@@ -1,7 +1,7 @@
 <div align="center">
 
 <p align="center">
-  <img src="[prismo.png](https://github.com/PrismoDevelopment/Prismo/blob/7c6bf013cea75ec7d7e63a186c55e710f524ec58/prismo.png?raw=true)" width="200" height="200">
+  <img src="prismo.png" width="200" height="200">
 </p>
 
 # Prismo
