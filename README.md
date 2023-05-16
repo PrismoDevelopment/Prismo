@@ -58,5 +58,5 @@ Prismo is licensed under the (insert license here). For more details, see the [L
 ---
 
 <div align="center">
-Thank you for choosing Prismo! Enjoy a vibrant and engaging Discord experience.
+Thank you for choosing Prismo! Enjoy a vibrant and engaging Discord experience. 
 </div>
