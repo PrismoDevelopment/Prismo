@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We are currently providing security updates for the following versions:
+We are currently providing security updates for the following versions: 
 
 <table>
   <tr>
