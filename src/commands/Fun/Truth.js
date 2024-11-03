@@ -1,6 +1,6 @@
 const Command = require("../../abstract/command");
 
-module.exports = class Truth extends Command {
+module.exports = class TruthCommand extends Command {
     constructor(...args) {
         super(...args, {
             name: "truth",
@@ -11,25 +11,31 @@ module.exports = class Truth extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/VkuNgBm.png",
         });
     }
+
     async run({ message }) {
-        const body = await this.client.util.requestget("https://api.truthordarebot.xyz/v1/truth");
-        if (!body) return message.channel.send("An error occured, please try again.");
+        const body = await this.client.fetch("https://badge.prismobot.xyz/truth", { method: "GET" }).then(res => res.json());
+        if (!body) return message?.channel.send("An error occurred, please try again.");
+
         const embed = this.client.util.embed()
             .setTitle("Truth")
-            .setDescription(body.question)
+            .setDescription(body.truth)
             .setColor(this.client.config.Client.PrimaryColor);
-        message.channel.send({ embeds: [embed] });
+
+        message?.channel.send({ embeds: [embed] });
     }
 
-    async exec ({ intraction }) {
-        const body = await this.client.util.requestget("https://api.truthordarebot.xyz/v1/truth");
-        if (!body) return intraction.reply("An error occured, please try again.");
+    async exec({ interaction }) {
+        const body = await this.client.fetch("https://badge.prismobot.xyz/truth", { method: "GET" }).then(res => res.json());
+        if (!body) return interaction?.reply("An error occurred, please try again.");
+
         const embed = this.client.util.embed()
             .setTitle("Truth")
-            .setDescription(body.question)
+            .setDescription(body.truth)
             .setColor(this.client.config.Client.PrimaryColor);
-        intraction.reply({ embeds: [embed] });
+
+        interaction?.reply({ embeds: [embed] });
     }
-}
+};

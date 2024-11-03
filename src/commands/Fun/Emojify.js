@@ -11,6 +11,7 @@ module.exports = class Emojify extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/dLwe4m1.png",
             options: [
                 {
                     name: "text",
@@ -21,17 +22,18 @@ module.exports = class Emojify extends Command {
             ],
         });
     }
+
     async run({ message, args }) {
         const text = args.join(" ");
-        if (!text) return message.channel.send("Please provide text to emojify.");
+        if (!text) return message?.channel.send("Please provide text to emojify.");
         const emojified = this.client.util.emojify(text);
-        message.channel.send(emojified);
+        message?.channel.send(emojified);
     }
 
     async exec({ interaction }) {
-        const text = interaction.options.getString("text");
-        if (!text) return interaction.reply("Please provide text to emojify.");
+        const text = interaction?.options.getString("text");
+        if (!text) return interaction?.reply("Please provide text to emojify.");
         const emojified = this.client.util.emojify(text);
-        interaction.reply(emojified);
+        interaction?.reply(emojified);
     }
-}
+};

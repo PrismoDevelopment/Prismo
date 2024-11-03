@@ -22,7 +22,7 @@ module.exports = class welcomeUserData {
             await data.save();
         }
         if (data) {
-            value.id = await this.makeid(8);
+            value.id = this.makeid(8);
             data.message.push(value);
             await data.save();
             return data;
@@ -70,7 +70,16 @@ module.exports = class welcomeUserData {
             return data;
         }
     }
-
+    async deleteUserData(id) {
+        let data = await mongoData.findOne({ id: id });
+        if (!data) {
+            return true;
+        }
+        if (data) {
+            await data.deleteOne( { id: id } );
+            return true;
+        }
+    }
     makeid(length) {
         var result = "";
         var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

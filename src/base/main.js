@@ -1,44 +1,36 @@
-const { IntentsBitField, ActivityType } = require("discord.js");
+const { IntentsBitField, ActivityType, Partials } = require("discord.js");
 const Cluster = require("discord-hybrid-sharding");
 const {
     Guilds,
-    GuildBans,
+    GuildModeration,
     GuildMembers,
     GuildMessages,
     MessageContent,
     GuildMessageReactions,
     GuildEmojisAndStickers,
     GuildVoiceStates,
-    DirectMessageReactions,
-    DirectMessageTyping,
-    DirectMessages,
     GuildIntegrations,
-    GuildInvites,
     GuildMessageTyping,
-    GuildScheduledEvents,
     GuildWebhooks,
+    GuildPresences,
 } = IntentsBitField.Flags;
 const AriaClient = require("./PrismoClient");
 const { Client } = require("../../config");
-require("events").defaultMaxListeners = 100;
+require("events").defaultMaxListeners = 1000;
 const client = new AriaClient({
-    disableMentions: "everyone",
+    // disableMentions: "everyone",
     intents: [
         Guilds,
-        GuildBans,
+        GuildModeration,
         GuildMembers,
+        GuildPresences,
         GuildMessages,
         MessageContent,
         GuildMessageReactions,
         GuildEmojisAndStickers,
         GuildVoiceStates,
-        DirectMessageReactions,
-        DirectMessageTyping,
-        DirectMessages,
         GuildIntegrations,
-        GuildInvites,
         GuildMessageTyping,
-        GuildScheduledEvents,
         GuildWebhooks,
     ],
     presence: {
@@ -51,17 +43,30 @@ const client = new AriaClient({
         ],
     },
     allowedMentions: { parse: ["users"], repliedUser: false },
-    restTimeOffset: 0,
-    shards: Cluster.data.SHARD_LIST,
-    shardCount: Cluster.data.TOTAL_SHARDS,
-});
-client.login(Client.Token);
-process.on("uncaughtException", (error) => {
-    console.error(error);
+    // restTimeOffset: 2500,
+    shards: Cluster.ClusterClient.getInfo().SHARD_LIST,
+    shardCount: Cluster.ClusterClient.getInfo().TOTAL_SHARDS,
+    debugger: true,
+    partials: [
+        Partials.Message,
+        Partials.GuildMember,
+        Partials.Reaction,
+        Partials.User,
+    ],
 });
 
-process.on("unhandledRejection", (error) => {
-    if (error.code === "10008" || error.code === "10062") return;
+client.login(Client.Token);
+process.on('uncaughtException', (error) => {
+    if (error.code == 10008) return;
+    if (error.code == 4000) return;
+    if (error.code == 10001) return;
+    if (error.code == 10003) return;
+    if (error.code == 10004) return;
+    if (error.code == 10005) return;
+    if (error.code == 50001) return;
+    if (error.code == 10062) return;
+    if (error.code == 50013) return;
+    if (error.code == 50035) return;
     console.error(error);
 });
 process.on("triggerUncaughtException", (error) => {

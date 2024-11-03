@@ -4,6 +4,7 @@ const welcomeDataUser = new Schema({
     id: { type: String, required: true },
     premium: { type: Boolean, default: false },
     premiumCount: { type: Number, default: 0 },
+    blacklist: { type: Boolean, default: false },
     message: {
         type: Array,
         default: [
@@ -29,7 +30,7 @@ const welcomeDataUser = new Schema({
                     title: "♡・welcyy ゛﹒𓂃",
                     description:
                         "<a:dot:1047385974692392960>Check Out Rules\n<a:dot:1047385974692392960>Boost if you love the guild\n\n<a:ace_heart_4:1047386085879197738> Don't leave us",
-                    color: 0x2f3136,
+                    color: 0x2b2d31,
                     footer: {
                         icon_url: "$guild_iconurl",
                     },

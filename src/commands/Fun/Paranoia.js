@@ -11,25 +11,41 @@ module.exports = class Paranoia extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/3w4825E.png",
         });
     }
+
     async run({ message }) {
-        const body = await this.client.util.requestget("https://api.truthordarebot.xyz/v1/paranoia");
-        if (!body) return message.channel.send("An error occured, please try again.");
+        let guilddata = await this.client.database.guildData.get(message?.guild.id);
+        if (!guilddata) return message?.channel.send("Guild data not found!");
+
+        const rating = guilddata.rratings ? "?rating=r" : "";
+        const url = `https://api.truthordarebot.xyz/v1/paranoia${rating}`;
+        const body = await this.client.util.requestget(url);
+        if (!body) return message?.channel.send("An error occurred, please try again.");
+
         const embed = this.client.util.embed()
             .setTitle("Paranoia")
             .setDescription(body.question)
             .setColor(this.client.config.Client.PrimaryColor);
-        message.channel.send({ embeds: [embed] });
+
+        message?.channel.send({ embeds: [embed] });
     }
 
-    async exec ({ intraction }) {
-        const body = await this.client.util.requestget("https://api.truthordarebot.xyz/v1/paranoia");
-        if (!body) return intraction.reply("An error occured, please try again.");
+    async exec({ interaction }) {
+        let guilddata = await this.client.database.guildData.get(interaction?.guild.id);
+        if (!guilddata) return interaction?.reply("Guild data not found!");
+
+        const rating = guilddata.rratings ? "?rating=r" : "";
+        const url = `https://api.truthordarebot.xyz/v1/paranoia${rating}`;
+        const body = await this.client.util.requestget(url);
+        if (!body) return interaction?.reply("An error occurred, please try again.");
+
         const embed = this.client.util.embed()
             .setTitle("Paranoia")
             .setDescription(body.question)
             .setColor(this.client.config.Client.PrimaryColor);
-        intraction.reply({ embeds: [embed] });
+
+        interaction?.reply({ embeds: [embed] });
     }
-}
+};

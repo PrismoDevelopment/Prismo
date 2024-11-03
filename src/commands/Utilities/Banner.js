@@ -1,118 +1,171 @@
 const Command = require("../../abstract/command");
-const { listenerCount } = require("../../models/guildData");
 
-module.exports = class help extends Command {
+module.exports = class Banner extends Command {
     constructor(...args) {
         super(...args, {
             name: "banner",
             aliases: ["banner"],
-            description: "Shows the banner of the mentioned user.",
-            usage: ["banner <user>"],
+            description: "gives a banner of user you mentioned",
+            usage: ["banner"],
             category: "Utilities",
-            userPerms: ["SendMessages", "ReadMessageHistory"],
+            userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
-            cooldown: 5,
+            guildOnly: true,
+            cooldown: 3,
+            image:"https://i.imgur.com/YBOEHFN.png",
             options: [
                 {
-                    type: 6,
                     name: "user",
-                    description: "The user to show the avatar of.",
-                    required: false,
-                },
-            ],
+                    description: "The user to get the banner of",
+                    type: 6,
+                    required: false
+                }
+            ]
         });
     }
     async run({ message, args }) {
-        let member = args[0]
-            ? await this.client.util.userQuery(args[0]) : message.author.id;
-        if (!member)
-            return message.channel.send({
-                content: "I couldn't find that user.",
-            });
-        const banner = await this.client.util.getBanner(member);
-        if (!banner)
-            return message.channel.send({
-                content: "This user doesn't have a banner.",
-            });
-        let user = await this.client.users.fetch(member);
-        let embed = this.client.util
-            .embed()
-            .setTitle(`${user.username}'s Banner`)
+        const user = args[0] ? await this.client.util.userQuery(args[0]) : message?.author.id;
+        let realUser = await this.client.users.fetch(user, { cache: false, force: true });
+        const banner = realUser.bannerURL({ dynamic: true, size: 2048 })
+        if (!banner) return message?.channel.send({ embeds: [this.client.util.errorDelete(message, "User does not have a banner.")] });
+        const embed = this.client.util.embed()
+            .setAuthor({ name: realUser.username + "'s Banner", iconURL: realUser.displayAvatarURL({ dynamic: true }) })
             .setImage(banner)
-            .setColor(this.client.config.Client.PrimaryColor);
-        const compos = [
-            {
-                type: 2,
-                style: 5,
-                label: "JPEG",
-                url: banner.replace("webp", "jpeg"),
-            },
-            {
-                type: 2,
-                style: 5,
-                label: "PNG",
-                url: banner.replace("webp", "png"),
-            },
-        ];
-        if (banner.includes("a_")) {
-            compos.push({
-                type: 2,
-                style: 5,
-                label: "GIF",
-                url: banner.replace("webp", "gif"),
-            });
+            .setColor(this.client.config.Client.PrimaryColor)
+            .setFooter({ text: `Requested by ${message?.author.username}`, iconURL: message?.author.displayAvatarURL({ dynamic: true }) })
+        let components = []
+        if (banner.includes(".gif")) {
+            components = [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: "PNG",
+                            style: 5,
+                            url: banner.replace(".gif", ".png")
+                        },
+                        {
+                            type: 2,
+                            label: "JPG",
+                            style: 5,
+                            url: banner.replace(".gif", ".jpg")
+                        },
+                        {
+                            type: 2,
+                            label: "WEBP",
+                            style: 5,
+                            url: banner.replace(".gif", ".webp")
+                        },
+                        {
+                            type: 2,
+                            label: "GIF",
+                            style: 5,
+                            url: banner
+                        }
+                    ]
+                }
+            ]
+        } else {
+            components = [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: "PNG",
+                            style: 5,
+                            url: banner.replace(".webp", ".png")
+                        },
+                        {
+                            type: 2,
+                            label: "JPG",
+                            style: 5,
+                            url: banner.replace(".webp", ".jpg")
+                        },
+                        {
+                            type: 2,
+                            label: "WEBP",
+                            style: 5,
+                            url: banner
+                        }
+                    ]
+                }
+            ]
         }
-
-        message.channel.send({
-            embeds: [embed],
-            components: [{ type: 1, components: compos }],
-        });
+        message?.channel.send({ embeds: [embed], components: components });
     }
 
-    async exec({ interaction, args }) {
-        let member = interaction.options.get("user")
-            ? interaction.options.get("user").user
-            : interaction.user;
-        if (!member)
-            return interaction.reply({ content: "I couldn't find that user." });
-        const banner = await member
-            .fetch()
-            .then((u) => u.bannerURL({ dynamic: true, size: 2048 }));
-        if (!banner)
-            return interaction.reply({
-                content: "That user doesn't have a banner.",
-            });
-        let embed = this.client.util
-            .embed()
-            .setTitle(`${member.username}'s Banner`)
+    async exec({ interaction }) {
+        const user = interaction?.options.getUser("user") ? interaction?.options.getUser("user").id : interaction?.user.id;
+        let realUser = await this.client.users.fetch(user, { cache: false, force: true });
+        const banner = realUser.bannerURL({ dynamic: true, size: 2048 })
+        if (!banner) return interaction?.reply({ embeds: [this.client.util.errorDelete(interaction, "User does not have a banner.")], ephemeral: true });
+        const embed = this.client.util.embed()
+            .setAuthor({ name: realUser.username + "'s Banner", iconURL: realUser.displayAvatarURL({ dynamic: true }) })
             .setImage(banner)
-            .setColor(this.client.config.Client.PrimaryColor);
-        const compos = [
-            {
-                type: 2,
-                style: 5,
-                label: "JPEG",
-                url: banner.replace("webp", "jpeg"),
-            },
-            {
-                type: 2,
-                style: 5,
-                label: "PNG",
-                url: banner.replace("webp", "png"),
-            },
-        ];
-        if (banner.includes("a_")) {
-            compos.push({
-                type: 2,
-                style: 5,
-                label: "GIF",
-                url: banner.replace("webp", "gif"),
-            });
+            .setColor(this.client.config.Client.PrimaryColor)
+            .setFooter({ text: `Requested by ${interaction?.user.username}`, iconURL: interaction?.user.displayAvatarURL({ dynamic: true }) })
+        let components = []
+        if (banner.includes(".gif")) {
+            components = [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: "PNG",
+                            style: 5,
+                            url: banner.replace(".gif", ".png")
+                        },
+                        {
+                            type: 2,
+                            label: "JPG",
+                            style: 5,
+                            url: banner.replace(".gif", ".jpg")
+                        },
+                        {
+                            type: 2,
+                            label: "WEBP",
+                            style: 5,
+                            url: banner.replace(".gif", ".webp")
+                        },
+                        {
+                            type: 2,
+                            label: "GIF",
+                            style: 5,
+                            url: banner
+                        }
+                    ]
+                }
+            ]
+        } else {
+            components = [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            label: "PNG",
+                            style: 5,
+                            url: banner.replace(".webp", ".png")
+                        },
+                        {
+                            type: 2,
+                            label: "JPG",
+                            style: 5,
+                            url: banner.replace(".webp", ".jpg")
+                        },
+                        {
+                            type: 2,
+                            label: "WEBP",
+                            style: 5,
+                            url: banner
+                        }
+                    ]
+                }
+            ]
         }
-
-        interaction.reply({
-            embeds: [embed],
-            components: [{ type: 1, components: compos }],
-        });
+        interaction?.reply({ embeds: [embed], components: components });
     }
-};
+}

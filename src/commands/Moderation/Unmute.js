@@ -16,6 +16,7 @@ module.exports = class help extends Command {
                 "ModerateMembers",
             ],
             cooldown: 3,
+            image:"https://i.imgur.com/bNVC35D.png",
             options: [
                 {
                     type: 6,
@@ -29,47 +30,47 @@ module.exports = class help extends Command {
     async run({ message, args }) {
         const user = await this.client.util.userQuery(args[0]);
         if (!user)
-            return message.reply({ content: "Please provide a valid user." });
-        const member = await message.guild.members.fetch(user);
+            return message?.reply({ content: "I would appreciate it if you provided a valid user!" });
+        const member = await message?.guild.members.fetch(user);
         if (!member)
-            return message.reply({ content: "Please provide a valid user." });
+            return message?.reply({ content: "I would appreciate it if you provided a valid user!" });
         if (!member.communicationDisabledUntil)
-            return message.reply({ content: "This user is not muted." });
+            return message?.reply({ content: "This user is not muted." });
         await member
             .edit({ communicationDisabledUntil: null })
-            .catch((e) => console.error(e));
+            .catch(() => { });
         const embed = this.client.util
             .embed()
             .setDescription(`Successfully Unmuted ${member.user.username}.`)
             .setColor(this.client.config.Client.PrimaryColor);
-        return message.reply({ embeds: [embed] });
+        return message?.reply({ embeds: [embed] });
     }
 
     async exec({ interaction }) {
-        let user = interaction.options.getUser("user");
+        let user = interaction?.options.getUser("user");
         if (!user)
-            return interaction.reply({
-                content: "Please provide a valid user.",
+            return interaction?.reply({
+                content: "I would appreciate it if you provided a valid user!",
                 ephemeral: true,
             });
-        let member = interaction.guild.members.cache.get(user.id);
+        let member = interaction?.guild.members.cache.get(user.id);
         if (!member)
-            return interaction.reply({
-                content: "Please provide a valid user.",
+            return interaction?.reply({
+                content: "I would appreciate it if you provided a valid user!",
                 ephemeral: true,
             });
         if (!member.communicationDisabledUntil)
-            return interaction.reply({
+            return interaction?.reply({
                 content: "This user is not muted.",
                 ephemeral: true,
             });
         await member
             .edit({ communicationDisabledUntil: null })
-            .catch((e) => console.error(e));
+            .catch(() => { });
         const embed = this.client.util
             .embed()
             .setDescription(`Successfully Unmuted ${member.user.username}.`)
             .setColor(this.client.config.Client.PrimaryColor);
-        return interaction.reply({ embeds: [embed] });
+        return interaction?.reply({ embeds: [embed] });
     }
 };

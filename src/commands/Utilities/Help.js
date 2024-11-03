@@ -10,92 +10,120 @@ module.exports = class help extends Command {
             category: "Utilities",
             examples: ["help"],
             userPerms: ["SendMessages"],
+            guildOnly: true,
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
+            image:"https://i.imgur.com/RXOQeMA.png",
         });
     }
 
     async run({ message, args }) {
         message.guild.config = await this.client.database.guildData.get(
-            message.guild.id
+            message?.guild.id
         );
-        const embed = this.client.util
+        let helpmenu;
+        if (!args[0]) {
+            const embed = this.client.util
             .embed()
-            .setThumbnail(this.client.user.displayAvatarURL())
             .setColor(this.client.config.Client.PrimaryColor)
             .setAuthor({
-                name: this.client.user.username,
-                iconURL: this.client.user.displayAvatarURL(),
-            })
-            .setFooter({
-                text: `Requested by ${message.author.username}`,
-                iconURL: message.author.displayAvatarURL(),
+                name: message?.member.user.username,
+                iconURL: message?.member.user.displayAvatarURL({
+                    dynamic: true,
+                }),
             })
             .setDescription(
-                `${this.client.user.username
-                } Is A Multi-Purpose Discord Bot With Many Features. You Can Use The ${"`" + message.guild.config.prefix
-                }help [Command name]${"`"} To Get Information About A Command.`
+                `${this.client.config.Client.emoji.prismoemo}  Hey bud! I'm **${this.client.user.username}**, a bot, here to make your discord experience even better. Need help with commands? Type \`${message?.guild.config.prefix}help\` to see what I can do.`
             )
-            .addFields([
-                {
-                    name: "Links",
-                    value: `**[Prismo](${this.client.config.Url.InviteURL})**\n**[Support Server](${this.client.config.Url.SupportURL})**`,
-                },
-                {
-                    name: "Commands Category",
-                    value: `${this.client.config.Client.Emoji.Welcome} **Welcome**\n${this.client.config.Client.Emoji.Moderation} **Moderation**\n${this.client.config.Client.Emoji.Utility} **Utility**\n${this.client.config.Client.Emoji.Fun} **Fun**\n${this.client.config.Client.Emoji.Image} **Image**`,
-                },
-            ]);
-        if (!args[0]) {
-            message.reply({
+            // .setTimestamp();
+            helpmenu = await message?.reply({
                 embeds: [embed],
+                // content: `${this.client.config.Client.emoji.prismoemo} My prefix for this server is **\`${message?.guild.config.prefix}\`**`,
                 components: [
                     this.client.util.row().setComponents(
                         this.client.util
                             .menu()
                             .setCustomId("select")
-                            .setPlaceholder("Select A Category")
+                            .setPlaceholder("Select A Category To Get Started")
                             .addOptions([
                                 {
                                     label: "Welcome",
                                     value: "help_welcome",
-                                    emoji: this.client.config.Client.Emoji
-                                        .Welcome,
+                                    emoji: this.client.config.Client.emoji
+                                        .welcome,
                                 },
                                 {
                                     label: "Moderation",
                                     value: "help_moderation",
-                                    emoji: this.client.config.Client.Emoji
-                                        .Moderation,
+                                    emoji: this.client.config.Client.emoji
+                                        .moderation,
                                 },
                                 {
                                     label: "Utility",
                                     value: "help_utility",
-                                    emoji: this.client.config.Client.Emoji
-                                        .Utility,
+                                    emoji: this.client.config.Client.emoji
+                                        .utility,
                                 },
                                 {
                                     label: "Fun",
                                     value: "help_fun",
-                                    emoji: this.client.config.Client.Emoji.Fun,
+                                    emoji: this.client.config.Client.emoji.fun,
                                 },
                                 {
                                     label: "Image",
                                     value: "help_image",
-                                    emoji: this.client.config.Client.Emoji.Image,
+                                    emoji: this.client.config.Client.emoji.image,
                                 },
+                                {
+                                    label: "Giveaway",
+                                    value: "help_giveaway",
+                                    emoji: this.client.config.Client.emoji.giveaway,
+                                },
+                                {
+                                    label: "Invite",
+                                    value: "help_invite",
+                                    emoji: this.client.config.Client.emoji.add,
+                                }
                             ])
+                    ),
+                    // create 2 button one for invite and other setEmojifor support 
+                    this.client.util.row().setComponents(
+                        this.client.util
+                            .button()
+                            .setStyle(5)
+                            .setLabel("Invite Me")
+                            .setEmoji(this.client.config.Client.emoji.invite)
+                            .setURL(
+                                `https://discord.com/oauth2/authorize?client_id=${this.client.user.id}&permissions=8&scope=bot%20applications.commands`
+                            ),
+                        this.client.util
+                            .button()
+                            .setStyle(5)
+                            .setLabel("Support")
+                            .setEmoji(this.client.config.Client.emoji.support)
+                            .setURL(this.client.config.Url.SupportURL),
+                        // this.client.util
+                        //     .button()
+                        //     .setStyle(5)
+                        //     .setLabel("Guide")
+                        //     .setEmoji(this.client.config.Client.emoji.guide)
+                        //     .setURL(this.client.config.Url.GuideURL),
+                        this.client.util
+                            .button()
+                            .setStyle(5)
+                            .setLabel("Premium")
+                            .setEmoji(this.client.config.Client.emoji.invite)
+                            .setURL(this.client.config.Url.GuideURL),
                     ),
                 ],
             });
         }
-        const filter = (i) => i.user.id === message.member.user.id;
-        const collector = message.channel.createMessageComponentCollector({
-            time: 900000,
+        const collector = message?.channel.createMessageComponentCollector({
+            time: 600000,
         });
         collector.on("collect", async (interaction) => {
-            if (interaction.customId === "select") {
-                if (interaction.values[0] === "help_welcome") {
+            if (interaction?.customId === "select") {
+                if (interaction?.values[0] === "help_welcome") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -105,8 +133,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${message.author.username}`,
-                            iconURL: message.author.displayAvatarURL(),
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -122,8 +150,8 @@ module.exports = class help extends Command {
                                     .join(", "),
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_moderation") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_moderation") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -133,8 +161,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${message.author.username}`,
-                            iconURL: message.author.displayAvatarURL(),
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -154,8 +182,8 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_utility") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_utility") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -165,8 +193,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${message.author.username}`,
-                            iconURL: message.author.displayAvatarURL(),
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -186,8 +214,8 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_fun") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_fun") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -197,8 +225,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${message.author.username}`,
-                            iconURL: message.author.displayAvatarURL(),
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -214,8 +242,8 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_image") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_image") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -225,8 +253,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${message.author.username}`,
-                            iconURL: message.author.displayAvatarURL(),
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -242,9 +270,56 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_giveaway") {
+                    const embed = this.client.util
+                        .embed()
+                        .setThumbnail(this.client.user.displayAvatarURL())
+                        .setColor(this.client.config.Client.PrimaryColor)
+                        .setAuthor({
+                            name: this.client.user.username,
+                            iconURL: this.client.user.displayAvatarURL(),
+                        })
+                        .setFooter({
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.displayAvatarURL(),
+                        })
+                        .addFields([
+                            {
+                                name:
+                                    "Giveaway `[" +
+                                    this.client.commands
+                                        .filter((c) => c.category == "Giveaways")
+                                        .size.toString() +
+                                    "]`",
+                                value: `${this.client.commands
+                                    .filter((cmd) => cmd.category === "Giveaways")
+                                    .map((cmd) => `\`${cmd.name}\``)
+                                    .join(", ")}`,
+                            },
+                        ]);
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_invite") {
+                    const embed = this.client.util
+                    .embed()
+                    .setThumbnail(this.client.user.displayAvatarURL())
+                    .setColor(this.client.config.Client.PrimaryColor)
+                    .setAuthor({
+                        name: this.client.user.username,
+                        iconURL: this.client.user.displayAvatarURL(),
+                    })
+                    .setFooter({
+                        text: `Requested by ${message?.author.username}`,
+                        iconURL: message?.author.displayAvatarURL(),
+                    })
+                    .addFields({name: `Invites [${this.client.commands.filter((c) => c.category == "Invites").size.toString()}]`, 
+                        value: `${this.client.commands.filter((c) => c.category == "Invites").map((c) => `\`${c.name}\``).join(", ") || "No Commands Found!"}`});
+                interaction?.reply({ embeds: [embed], ephemeral: true });
                 }
             }
+        });
+        collector.on("end", async (interaction) => {
+            helpmenu?.delete();
         });
         if (!args[0]) return;
         let command =
@@ -255,7 +330,7 @@ module.exports = class help extends Command {
 
         if (!command || command.category.includes("Owners")) {
             return this.client.util
-                .doDeletesend(
+                .errorDelete(
                     message,
                     `No Command Found - ${args[0].charAt(0).toUpperCase() + args[0].slice(1)
                     }!`
@@ -266,10 +341,10 @@ module.exports = class help extends Command {
         }
         const Embededinfo = this.client.util
             .embed()
-            .setThumbnail(this.client.user.displayAvatarURL())
+            .setThumbnail(message?.guild?.iconURL({ dynamic: true }))
             .setColor(this.client.config.Client.PrimaryColor)
             .setAuthor({
-                name: `${command.category}`,
+                name: `${command.name} Command`,
                 iconURL: this.client.user.displayAvatarURL({ format: "png" }),
                 url: this.client.config.Url.SupportURL,
             })
@@ -279,13 +354,13 @@ module.exports = class help extends Command {
                     : "> No Description"
             )
             .setFooter({
-                text: `Requested by ${message.author.username}`,
-                iconURL: message.author.displayAvatarURL(),
+                text: `Requested by ${message?.author.username}`,
+                iconURL: message?.author.displayAvatarURL(),
             })
             .addFields([
                 {
-                    name: "Name",
-                    value: `\`${command.name}\``,
+                    name: "Category",
+                    value: `\`${command.category}\``,
                 },
             ]);
         if (command.aliases.length) {
@@ -301,8 +376,8 @@ module.exports = class help extends Command {
         if (command.usage) {
             Embededinfo.addFields([
                 {
-                    name: "Usage",
-                    value: `\`${command.usage}\``,
+                    name: "Example",
+                    value: `\`${message?.guild.config.prefix}${command.usage}\``,
                 },
             ]);
         }
@@ -314,44 +389,17 @@ module.exports = class help extends Command {
                 },
             ]);
         }
-        await message.reply({ embeds: [Embededinfo] }).catch((e) => {
+        await message?.reply({ embeds: [Embededinfo] }).catch((e) => {
             return;
         });
     }
 
     async exec({ interaction, args }) {
         interaction.guild.config = await this.client.database.guildData.get(
-            interaction.guild.id
+            interaction?.guild.id
         );
-        const embed = this.client.util
-            .embed()
-            .setThumbnail(this.client.user.displayAvatarURL())
-            .setColor(this.client.config.Client.PrimaryColor)
-            .setAuthor({
-                name: this.client.user.username,
-                iconURL: this.client.user.displayAvatarURL(),
-            })
-            .setFooter({
-                text: `Requested by ${interaction.user.username}`,
-                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
-            })
-            .setDescription(
-                `${this.client.user.username
-                } Is A Multi-Purpose Discord Bot With Many Features. You Can Use The ${"`" + interaction.guild.config.prefix
-                }help [Command name]${"`"} To Get Information About A Command.`
-            )
-            .addFields([
-                {
-                    name: "Links",
-                    value: `**[Prismo](${this.client.config.Url.InviteURL})**\n**[Support Server](${this.client.config.Url.SupportURL})**`,
-                },
-                {
-                    name: "Commands Category",
-                    value: `${this.client.config.Client.Emoji.Welcome} **Welcome**\n${this.client.config.Client.Emoji.Moderation} **Moderation**\n${this.client.config.Client.Emoji.Utility} **Utility**\n${this.client.config.Client.Emoji.Fun} **Fun**\n${this.client.config.Client.Emoji.Image} **Image**`,
-                },
-            ]);
-        interaction.reply({
-            embeds: [embed],
+        let helpmenu = await interaction?.reply({
+            content: `${this.client.config.Client.emoji.prismoemo} My prefix for this server is **\`${interaction?.guild.config.prefix}\`**`,
             components: [
                 this.client.util.row().setComponents(
                     this.client.util
@@ -362,43 +410,76 @@ module.exports = class help extends Command {
                             {
                                 label: "Welcome",
                                 value: "help_welcomeslash",
-                                emoji: this.client.config.Client.Emoji.Welcome,
+                                emoji: this.client.config.Client.emoji.welcome,
                             },
                             {
                                 label: "Moderation",
                                 value: "help_moderationslash",
-                                emoji: this.client.config.Client.Emoji
-                                    .Moderation,
+                                emoji: this.client.config.Client.emoji
+                                    .moderation,
                             },
                             {
                                 label: "Utility",
                                 value: "help_utilityslash",
-                                emoji: this.client.config.Client.Emoji.Utility,
+                                emoji: this.client.config.Client.emoji.utility,
                             },
                             {
                                 label: "Fun",
                                 value: "help_funslash",
-                                emoji: this.client.config.Client.Emoji.Fun,
+                                emoji: this.client.config.Client.emoji.fun,
                             },
                             {
                                 label: "Image",
                                 value: "help_imageslash",
-                                emoji: this.client.config.Client.Emoji.Image,
+                                emoji: this.client.config.Client.emoji.image,
                             },
-                        ])
+                            {
+                                label: "Giveaway",
+                                value: "help_giveawayslash",
+                                emoji: this.client.config.Client.emoji.giveaway,
+                            },
+                            {
+                                label: "Invites",
+                                value: "help_inviteslash",
+                                emoji: this.client.config.Client.emoji.add,
+                            },
+
+                        ]),
+                ),
+                this.client.util.row().setComponents(
+                    this.client.util
+                        .button()
+                        .setStyle(5)
+                        .setLabel("Invite Me")
+                        .setEmoji(this.client.config.Client.emoji.invite)
+                        .setURL(
+                            `https://discord.com/oauth2/authorize?client_id=${this.client.user.id}&permissions=8&scope=bot%20applications.commands`
+                        ),
+                    this.client.util
+                        .button()
+                        .setStyle(5)
+                        .setLabel("Support")
+                        .setEmoji(this.client.config.Client.emoji.support)
+                        .setURL(this.client.config.Url.SupportURL),
+                    this.client.util
+                        .button()
+                        .setStyle(5)
+                        .setLabel("Guide")
+                        .setEmoji(this.client.config.Client.emoji.guide)
+                        .setURL(this.client.config.Url.GuideURL),
                 ),
             ],
         });
-        const filter = (i) => i.user.id === interaction.member.user.id;
-        const collector = interaction.channel.createMessageComponentCollector({
+        const filter = (i) => i.user.id === interaction?.member.user.id;
+        const collector = interaction?.channel.createMessageComponentCollector({
             time: 900000,
         });
         /**
          * @param {
          */
         collector.on("collect", async (interaction) => {
-            if (interaction.customId === "select_xd") {
-                if (interaction.values[0] === "help_welcomeslash") {
+            if (interaction?.customId === "select_xd") {
+                if (interaction?.values[0] === "help_welcomeslash") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -408,8 +489,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${interaction.user.username}`,
-                            iconURL: interaction.user.displayAvatarURL(),
+                            text: `Requested by ${interaction?.user.username}`,
+                            iconURL: interaction?.user.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -425,8 +506,8 @@ module.exports = class help extends Command {
                                     .join(", "),
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_moderationslash") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_moderationslash") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -436,8 +517,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${interaction.user.username}`,
-                            iconURL: interaction.user.displayAvatarURL(),
+                            text: `Requested by ${interaction?.user.username}`,
+                            iconURL: interaction?.user.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -457,8 +538,8 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_utilityslash") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_utilityslash") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -468,7 +549,7 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${interaction.user.username}`,
+                            text: `Requested by ${interaction?.user.username}`,
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .addFields([
@@ -489,8 +570,8 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_funslash") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_funslash") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -500,8 +581,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${interaction.user.username}`,
-                            iconURL: interaction.user.displayAvatarURL(),
+                            text: `Requested by ${interaction?.user.username}`,
+                            iconURL: interaction?.user.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -517,8 +598,8 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
-                } else if (interaction.values[0] === "help_imageslash") {
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_imageslash") {
                     const embed = this.client.util
                         .embed()
                         .setThumbnail(this.client.user.displayAvatarURL())
@@ -528,8 +609,8 @@ module.exports = class help extends Command {
                             iconURL: this.client.user.displayAvatarURL(),
                         })
                         .setFooter({
-                            text: `Requested by ${interaction.user.username}`,
-                            iconURL: interaction.user.displayAvatarURL(),
+                            text: `Requested by ${interaction?.user.username}`,
+                            iconURL: interaction?.user.displayAvatarURL(),
                         })
                         .addFields([
                             {
@@ -545,7 +626,67 @@ module.exports = class help extends Command {
                                     .join(", ")}`,
                             },
                         ]);
-                    interaction.reply({ embeds: [embed], ephemeral: true });
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_giveawayslash") {
+                    const embed = this.client.util
+                        .embed()
+                        .setThumbnail(this.client.user.displayAvatarURL())
+                        .setColor(this.client.config.Client.PrimaryColor)
+                        .setAuthor({
+                            name: this.client.user.username,
+                            iconURL: this.client.user.displayAvatarURL(),
+                        })
+                        .setFooter({
+                            text: `Requested by ${interaction?.user.username}`,
+                            iconURL: interaction?.user.displayAvatarURL(),
+                        })
+                        .addFields([
+                            {
+                                name:
+                                    "Giveaway `[" +
+                                    this.client.commands
+                                        .filter((c) => c.category == "Giveaways")
+                                        .size.toString() +
+                                    "]`",
+                                value: `${this.client.commands
+                                    .filter(
+                                        (cmd) => cmd.category === "Giveaways"
+                                    )
+                                    .map((cmd) => `\`${cmd.name}\``)
+                                    .join(", ")}`,
+                            },
+                        ]);
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
+                } else if (interaction?.values[0] === "help_inviteslash") {
+                    const embed = this.client.util
+                        .embed()
+                        .setThumbnail(this.client.user.displayAvatarURL())
+                        .setColor(this.client.config.Client.PrimaryColor)
+                        .setAuthor({
+                            name: this.client.user.username,
+                            iconURL: this.client.user.displayAvatarURL(),
+                        })
+                        .setFooter({
+                            text: `Requested by ${interaction?.user.username}`,
+                            iconURL: interaction?.user.displayAvatarURL(),
+                        })
+                        .addFields([
+                            {
+                                name:
+                                    "Invites `[" +
+                                    this.client.commands
+                                        .filter((c) => c.category == "Invites")
+                                        .size.toString() +
+                                    "]`",
+                                value: `${this.client.commands
+                                    .filter(
+                                        (cmd) => cmd.category === "Invites"
+                                    )
+                                    .map((cmd) => `\`${cmd.name}\``)
+                                    .join(", ")}`,
+                            },
+                        ]);
+                    interaction?.reply({ embeds: [embed], ephemeral: true });
                 }
             }
         });

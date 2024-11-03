@@ -5,8 +5,8 @@ module.exports = class help extends Command {
         super(...args, {
             name: "embed",
             aliases: ["em", "preset"],
-            description: "Creates/Delete/Edit/Show embeds.",
-            usage: ["embed"],
+            description: "Create Embed can be used for announcment and welcome",
+            usage: ["embed (Creates/Delete/Edit/Show embeds.)"],
             category: "Utilities",
             userPerms: [
                 "SendMessages",
@@ -16,6 +16,7 @@ module.exports = class help extends Command {
             ],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/YRh8F15.png",
             options: [
                 {
                     type: 1,
@@ -45,12 +46,12 @@ module.exports = class help extends Command {
         try {
             this.client.commandFunctions.embedFunction.buildNormal(
                 message,
-                args
+                args[0],
+                false
             );
         } catch (e) {
-            message.reply({
+            message?.reply({
                 content: e.message,
-                ephemeral: true,
             });
         }
     }
@@ -58,11 +59,11 @@ module.exports = class help extends Command {
         try {
             this.client.commandFunctions.embedFunction.buildNormal(
                 interaction,
-                interaction.options.getSubcommand(),
+                interaction?.options.getSubcommand(),
                 true
             );
         } catch (e) {
-            interaction.reply({
+            interaction?.reply({
                 content: e.message,
                 ephemeral: true,
             });

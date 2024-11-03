@@ -6,14 +6,16 @@ module.exports = class Slot extends Command {
         super(...args, {
             name: "slot",
             aliases: ["slot"],
-            description: "Play a game of slot.",
+            description: "Play a game of slots.",
             category: "Fun",
             usage: ["slot"],
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/0FDidz1.png",
         });
     }
+
     async run({ message }) {
         const Game = new Slots({
             message: message,
@@ -28,11 +30,12 @@ module.exports = class Slot extends Command {
             },
             slots: ['🍇', '🍊', '🍋', '🍌'],
             othersMessage: 'Only <@{{author}}> can use the buttons!',
-        })
+        });
+
         Game.startGame();
     }
 
-    async exec({ interaction  }) {
+    async exec({ interaction }) {
         const Game = new Slots({
             message: interaction,
             embed: {
@@ -47,7 +50,8 @@ module.exports = class Slot extends Command {
             slots: ['🍇', '🍊', '🍋', '🍌'],
             othersMessage: 'Only <@{{author}}> can use the buttons!',
             isSlashGame: true,
-        })
+        });
+
         Game.startGame();
     }
-}
+};

@@ -31,6 +31,6 @@ module.exports = class serverVerificationCreate extends Event {
         .setCustomId(`modal_verification_sumbit`)
         .addComponents(rows)
         .setTitle(`Enter code ${randomsixdigit} to verify`)
-      return  await interaction.showModal(modal);
+      return  await interaction?.showModal(modal);
     }
 };

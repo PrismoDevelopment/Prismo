@@ -5,12 +5,13 @@ module.exports = class help extends Command {
         super(...args, {
             name: "welcome",
             aliases: ["wel"],
-            description: "Set/Delete/Test Welcome Message",
-            usage: ["welcome"],
+            description: "Will Welcome the user to your server",
+            usage: ["welcome <set|delete>"],
             category: "Welcome",
             userPerms: ["ManageGuild"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/BA5XIva.png",
             options: [
                 {
                     type: 1,
@@ -42,31 +43,30 @@ module.exports = class help extends Command {
     async run({ message, args }) {
         try {
             if (!args[0])
-                return message.reply({
-                    content: "You Must Choose: `set`, `delete`, `test`",
+                return message?.reply({
+                    embeds: [this.client.util.errorDelete(message, "Please Provide A Valid Option!\n\n**Options**:\n- `set`\n- `delete`\n- `test`")],
                     ephemeral: true,
                 });
             if (args[0] === "set") {
                 const channel =
-                    message.mentions.channels.first() ||
-                    message.guild.channels.cache.get(args[1]) ||
-                    message.guild.channels.cache.find(
+                    message?.mentions.channels.first() ||
+                    message?.guild.channels.cache.get(args[1]) ||
+                    message?.guild.channels.cache.find(
                         (r) =>
                             r.name.toLowerCase() ==
                             args.slice(0).join(" ").toLowerCase()
-                    ) ||
-                    message.channel;
+                    )
                 if (!channel)
-                    return message.reply({
-                        content: "Please Provide A Channel!",
+                    return message?.reply({
+                        embeds: [this.client.util.errorDelete(message, "Please Provide A Valid Channel!")],
                         ephemeral: true,
                     });
                 const data = await this.client.database.welcomeUserData.get(
-                    message.member.user.id
+                    message?.member.user.id
                 );
-                let max = data.message.length;
-                let okie = data.message.slice(0, max);
-                const msg = await message.reply({
+                let max = data.message?.length;
+                let okie = data.message?.slice(0, max);
+                const msg = await message?.reply({
                     content:
                         `Please Choose, Channel And Preset You Want To Set
 Need more presets? Try \`/embed create\`!`,
@@ -75,7 +75,7 @@ Need more presets? Try \`/embed create\`!`,
                             this.client.util
                                 .menu()
                                 .setCustomId("embedPreset")
-                                .setPlaceholder("Choose Preset")
+                                .setPlaceholder("Choose Preset To Set Welcome Message")
                                 .addOptions([
                                     ...okie.map((c) => ({
                                         label: c.name,
@@ -99,7 +99,7 @@ Need more presets? Try \`/embed create\`!`,
                             ),
                     ],
                 });
-                const filter = (i) => i.user.id === message.member.user.id;
+                const filter = (i) => i.user.id === message?.member.user.id;
                 const collector = msg.createMessageComponentCollector({
                     filter,
                     time: 60000,
@@ -127,15 +127,15 @@ Need more presets? Try \`/embed create\`!`,
                         if (i.customId === "save") {
                             if (!dataToSave.embeds)
                                 return i.reply({
-                                    content: "You Must Choose A Preset",
+                                    content: `${this.client.config.Client.emoji.cross} Please Choose A Preset!`,
                                     ephemeral: true,
                                 });
                             await this.client.database.guildData.putWelcome(
-                                message.guild.id,
+                                message?.guild.id,
                                 dataToSave
                             );
                             msg.edit({
-                                content: `Welcome Message Has Been Set Successfully!\n\n**Channel**: <#${dataToSave.channel}>\n**Preset**: ${presetName}`,
+                                content: `${this.client.config.Client.emoji.tick} Welcome Message Has Been Successfully Setupped!\n\n**Channel**: <#${dataToSave.channel}>\n**Preset**: ${presetName}`,
                                 components: [],
                             });
                             collector.stop();
@@ -149,51 +149,50 @@ Need more presets? Try \`/embed create\`!`,
             }
             if (args[0] === "delete") {
                 await this.client.database.guildData.putWelcome(
-                    message.guild.id,
+                    message?.guild.id,
                     {
                         channel: null,
                         content: null,
                         embeds: null,
                     }
                 );
-                message.reply({
-                    content: "Welcome Message Has Been Deleted Successfully!",
+                message?.reply({
+                    embeds: [this.client.util.doDeletesend(message, "Welcome Message Has Been Successfully Deleted!")],
                     ephemeral: true,
                 });
             }
             if (args[0] === "test") {
                 const data = await this.client.database.guildData.getWelcome(
-                    message.guild.id
+                    message?.guild.id
                 );
                 if (!data.channel)
-                    return message.reply({
-                        content: "You Must Set Welcome Message First!",
+                    return message?.reply({
+                        embeds: [this.client.util.errorDelete(message, "Welcome Message Hasn't Been Setupped Yet!")],
                         ephemeral: true,
                     });
-                message.reply({
-                    content: "Welcome Test Message Has Been Sent Successfully!",
+                message?.reply({
+                    embeds: [this.client.util.doDeletesend(message, "Welcome Message Has Been Sent!")],
                     ephemeral: true,
                 });
-                this.client.emit("guildMemberAdd", message.member);
+                this.client.emit("guildMemberAdd", message?.member);
             }
         } catch (e) {
-            console.log(e);
+            return
         }
     }
 
     async exec({ interaction }) {
         try {
-            if (interaction.options.getSubcommand() === "set") {
+            if (interaction?.options.getSubcommand() === "set") {
                 const channel =
-                    interaction.options.getChannel("channel") ||
-                    interaction.channel;
-                // if (channel.type != 0 || channel.type != 5 ) return interaction.reply({ content: 'Please Provide A Text Channel!', ephemeral: true });
+                    interaction?.options.getChannel("channel") ||
+                    interaction?.channel;
                 const data = await this.client.database.welcomeUserData.get(
-                    interaction.user.id
+                    interaction?.user.id
                 );
-                let max = data.message.length;
-                let okie = data.message.slice(0, max);
-                const msg = await interaction.reply({
+                let max = data.message?.length;
+                let okie = data.message?.slice(0, max);
+                const msg = await interaction?.reply({
                     content:
                         `Please Choose, Channel And Preset You Want To Set
 Need more presets? Try \`/embed create\`!`,
@@ -203,7 +202,7 @@ Need more presets? Try \`/embed create\`!`,
                             this.client.util
                                 .menu()
                                 .setCustomId("embedPreset")
-                                .setPlaceholder("Choose Preset")
+                                .setPlaceholder("Choose Preset To Set Welcome Message")
                                 .addOptions([
                                     ...okie.map((c) => ({
                                         label: c.name,
@@ -227,7 +226,7 @@ Need more presets? Try \`/embed create\`!`,
                             ),
                     ],
                 });
-                const filter = (i) => i.user.id === interaction.user.id;
+                const filter = (i) => i.user.id === interaction?.user.id;
                 const collector = msg.createMessageComponentCollector({
                     filter,
                     time: 60000,
@@ -261,11 +260,11 @@ Need more presets? Try \`/embed create\`!`,
                                         ephemeral: true,
                                     });
                                 await this.client.database.guildData.putWelcome(
-                                    interaction.guild.id,
+                                    interaction?.guild.id,
                                     dataToSave
                                 );
                                 msg.edit({
-                                    content: `Welcome Message Has Been Set Successfully!\n\n**Channel**: <#${dataToSave.channel}>\n**Preset**: ${presetName}`,
+                                    content: `${this.client.config.Client.emoji.tick} Welcome Message Has Been Successfully Setupped!\n\n**Channel**: <#${dataToSave.channel}>\n**Preset**: ${presetName}`,
                                     components: [],
                                 });
                                 collector.stop();
@@ -279,37 +278,37 @@ Need more presets? Try \`/embed create\`!`,
                     { time: 60000 }
                 );
             }
-            if (interaction.options.getSubcommand() === "delete") {
+            if (interaction?.options.getSubcommand() === "delete") {
                 await this.client.database.guildData.putWelcome(
-                    interaction.guild.id,
+                    interaction?.guild.id,
                     {
                         channel: null,
                         content: null,
                         embeds: null,
                     }
                 );
-                interaction.reply({
-                    content: "Welcome Message Has Been Deleted Successfully!",
+                interaction?.reply({
+                    content: `${this.client.config.Client.emoji.tick} Welcome Message Has Been Successfully Deleted!`,
                     ephemeral: true,
                 });
             }
-            if (interaction.options.getSubcommand() === "test") {
+            if (interaction?.options.getSubcommand() === "test") {
                 const data = await this.client.database.guildData.getWelcome(
-                    interaction.guild.id
+                    interaction?.guild.id
                 );
                 if (!data.channel)
-                    return interaction.reply({
-                        content: "You Must Set Welcome Message First!",
+                    return interaction?.reply({
+                        content: `${this.client.config.Client.emoji.cross} Welcome Message Has Not Been Setupped Yet!`,
                         ephemeral: true,
                     });
-                interaction.reply({
-                    content: "Welcome Test Message Has Been Sent Successfully!",
+                interaction?.reply({
+                    content: `${this.client.config.Client.emoji.tick} Welcome Message Has Been Successfully Sent!`,
                     ephemeral: true,
                 });
-                this.client.emit("guildMemberAdd", interaction.member);
+                this.client.emit("guildMemberAdd", interaction?.member);
             }
         } catch (e) {
-            console.log(e);
+            return  
         }
     }
 };

@@ -6,14 +6,16 @@ module.exports = class Mp extends Command {
         super(...args, {
             name: "matchpairs",
             aliases: ["matchpairs"],
-            description: "Play a game of matchpairs.",
+            description: "Play a game of Match Pairs.",
             category: "Fun",
             usage: ["matchpairs"],
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/6LeGxNQ.png",
         });
     }
+
     async run({ message }) {
         const Game = new MatchPairs({
             message: message,
@@ -25,14 +27,15 @@ module.exports = class Mp extends Command {
             },
             timeoutTime: 60000,
             emojis: ['🍉', '🍇', '🍊', '🥭', '🍎', '🍏', '🥝', '🥥', '🍓', '🫐', '🍍', '🥕', '🥔'],
-            winMessage: '**You won the Game! You turned a total of `{tilesTurned}` tiles.**',
-            loseMessage: '**You lost the Game! You turned a total of `{tilesTurned}` tiles.**',
+            winMessage: '**You won the game! You turned a total of `{tilesTurned}` tiles.**',
+            loseMessage: '**You lost the game! You turned a total of `{tilesTurned}` tiles.**',
             playerOnlyMessage: 'Only {player} can use these buttons.'
-        })
+        });
+
         Game.startGame();
     }
 
-    async exec({ interaction  }) {
+    async exec({ interaction }) {
         const Game = new MatchPairs({
             message: interaction,
             embed: {
@@ -43,11 +46,12 @@ module.exports = class Mp extends Command {
             },
             timeoutTime: 60000,
             emojis: ['🍉', '🍇', '🍊', '🥭', '🍎', '🍏', '🥝', '🥥', '🍓', '🫐', '🍍', '🥕', '🥔'],
-            winMessage: '**You won the Game! You turned a total of `{tilesTurned}` tiles.**',
-            loseMessage: '**You lost the Game! You turned a total of `{tilesTurned}` tiles.**',
+            winMessage: '**You won the game! You turned a total of `{tilesTurned}` tiles.**',
+            loseMessage: '**You lost the game! You turned a total of `{tilesTurned}` tiles.**',
             playerOnlyMessage: 'Only {player} can use these buttons.',
             isSlashGame: true,
-        })
+        });
+
         Game.startGame();
     }
-}
+};

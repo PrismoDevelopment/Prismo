@@ -11,6 +11,7 @@ module.exports = class Pat extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
+            image: "https://i.imgur.com/guPSfAO.png",
             options: [
                 {
                     name: "user",
@@ -63,17 +64,17 @@ module.exports = class Pat extends Command {
         "https://media.tenor.com/CIF_Pa3yepwAAAAC/rika-higurashi.gif",
         "https://media.tenor.com/bdhDKq7U7ycAAAAC/anime-aldnoah.gif",
         "https://media.tenor.com/Ls2uiad4RRUAAAAC/anime-anime-headpat.gif",]
-        let user = args[0] ? await this.client.util.userQuery(args[0], message.guild) : null;
-        if (!user) return message.reply("Please provide a valid user.");
+        let user = args[0] ? await this.client.util.userQuery(args[0], message?.guild) : null;
+        if (!user) return message?.reply("Please provide a valid user.");
         let gif = gifs[Math.floor(Math.random() * gifs.length)];
-        let member = message.guild.members.cache.get(user);
-        if (!member) return message.reply("Please provide a valid user.");
-        if (member.id === message.author.id) return message.reply("You can't pat yourself.");
+        let member = message?.guild.members.cache.get(user);
+        if (!member) return message?.reply("Please provide a valid user.");
+        if (member.id === message?.author.id) return message?.reply("You can't pat yourself.");
         let embed = this.client.util.embed()
-        .setAuthor({ name: `${message.author.tag} pats ${member.user.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+        .setAuthor({ name: `${message?.author.username} pats ${member.user.username}`, iconURL: message?.author.displayAvatarURL({ dynamic: true }) })
         .setImage(gif)
         .setColor(this.client.config.Client.PrimaryColor)
-        message.channel.send({ embeds: [embed] });
+        message?.channel.send({ embeds: [embed] });
     }
 
     async exec({ interaction }) {
@@ -117,16 +118,16 @@ module.exports = class Pat extends Command {
         "https://media.tenor.com/CIF_Pa3yepwAAAAC/rika-higurashi.gif",
         "https://media.tenor.com/bdhDKq7U7ycAAAAC/anime-aldnoah.gif",
         "https://media.tenor.com/Ls2uiad4RRUAAAAC/anime-anime-headpat.gif",]
-        let user = interaction.options.getUser("user")
-        if (!user) return interaction.reply({ content: "Please provide a valid user.", ephemeral: true });
+        let user = interaction?.options.getUser("user")
+        if (!user) return interaction?.reply({ content: "Please provide a valid user.", ephemeral: true });
         let gif = gifs[Math.floor(Math.random() * gifs.length)];
-        let member = interaction.guild.members.cache.get(user);
-        if (!member) return interaction.reply({ content: "Please provide a valid user.", ephemeral: true });
-        if (member.id === interaction.user.id) return interaction.reply({ content: "You can't pat yourself.", ephemeral: true });
+        let member = interaction?.guild.members.cache.get(user);
+        if (!member) return interaction?.reply({ content: "Please provide a valid user.", ephemeral: true });
+        if (member.id === interaction?.user.id) return interaction?.reply({ content: "You can't pat yourself.", ephemeral: true });
         let embed = this.client.util.embed()
-        .setAuthor({ name: `${interaction.user.tag} pats ${member.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+        .setAuthor({ name: `${interaction?.user.username} pats ${member.user.username}`, iconURL: interaction?.user.displayAvatarURL({ dynamic: true }) })
         .setImage(gif)
         .setColor(this.client.config.Client.PrimaryColor)
-        interaction.reply({ embeds: [embed] });
+        interaction?.reply({ embeds: [embed] });
     }
 }

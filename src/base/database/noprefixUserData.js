@@ -20,7 +20,14 @@ module.exports = class noprefixUserData {
         let newData = await this.get(id);
         newData.userids = data.userids;
         await newData.save();
+        await this.database.client.cache.set(id, newData);
         return newData;
     }
+
+    async find() {
+        let data = await mongoData.find();
+        if (data) return data;
+    }
+    
 };
 // Path: src\base\database\prefix.js

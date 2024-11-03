@@ -5,7 +5,7 @@ const { Collection } = require("discord.js");
 module.exports = class CommandHandler {
     /**
      *
-     * @param {import('../GrootClient')} client
+     * @param {import('../PrismoClient')} client
      */
     constructor(client) {
         this.client = client;

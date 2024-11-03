@@ -1,6 +1,6 @@
 const Command = require("../../abstract/command");
 const DIG = require("discord-image-generation");
-const { AttachmentBuilder } = require('discord.js')
+const { AttachmentBuilder, Message } = require("discord.js");
 
 module.exports = class Jail extends Command {
     constructor(...args) {
@@ -9,8 +9,9 @@ module.exports = class Jail extends Command {
             aliases: ["jail"],
             description: "jail a user",
             usage: ["jail <user>"],
+            image:"https://imgur.com/J9t40Eh",
             category: "Image",
-            userPerms: ["SendMessages", "ReadMessageHistory"],
+            userPerms: ["SendMessages"],
             botPerms: ["SendMessages", "ReadMessageHistory", "AttachFiles"],
             options: [
                 {
@@ -23,32 +24,36 @@ module.exports = class Jail extends Command {
         });
     }
 
-    async run({ message, args }) {
-        const user = args[0] ? await this.client.util.userQuery(args[0]) : message.author;
-        const member = await this.client.users.fetch(user);
-        let avatar = member.displayAvatarURL({ size: 512, dynamic: false });
-        let pngavatar = avatar.replace("webp", "png");
-        const img = await new DIG.Jail().getImage(pngavatar);
-        const attach = new AttachmentBuilder(img, {name: "jail.png"});
-        let embed = this.client.util.embed()
-            .setColor(this.client.config.Client.PrimaryColor)
-            .setDescription(`Jail ${member.username}`)
-            .setImage("attachment://jail.png")
-        let xddata = message.channel.send({ embeds: [embed], files: [attach] });
-    }
-
-    async exec({ interaction }) {
-        const user = interaction.options.getUser("user") || interaction.user;
-        const member = await this.client.users.fetch(user);
-        let avatar = member.displayAvatarURL({ size: 512, dynamic: false });
-        let pngavatar = avatar.replace("webp", "png");
-        const img = await new DIG.Jail().getImage(pngavatar);
-        const attach = new AttachmentBuilder(img, {name: "jail.png"});
-        let embed = this.client.util.embed()
-            .setColor(this.client.config.Client.PrimaryColor)
-            .setDescription(`Jail ${member.username}`)
-            .setImage("attachment://jail.png")
-        await interaction.deferReply();
-        await interaction.editReply({ embeds: [embed], files: [attach] });
-    }
-};
+    async execute(interactionOrMessage, args = null) {
+        // Function to handle both messages and interactions
+        const user = interactionOrMessage instanceof Message ? (args[0] ? await this.client.util.userQuery(args[0]) : interactionOrMessage?.author) : interactionOrMessage.options.getUser("user") || interactionOrMessage.user;
+        const member = interactionOrMessage instanceof Message ? await this.client.users.fetch(user) : null; // Fetch user if it's a message
+        const avatarURL = member?.displayAvatarURL({ size: 512, extension: "png" }); // Get PNG directly
+    
+        const imageBuffer = await new DIG.Jail().getImage(avatarURL);
+        const attachment = new AttachmentBuilder(imageBuffer, { name: "Jail.png" });
+    
+        const embed = this.client.util.embed().setColor(this.client.config.Client.PrimaryColor).setDescription(`Jail ${member?.username}`).setImage("attachment://Jail.png");
+        try {
+          if (interactionOrMessage instanceof Message) {
+            await interactionOrMessage.channel.send({ embeds: [embed], files: [attachment] });
+          } else {
+            await interactionOrMessage.deferReply(); // Only defer if an interaction
+            await interactionOrMessage.editReply({ embeds: [embed], files: [attachment] });
+          }
+        } catch (error) {
+          console.error("Error sending Jail image:", error);
+          // Add error handling based on your project setup
+        }
+      }
+    
+      async run({ message, args }) {
+        // Assuming 'run' is required by the abstract Command
+        await this.execute(message, args);
+      }
+    
+      async exec({ interaction }) {
+        // Assuming 'exec' is required by the abstract Command
+        await this.execute(interaction);
+      }
+    };

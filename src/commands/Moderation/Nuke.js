@@ -16,6 +16,7 @@ module.exports = class help extends Command {
                 "ManageChannels",
             ],
             cooldown: 5,
+            image: "https://imgur.com/M2qjy9x",
             options: [
                 {
                     type: 7,
@@ -29,41 +30,30 @@ module.exports = class help extends Command {
 
     async run({ message, args }) {
         try {
-            if (!message.member.permissions.has("MANAGE_CHANNELS"))
-                return message.reply({
-                    content: "You do not have permission to use this command.",
-                    ephemeral: true,
-                });
+            let serverowner = message.guild.ownerId;
+            if(message.author.id !== serverowner) {
             if (
-                !message.guild.members.cache
-                    .get(this.client.user.id)
-                    .permissions.has("MANAGE_CHANNELS")
-            )
-                return message.reply({
-                    content: "I do not have permission to use this command.",
-                    ephemeral: true,
-                });
-            if (
-                message.member.roles.highest.position <
-                message.guild.members.cache.get(this.client.user.id).roles
+                message?.member.roles.highest.position <
+                message?.guild.members.cache.get(this.client.user.id).roles
                     .highest.position
             )
-                return message.reply({
-                    content: "You do not have permission to use this command.",
+                return message?.reply({
+                    content: "You need to have a higher role than me.",
                     ephemeral: true,
                 });
+            }
             let channel =
-                message.mentions.channels.first() ||
-                message.guild.channels.cache.get(args[0]) ||
-                message.guild.channels.cache.find(
+                message?.mentions.channels.first() ||
+                message?.guild.channels.cache.get(args[0]) ||
+                message?.guild.channels.cache.find(
                     (r) =>
                         r.name.toLowerCase() ==
                         args.slice(0).join(" ").toLowerCase()
                 ) ||
-                message.channel;
+                message?.channel;
             if (!channel)
-                return message.reply({
-                    content: "Please provide a valid channel.",
+                return message?.reply({
+                    content: "I would appreciate it if you provided a valid channel.",
                     ephemeral: true,
                 });
 
@@ -93,7 +83,7 @@ module.exports = class help extends Command {
                 })
                 .then(async (msg) => {
                     // eslint-disable-line
-                    const filter = (i) => i.user.id === message.author.id;
+                    const filter = (i) => i.user.id === message?.author.id;
                     const collector = msg.createMessageComponentCollector({
                         filter,
                         time: 25000,
@@ -123,41 +113,30 @@ module.exports = class help extends Command {
                     });
                 });
         } catch (e) {
-            console.log(e);
+            return
         }
     }
 
     async exec({ interaction }) {
         try {
-            if (!interaction.member.permissions.has("MANAGE_CHANNELS"))
-                return interaction.reply({
-                    content: "You do not have permission to use this command.",
-                    ephemeral: true,
-                });
+            let serverowner = interaction.guild.ownerId;
+            if(interaction.user.id !== serverowner) {
             if (
-                !interaction.guild.members.cache
-                    .get(this.client.user.id)
-                    .permissions.has("MANAGE_CHANNELS")
-            )
-                return interaction.reply({
-                    content: "I do not have permission to use this command.",
-                    ephemeral: true,
-                });
-            if (
-                interaction.member.roles.highest.position <
-                interaction.guild.members.cache.get(this.client.user.id).roles
+                interaction?.member.roles.highest.position <
+                interaction?.guild.members.cache.get(this.client.user.id).roles
                     .highest.position
             )
-                return interaction.reply({
+                return interaction?.reply({
                     content: "You do not have permission to use this command.",
                     ephemeral: true,
                 });
+            }
             const channel =
-                interaction.options.getChannel("channel") ||
-                interaction.channel;
+                interaction?.options.getChannel("channel") ||
+                interaction?.channel;
             if (!channel)
-                return interaction.reply({
-                    content: "Please provide a valid channel.",
+                return interaction?.reply({
+                    content: "I would appreciate it if you provided a valid channel.",
                     ephemeral: true,
                 });
             const position = channel.rawPosition;
@@ -186,7 +165,7 @@ module.exports = class help extends Command {
                 })
                 .then(async (msg) => {
                     // eslint-disable-line
-                    const filter = (i) => i.user.id === interaction.user.id;
+                    const filter = (i) => i.user.id === interaction?.user.id;
                     const collector = msg.createMessageComponentCollector({
                         filter,
                         time: 25000,
@@ -216,7 +195,7 @@ module.exports = class help extends Command {
                     });
                 });
         } catch (e) {
-            console.log(e);
+            return
         }
     }
 };

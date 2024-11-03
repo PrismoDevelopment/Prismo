@@ -23,12 +23,30 @@ module.exports = class Command {
         this.premium = options.premium || false;
         this.guildPremium = options.guildPremium || false;
         this.options = options.options || null;
+        this.guildOnly = options.guildOnly || false;
+        this.image = options.image || null;
     }
     get interactionData() {
         return {
             name: this.name,
             description: this.description,
             options: this.options,
+            defaultMemberPermissions: this.userPerms
         };
+    }
+    get Global() {
+        return {
+            name: this.name,
+            description: this.description || "No description provided.",
+            usage: this.usage ? this.usage : this.examples ? this.examples : "No usage provided.",
+            category: this.category || "general",
+            aliases: this.aliases || [],
+            cooldown: this.cooldown || 0,
+            userPerms: this.userPerms?.toArray() || [],
+            botPerms: this.botPerms?.toArray() || [],
+            vote: this.vote || false,
+            premium: this.premium || false,
+            image: this.image || null,
+        }
     }
 };

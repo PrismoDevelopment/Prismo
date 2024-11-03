@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-mixed-spaces-and-tabs */
 const Command = require("../../abstract/command");
 const { GuildMember } = require("discord.js");
 const { ApplicationCommandOptionType } = require("discord-api-types/v9");
@@ -11,10 +9,12 @@ module.exports = class about extends Command {
             description: "Get all information about a user.",
             aliases: ["ui", "uinfo", "whois"],
             usage: ["userinfo <@user>"],
-            category: "General",
+            category: "Utilities",
             userPerms: ["SendMessages"],
             botPerms: ["SendMessages", "EmbedLinks"],
             cooldown: 5,
+            image:"https://i.imgur.com/09yyTmo.png",
+            guildOnly: true,
             options: [
                 {
                     name: "member",
@@ -53,11 +53,11 @@ module.exports = class about extends Command {
         let acknowledgements = "Member";
         let member = args[0]
             ? await this.client.util.userQuery(args[0])
-            : message.member;
+            : message?.member;
         if (typeof member === "string") {
             let nopeMember = null;
             try {
-                nopeMember = await message.guild.members.fetch(member);
+                nopeMember = await message?.guild.members.fetch(member);
             } catch (e) {
                 try {
                     nopeMember = await this.client.users.fetch(member);
@@ -74,8 +74,8 @@ module.exports = class about extends Command {
         const embed = this.client.util
             .embed()
             .setFooter({
-                text: message.author.tag,
-                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+                text: message?.author.username,
+                iconURL: message?.author.displayAvatarURL({ dynamic: true }),
             })
             .setTimestamp();
         if (member instanceof GuildMember) {
@@ -117,7 +117,7 @@ module.exports = class about extends Command {
                 acknowledgements = "Moderator";
             if (member.permissions.has("Administrator"))
                 acknowledgements = "Administrator";
-            if (member.id == message.guild.ownerId)
+            if (member.id == message?.guild.ownerId)
                 acknowledgements = "Server Owner";
             embed.setAuthor({
                 name: `${member.user.username}#${member.user.discriminator}`,
@@ -128,13 +128,13 @@ module.exports = class about extends Command {
             embed.addFields([
                 {
                     name: "__**Informations**__",
-                    value: `**Username:** ${member.user.tag}
+                    value: `**Username:** ${member.user.username}
 **ID:** ${member.id}
 **Nickname:** ${member.nickname ? member.nickname : "None"}
 **Bot:** ${
                         member.user.bot
-                            ? "Yes " + this.client.config.Client.Emojis.Success
-                            : "No " + this.client.config.Client.Emojis.Error
+                            ? "Yes " + this.client.config.Client.emoji.tick
+                            : "No " + this.client.config.Client.emoji.cross
                     }
 **Badges:** ${
                         badges.length != 0
@@ -169,7 +169,7 @@ module.exports = class about extends Command {
                 },
             ]);
             return messageData == null
-                ? await message.reply({
+                ? await message?.reply({
                       embeds: [
                           embed.setImage(
                               await member.user
@@ -203,12 +203,12 @@ module.exports = class about extends Command {
         embed.addFields([
             {
                 name: "__Informations__",
-                value: `**Username:** ${member.tag}
+                value: `**Username:** ${member.username}
 **ID:** ${member.id}
 **Bot:** ${
                     member.bot
-                        ? "Yes " + this.client.config.Client.Emojis.Success
-                        : "No " + this.client.config.Client.Emojis.Error
+                        ? "Yes " + this.client.config.Client.emoji.tick
+                        : "No " + this.client.config.Client.emoji.cross
                 }
 **Badges:** ${
                     badges.length != 0
@@ -222,7 +222,7 @@ module.exports = class about extends Command {
             (await member.fetch()).bannerURL({ dynamic: true, size: 2048 })
         );
         return messageData == null
-            ? await message.reply({
+            ? await message?.reply({
                   embeds: [embed],
               })
             : await messageData.edit({
@@ -232,32 +232,33 @@ module.exports = class about extends Command {
               });
     }
     async exec({ interaction, serverData }) {
+        await interaction?.deferReply();
         let permissionsArray = [];
         let acknowledgements = "Member";
-        let member = interaction.options.getUser("member");
+        let member = interaction?.options.getUser("member");
         if (member) {
             try {
-                member = await interaction.guild.members.fetch(member.id);
+                member = await interaction?.guild.members.fetch(member.id);
             } catch (e) {
                 try {
                     member = await this.client.users.fetch(member.id);
                 } catch (e) {
-                    member = interaction.member;
+                    member = interaction?.member;
                 }
             }
         }
-        if (!member) member = interaction.member;
+        if (!member) member = interaction?.member;
         const badges = member.user
             ? member.user.flags.toArray()
             : member.flags.toArray();
         const embed = this.client.util
             .embed()
             .setFooter({
-                text: interaction.user.tag,
-                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                text: interaction?.user.username,
+                iconURL: interaction?.user.displayAvatarURL({ dynamic: true }),
             })
             .setTimestamp();
-        interaction.deferReply();
+        interaction?.deferReply();
         if (member instanceof GuildMember) {
             if (member.permissions.has("Administrator"))
                 permissionsArray.push("Administrator");
@@ -295,13 +296,11 @@ module.exports = class about extends Command {
                 permissionsArray.push("Priority Speaker");
             if (member.permissions.has("UseVAD"))
                 permissionsArray.push("Use VAD");
-            if (member.permissions.has("ViewAuditLogs"))
-                permissionsArray.push("View Audit Logs");
             if (member.permissions.has("ManageGuild"))
                 acknowledgements = "Moderator";
             if (member.permissions.has("Administrator"))
                 acknowledgements = "Administrator";
-            if (member.id == interaction.guild.ownerId)
+            if (member.id == interaction?.guild.ownerId)
                 acknowledgements = "Server Owner";
             embed.setAuthor({
                 name: `${member.user.username}#${member.user.discriminator}`,
@@ -318,13 +317,13 @@ module.exports = class about extends Command {
             embed.addFields([
                 {
                     name: "__**Informations**__",
-                    value: `**Username:** ${member.user.tag}
+                    value: `**Username:** ${member.user.username}
 **ID:** ${member.id}
 **Nickname:** ${member.nickname ? member.nickname : "None"}
 **Bot:** ${
                         member.user.bot
-                            ? "Yes " + this.client.config.Client.Emojis.Success
-                            : "No " + this.client.config.Client.Emojis.Error
+                            ? "Yes " + this.client.config.Client.emoji.tick
+                            : "No " + this.client.config.Client.emoji.cross
                     }
 **Badges:** ${
                         badges.length != 0
@@ -358,7 +357,7 @@ module.exports = class about extends Command {
                     value: `${acknowledgements ? acknowledgements : "None"}`,
                 },
             ]);
-            return interaction.editReply({
+            return interaction?.editReply({
                 embeds: [
                     embed.setImage(
                         await member.user
@@ -379,12 +378,12 @@ module.exports = class about extends Command {
         embed.addFields([
             {
                 name: "__Informations__",
-                value: `**Username:** ${member.tag}
+                value: `**Username:** ${member.username}
 **ID:** ${member.id}
 **Bot:** ${
                     member.bot
-                        ? "Yes " + this.client.config.Client.Emojis.Success
-                        : "No " + this.client.config.Client.Emojis.Error
+                        ? "Yes " + this.client.config.Client.emoji.tick
+                        : "No " + this.client.config.Client.emoji.cross
                 }
 **Badges:** ${
                     badges.length != 0
@@ -397,7 +396,7 @@ module.exports = class about extends Command {
         embed.setImage(
             (await member.fetch()).bannerURL({ dynamic: true, size: 2048 })
         );
-        interaction.editReply({
+        interaction?.editReply({
             embeds: [embed],
         });
     }

@@ -8,8 +8,9 @@ module.exports = class ready extends Event {
     }
     async run() {
         try {
+            await this.client.giveawayManager.init()
             this.client.logger.log(
-                `Logged in as ${this.client.user.tag}`,
+                `Logged in as ${this.client.user.username}`,
                 "ready"
             );
             this.client.logger.log(
@@ -22,6 +23,8 @@ module.exports = class ready extends Event {
             );
             const commands = this.client.commands
                 .filter((c) => c.ownerOnly != true)
+                .filter((cd) => cd.category != "Image")
+                .filter((c) => c.category != "Fun")
                 .map((command) => command.interactionData);
             if (!this.client.config.Client.GuildID) {
                 await this.client.application?.commands.set(commands);
@@ -38,9 +41,21 @@ module.exports = class ready extends Event {
             }
             setInterval(() => {
                 this.premiumCheckGuild();
+                this.client.cache.flush();
+                this.client.cacheData();
+                this.client.cacheServerData();
+                this.client.cacheAfkData();
+                this.client.cacheNoprefixData();
+                this.client.cacheStatusData();
+                // this.leaveblacklistedguild();
+                // this.changeStatus();
+            }, 60000 * 3);
+            setInterval(() => {
+                this.client.notifier.checkyt();
             }, 60000 * 2);
         } catch (error) {
-            console.error(error);
+            console.log(error);
+            return;
         }
     }
 
@@ -63,4 +78,47 @@ module.exports = class ready extends Event {
             }
         }
     }
+    // async leaveblacklistedguild() {
+    //     const guilds = await this.client.guilds.fetch();
+    //     for (let guild of guilds) {
+    //         let guildData = await this.client.cache.get(guild[0]);
+    //         if (!guildData) {
+    //             guildData = await this.client.database.guildData.get(
+    //                 guild[0]
+    //             );
+    //         }
+    //         if (guildData.blacklisted) {
+    //             guild = this.client.guilds.cache.get(guild[0])
+    //             guild.leave();
+    //         }
+    //     }
+    // }
+    async changeStatus() {
+        const statuses = [
+            {
+                name: `/help`,
+                type: 2
+            },
+            {
+                name: `Your server's security`,
+                type: 3
+            },
+            {
+                name: `/setup`,
+                type: 2
+            },
+            {
+                name: `/ai`,
+                type: 2
+            },
+            {
+                name: `/antinuke`,
+                type: 2
+            }
+        ];
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        this.client.user.setPresence({
+            activities: [status]
+        });
+    }       
 };

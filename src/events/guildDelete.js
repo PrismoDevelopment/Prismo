@@ -10,7 +10,7 @@ module.exports = class guildDelete extends Event {
     }
     async run(guild) {
         try {
-            const owner = await this.client.users.fetch(guild.ownerId);
+            const owner = await this.client.users.fetch(guild.ownerId).catch(() => { });
             let embed = this.client.util
                 .embed()
                 .setAuthor({
@@ -20,14 +20,10 @@ module.exports = class guildDelete extends Event {
                 .setColor(this.client.config.Client.ErrorColor)
                 .setThumbnail(guild.iconURL({ dynamic: true }))
                 .setDescription(
-                    `**Guild Name:** ${guild.name}\n**Guild ID:** ${
-                        guild.id
-                    }\n**Guild Owner:** ${
-                        owner.tag || "Unknown"
-                    }\n**Guild Owner ID:** ${
-                        guild.ownerId || "Unknown"
-                    }\n**Guild Member Count:** ${
-                        guild.memberCount || "Unknown"
+                    `**Guild Name:** ${guild.name}\n**Guild ID:** ${guild.id
+                    }\n**Guild Owner:** ${owner.username || "Unknown"
+                    }\n**Guild Owner ID:** ${guild.ownerId || "Unknown"
+                    }\n**Guild Member Count:** ${guild.memberCount || "Unknown"
                     }`
                 )
                 .setTimestamp()
@@ -36,9 +32,9 @@ module.exports = class guildDelete extends Event {
                 });
             this.client.channels.cache
                 .get(this.client.config.Client.LogsChannel)
-                .send({ embeds: [embed] });
+                .send({ embeds: [embed] }).catch(() => { });
         } catch (error) {
-            console.error(error);
+            return
         }
     }
 };
