@@ -1,38 +1,53 @@
-MIT License
+PRISMO LICENSE v2.0  
+Copyright (C) 2025 Vaxera  
 
-Copyright (c) 2023 Prismo Bot
+1. Usage Restrictions:  
+   - This source code CANNOT be used in any public Discord bot without explicit written permission from the original author (Vaxera).  
+   - Only allowed for personal use, educational purposes, and collaboration.  
+   - Unauthorized use will result in legal consequences.  
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+2. Redistribution & Modification:  
+   - You CANNOT redistribute, rebrand, rename, or modify this code for another bot without prior approval.  
+   - Any modifications MUST include proper credit to the original author.  
+   - Public redistribution MUST include this original license file.  
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+3. Commercial Use Prohibition:  
+   - This code CANNOT be used for any paid service, SaaS, or commercial product without the author's explicit permission.  
+   - Monetizing a bot or service using this code without permission will lead to legal action.  
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-MIT License with Commons Clause
+4. No Skidding & Unauthorized Hosting:  
+   - Skidding (copying, modifying, and reusing the code for personal gain) is STRICTLY PROHIBITED.  
+   - Self-hosting or publicly deploying a bot using this code without permission is not allowed.  
+   - Any violation will result in a DMCA takedown request and possible legal consequences.  
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, modify, and distribute the Software, subject to the following conditions:
+5. Legal Enforcement & Penalties:  
+   - DMCA Copyright Infringement Claims will be filed against any unauthorized use, modification, or redistribution.  
+   - Cease and Desist Notices will be sent to violators.  
+   - Legal actions (lawsuits, damages, and financial penalties) may be pursued for severe violations.  
+   - If found guilty of license violations, you may face fines, account suspensions (GitHub, Discord, etc.), and further legal consequences.  
 
-1. The Commons Clause: The Software is provided under the terms of the MIT License with the following additional restrictions:
+6. Attribution Requirements:  
+   - Any use of this code must include proper credit to the original author (Vaxera).  
+   - Removing, modifying, or hiding the author's name in any way is prohibited.  
+   - If you use this code as a base for another project, you must mention the original repository and author.  
 
-    a. Commercial Use Restriction: The Software may not be used, in whole or in part, for commercial purposes without the explicit written permission of the copyright holders.
+7. Termination of Rights:  
+   - If you violate any of the terms in this license, all rights granted to you will be immediately revoked.  
+   - Upon termination, you must delete all copies of this software from your devices, servers, and repositories.  
+   - If you continue using the code after termination, legal action may be taken.  
 
-    b. Redistribution Restriction: The Software may not be redistributed or included as part of any commercial product or service without the explicit written permission of the copyright holders.
+8. Liability Disclaimer:  
+   - This software is provided "as is," without any warranties of any kind.  
+   - The author (Vaxera) is not responsible for any damages, data loss, or security breaches caused by the use or modification of this code.  
+   - You use this software at your own risk.  
 
-    c. License Modification: The terms of this license may not be modified, superseded, or removed without the explicit written permission of the copyright holders.
+9. Dispute Resolution:  
+   - Any disputes related to this license will be handled under the laws of [Your Country/State].  
+   - Legal disputes must first go through arbitration before any lawsuit is filed.  
+   - The author reserves the right to pursue legal action against anyone violating the terms.  
 
-    d. License Notice: Redistributions of the Software must retain the above copyright notice, this list of conditions, and the following disclaimer.
+10. Third-Party Dependencies:  
+   - If this code includes third-party dependencies, those dependencies are licensed separately and follow their own licenses.  
+   - The author is not responsible for any issues arising from third-party code used in this project.  
 
-Except as expressly stated above, no other rights or licenses are granted, including, but not limited to, patents, trademarks, or other intellectual property rights of the copyright holders.
-
-THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+By using this code, you agree to these terms. Any violation will be met with strict legal enforcement.
