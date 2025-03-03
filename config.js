@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2025 Vaxera
+ * Licensed under the Prismo License v1.0
+ * Unauthorized use, distribution, or modification is strictly prohibited.
+ * Legal actions, including DMCA takedowns and financial penalties, may apply.
+ */
 module.exports = {
     Shards: {
         totalShards: "auto",
