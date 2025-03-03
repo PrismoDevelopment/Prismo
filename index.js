@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2024 Vaxera
+ * Licensed under the Prismo License v1.0
+ * Unauthorized use, distribution, or modification is strictly prohibited.
+ * Legal actions, including DMCA takedowns and financial penalties, may apply.
+ */
 const Cluster = require("discord-hybrid-sharding");
 const { Client, Shards } = require("./config");
 const Logger = require("./src/base/logger");
