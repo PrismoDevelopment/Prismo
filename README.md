@@ -5,7 +5,7 @@
 </p>
 
 # Prismo
-[![node](https://img.shields.io/badge/node-v18.0.0-green)](#) [![discord.js](https://img.shields.io/badge/discord.js-latest-blue)](#) [![license](https://img.shields.io/badge/license-Prismo-v2.0-red)](#) [![discord](https://img.shields.io/discord/987749138743582811?color=7289da&logo=discord&logoColor=white)](https://discord.gg/prismo)
+[![node](https://img.shields.io/badge/node-v18.0.0-green)](#) [![discord.js](https://img.shields.io/badge/discord.js-latest-blue)](#) [![license](https://img.shields.io/badge/license-Prismov2.0-red)](#) [![discord](https://img.shields.io/discord/987749138743582811?color=7289da&logo=discord&logoColor=white)](https://discord.gg/prismo)
 
 A Feature-Packed Discord Bot with a touch of elegance and a boatload of fun!
 </div>
