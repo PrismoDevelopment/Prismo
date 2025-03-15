@@ -34,7 +34,7 @@ Prismo is not just a Discord bot, it's a multi-purpose companion that enhances y
 
 ## 💡 Getting Started
 
-Add Prismo to your server by following this link: [Invite Prismo]([https://discord.com/api/oauth2/authorize?client_id=1024365860246278244&permissions=8&redirect_uri=https%3A%2F%2Fdiscord.gg%2FUAGA9htZCe&response_type=code&scope=bot%20applications.commands.permissions.update%20identify%20guilds](https://discord.com/oauth2/authorize?client_id=1051555085970325534&permissions=8&integration_type=0&scope=bot))
+Add Prismo to your server by following this link: [Invite Prismo](https://discord.com/oauth2/authorize?client_id=1051555085970325534&permissions=8&integration_type=0&scope=bot+applications.commands)
 
 ---
 
