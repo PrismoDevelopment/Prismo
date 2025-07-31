@@ -41,7 +41,7 @@ Add Prismo to your server by following this link: [Invite Prismo](https://discor
 ## 📢 Support
 
 
-If you encounter any issues or have suggestions, join our support server: [Support Server](https://discord.gg/prismo) 
+If you encounter any issues or have suggestions, join our support server: [Support Server](https://discord.gg/DqRnRMS42P) 
 
 ---
 
