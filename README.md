@@ -51,7 +51,7 @@ We welcome and appreciate community contributions! Check out the [CONTRIBUTING.m
 
 ## ⚖️ License
 
-This project is licensed under the Prismo License v2.0.  
+This project is licensed under the Apache License 2.0.  
 Unauthorized use, skidding, or redistribution is strictly prohibited.  
 Violators may face DMCA takedowns and legal consequences.
 
