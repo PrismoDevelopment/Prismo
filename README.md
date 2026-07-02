@@ -16,8 +16,6 @@ A Feature-Packed Discord Bot with a touch of elegance and a boatload of fun!
 
 Prismo is not just a Discord bot, it's a multi-purpose companion that enhances your Discord server experience. Whether it's keeping the server in check with advanced moderation features, engaging users with fun games, or welcoming new members with customizable messages, Prismo does it all. Now open-sourced, our aim is to improve transparency and encourage contributions while ensuring unauthorized use is prevented. 
 
-> ⚠️ **IMPORTANT:** Prismo is a proprietary software, and self-hosting is strictly prohibited. Any unauthorized use or replication of the source code for hosting purposes will be dealt with sternly.
-
 ---
 
 ## 🚀 Features
