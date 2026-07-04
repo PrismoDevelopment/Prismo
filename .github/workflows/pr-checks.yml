@@ -1,0 +1,31 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  lint-and-format:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci || npm install
+
+      - name: Check Prettier Formatting
+        run: npx prettier --check .
+        
+      - name: Run ESLint
+        run: npx eslint .
