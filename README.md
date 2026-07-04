@@ -45,7 +45,7 @@ If you encounter any issues or have suggestions, join our support server: [Suppo
 
 ## 📚 Contributing
 
-We welcome and appreciate community contributions! Check out the [CONTRIBUTING.md](./CONTRIBUTING.md) file to learn how you can help improve Prismo.
+We welcome and appreciate community contributions! Check out the [CONTRIBUTING.md](.github/CONTRIBUTING.md) file to learn how you can help improve Prismo.
 
 ---
 
