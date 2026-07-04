@@ -12,7 +12,7 @@ module.exports = class help extends Command {
             userPerms: ["SendMessages"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/WJVzS4s.png",
+            image: "https://i.imgur.com/WJVzS4s.png",
             guildOnly: true,
         });
     }
@@ -27,7 +27,7 @@ module.exports = class help extends Command {
         // this is ok but not the best way to do it add all typesof latency lets create there variables
         let botLatency = msg.createdTimestamp - message?.createdTimestamp;
         let apiLatency = Math.round(this.client.ws.ping);
-        // lets get database latency 
+        // lets get database latency
         let dbstart = Date.now();
         await this.client.database.guildData.get(message?.guild.id);
         let dbend = Date.now();
@@ -35,8 +35,10 @@ module.exports = class help extends Command {
         // lets get the latency of the message
         let msgLatency = Date.now() - msg.createdTimestamp;
         // lets send the message
-        
-        msg.edit(`Pong! Bot Latency is **${botLatency}ms**. API Latency is **${apiLatency}ms**\nDatabase Latency is **${dbLatency}ms**. Message Latency is **${msgLatency}ms**`);
+
+        msg.edit(
+            `Pong! Bot Latency is **${botLatency}ms**. API Latency is **${apiLatency}ms**\nDatabase Latency is **${dbLatency}ms**. Message Latency is **${msgLatency}ms**`
+        );
     }
     async exec({ interaction }) {
         interaction?.reply(`Pinging...`).then(async (msg) => {

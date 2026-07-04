@@ -1,11 +1,5 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
-const { BaseInteraction, WebhookClient } = require('discord.js');
+const { BaseInteraction, WebhookClient } = require("discord.js");
 module.exports = class interactionCreate extends Event {
     get name() {
         return "interactionCreate";
@@ -18,90 +12,110 @@ module.exports = class interactionCreate extends Event {
      */
     async run(interaction) {
         try {
-            if (!interaction?.guild || interaction?.channel.type == 1) return interaction?.reply({ content: "This command is not available in DMs!", ephemeral: true });
+            if (!interaction?.guild || interaction?.channel.type == 1)
+                return interaction?.reply({
+                    content: "This command is not available in DMs!",
+                    ephemeral: true,
+                });
             if (!interaction?.guild.config) {
-                interaction.guild.config =
-                    await this.client.database.guildData.get(
-                        interaction?.guild.id
-                    );
+                interaction.guild.config = await this.client.database.guildData.get(
+                    interaction?.guild.id
+                );
             }
             interaction.guild.config = await this.client.database.guildData.get(
                 interaction?.guild.id
             );
             if (interaction?.isButton() && interaction?.customId == "verify_server") {
-                return this.client.emit('serverVerificationCreate', interaction);
-            };
+                return this.client.emit("serverVerificationCreate", interaction);
+            }
             if (interaction?.isButton() && interaction?.customId.startsWith("giveaway-")) {
                 let id = interaction?.customId.split("-")[1];
-                let giveaway = this.client.giveawayManager.giveaways.find((g) => g.messageId === id);
-                if (!giveaway) return interaction?.reply({ content: `This giveaway is not found!`, ephemeral: true });
-                if (giveaway.ended) return interaction?.reply({ content: `This giveaway is ended!`, ephemeral: true });
+                let giveaway = this.client.giveawayManager.giveaways.find(
+                    (g) => g.messageId === id
+                );
+                if (!giveaway)
+                    return interaction?.reply({
+                        content: `This giveaway is not found!`,
+                        ephemeral: true,
+                    });
+                if (giveaway.ended)
+                    return interaction?.reply({
+                        content: `This giveaway is ended!`,
+                        ephemeral: true,
+                    });
                 if (giveaway.entered.includes(interaction?.user.id)) {
                     giveaway.entered = giveaway.entered.filter((u) => u !== interaction?.user.id);
                     this.client.giveawayManager.editData(giveaway);
                     const button = await this.client.giveawayManager.embedButton(giveaway);
-                    interaction?.message?.edit({ components: [this.client.util.row().addComponents(button)] });
-                    return interaction?.reply({ content: `You have left the giveaway successfully!`, ephemeral: true });
+                    interaction?.message?.edit({
+                        components: [this.client.util.row().addComponents(button)],
+                    });
+                    return interaction?.reply({
+                        content: `You have left the giveaway successfully!`,
+                        ephemeral: true,
+                    });
                 }
-                interaction?.reply({ content: `You have joined the giveaway successfully!`, ephemeral: true });
+                interaction?.reply({
+                    content: `You have joined the giveaway successfully!`,
+                    ephemeral: true,
+                });
                 giveaway.entered.push(interaction?.user.id);
                 this.client.giveawayManager.editData(giveaway);
                 const button = await this.client.giveawayManager.embedButton(giveaway);
-                interaction?.message?.edit({ components: [this.client.util.row().addComponents(button)] });
+                interaction?.message?.edit({
+                    components: [this.client.util.row().addComponents(button)],
+                });
             }
-            if (interaction?.isModalSubmit() && interaction?.customId === 'modal_verification_sumbit') {
-                return this.client.emit('serverVerificationSubmit', interaction);
-            };
+            if (
+                interaction?.isModalSubmit() &&
+                interaction?.customId === "modal_verification_sumbit"
+            ) {
+                return this.client.emit("serverVerificationSubmit", interaction);
+            }
             if (interaction?.isButton() && interaction?.customId.startsWith("setup_")) {
-                if(interaction?.user.id !== interaction?.guild?.ownerId) return interaction.reply({ content: `Only the server owner can use this button!`, ephemeral: true });
+                if (interaction?.user.id !== interaction?.guild?.ownerId)
+                    return interaction.reply({
+                        content: `Only the server owner can use this button!`,
+                        ephemeral: true,
+                    });
                 await interaction?.reply({ content: `Setup has been started!`, ephemeral: true });
                 this.client.commandFunctions.SetupFunction.setup(interaction, true);
-            };
-            if (
-                interaction?.isButton() &&
-                interaction?.customId == "eval_delete"
-            ) {
+            }
+            if (interaction?.isButton() && interaction?.customId == "eval_delete") {
                 return interaction?.message?.delete().catch((e) => {
                     return;
                 });
-            };
+            }
             if (interaction?.type != 2) return;
             const command = this.client.commands.get(interaction?.commandName);
             if (!command) return;
-            if (
-                command.ownerOnly &&
-                !this.client.util.checkOwner(interaction?.member.id)
-            )
-                return;
-            if (!this.client.util.checkOwner(interaction?.member.id)) { //&& 
-                (!interaction?.channel?.permissionsFor(interaction?.user).has([
-                    "Administrator",
-                    "ManageGuild",
-                    "ManageRoles",
-                    "ManageChannels",
-                    "ManageMessages",
-                    "ManageNicknames",
-                    "ManageEmojisAndStickers",
-                    "ManageWebhooks",
-                    "ManageThreads",
-                    "BanMembers",
-                    "KickMembers",
-                ]))
+            if (command.ownerOnly && !this.client.util.checkOwner(interaction?.member.id)) return;
+            if (!this.client.util.checkOwner(interaction?.member.id)) {
+                //&&
+                !interaction?.channel
+                    ?.permissionsFor(interaction?.user)
+                    .has([
+                        "Administrator",
+                        "ManageGuild",
+                        "ManageRoles",
+                        "ManageChannels",
+                        "ManageMessages",
+                        "ManageNicknames",
+                        "ManageEmojisAndStickers",
+                        "ManageWebhooks",
+                        "ManageThreads",
+                        "BanMembers",
+                        "KickMembers",
+                    ]);
                 {
-                    if (
-                        interaction?.guild.config.disabledCommands.includes(
-                            command.name
-                        )
-                    ) {
+                    if (interaction?.guild.config.disabledCommands.includes(command.name)) {
                         return interaction?.reply({
                             content: `This command is disabled in this server!`,
                             ephemeral: true,
                         });
                     }
                     if (
-                        interaction?.guild.config.disabledChannels.includes(
-                            interaction?.channel.id
-                        )
+                        interaction?.guild.config.disabledChannels.includes(interaction?.channel.id)
                     ) {
                         return interaction?.reply({
                             content: `This command is disabled in this channel!`,
@@ -128,9 +142,7 @@ module.exports = class interactionCreate extends Event {
                         ephemeral: true,
                     });
                 }
-                let userdata = await this.client.database.welcomeUserData.get(
-                    interaction?.user.id
-                );
+                let userdata = await this.client.database.welcomeUserData.get(interaction?.user.id);
                 if (userdata.blacklist) {
                     return interaction?.reply({
                         content: `You are blacklisted from using this bot!`,
@@ -153,10 +165,7 @@ module.exports = class interactionCreate extends Event {
                 const userPermCheck = command.userPerms
                     ? this.client.userPerms.add(command.userPerms)
                     : this.client.userPerms;
-                if (
-                    userPermCheck &&
-                    !this.client.util.checkOwner(interaction?.member.id)
-                ) {
+                if (userPermCheck && !this.client.util.checkOwner(interaction?.member.id)) {
                     const missing = interaction?.channel
                         .permissionsFor(interaction?.member)
                         .missing(userPermCheck);
@@ -181,8 +190,7 @@ module.exports = class interactionCreate extends Event {
                 if (
                     command.upFromMe &&
                     interaction?.member.roles.highest.position <
-                    interaction?.guild.members.resolve(this.client.user)
-                        .roles.highest.position
+                        interaction?.guild.members.resolve(this.client.user).roles.highest.position
                 ) {
                     return this.client.util.errorDelete(
                         interaction,
@@ -208,16 +216,12 @@ module.exports = class interactionCreate extends Event {
                     (!interaction?.guild.config.premium && command?.vote) ||
                     (!interaction?.guild.config.premium && command?.premium)
                 ) {
-                    let voted = await this.client.util.checkVote(
-                        interaction?.member.id
-                    );
+                    let voted = await this.client.util.checkVote(interaction?.member.id);
                     if (!voted) {
                         let embed = this.client.util
                             .embed()
                             .setTitle(`Premium Command`)
-                            .setDescription(
-                                `You Need To Vote For Me To Use This Command!`
-                            )
+                            .setDescription(`You Need To Vote For Me To Use This Command!`)
                             .setColor(this.client.config.Client.PrimaryColor);
                         return interaction?.channel.send({
                             embeds: [embed],
@@ -238,7 +242,7 @@ module.exports = class interactionCreate extends Event {
                     }
                 }
             }
-            let cmdr = command.exec({ interaction });
+            await command.exec({ interaction });
             // let webhook = new WebhookClient({
             //     url: this.client.config.Webhook.Url,
             // });
@@ -251,7 +255,9 @@ module.exports = class interactionCreate extends Event {
             //     embeds: [embed],
             // });
         } catch (error) {
-            return
+            console.error(error);
+            interaction?.reply("An error occurred while executing this command.").catch(() => {});
+            return;
         }
     }
 };

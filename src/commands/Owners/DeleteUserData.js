@@ -21,5 +21,3 @@ module.exports = class deleteUserData extends Command {
         return message?.reply(`User data deleted`);
     }
 };
-
-        

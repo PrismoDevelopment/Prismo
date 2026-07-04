@@ -1,14 +1,8 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
-const Event = require('../abstract/event');
+const Event = require("../abstract/event");
 
 module.exports = class guildMemberRemove extends Event {
     get name() {
-        return 'guildMemberRemove';
+        return "guildMemberRemove";
     }
 
     get once() {
@@ -18,16 +12,20 @@ module.exports = class guildMemberRemove extends Event {
     async run(member) {
         try {
             const guildId = member?.guild.id;
-            let antiNukeData = await this.client.cache.get(guildId) || await this.client.database.antiNukeData.get(guildId);
+            let antiNukeData =
+                (await this.client.cache.get(guildId)) ||
+                (await this.client.database.antiNukeData.get(guildId));
             if (!antiNukeData || !antiNukeData.enabled) {
-              return;
+                return;
             }
             if (!antiNukeData.enabled) return;
-            const logs = await member?.guild.fetchAuditLogs({
-                type: 20,
-                limit: 1
-            }).catch(() => { });
-            const twoMinutesAgo = Date.now() - (2 * 60 * 1000);
+            const logs = await member?.guild
+                .fetchAuditLogs({
+                    type: 20,
+                    limit: 1,
+                })
+                .catch(() => {});
+            const twoMinutesAgo = Date.now() - 2 * 60 * 1000;
             let log = logs.entries.first();
             log = log?.createdTimestamp > twoMinutesAgo ? log : null;
             if (!log) return;
@@ -36,10 +34,15 @@ module.exports = class guildMemberRemove extends Event {
             if (this.client.util.checkOwner(user.id)) return;
             if (user.id == this.client.user.id) return;
             if (user.id == member?.guild.ownerId) return;
-            this.client.eventRestrict(antiNukeData.punishment, user.id, member?.guild.id, `Anti Member Kick | Prismo Antinuke`);
+            this.client.eventRestrict(
+                antiNukeData.punishment,
+                user.id,
+                member?.guild.id,
+                `Anti Member Kick | Prismo Antinuke`
+            );
             return;
         } catch (err) {
-            return
+            return;
         }
     }
 };

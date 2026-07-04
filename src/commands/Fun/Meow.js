@@ -1,6 +1,5 @@
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Meow extends Command {
     constructor(...args) {
@@ -29,13 +28,12 @@ module.exports = class Meow extends Command {
         if (!user) return message?.reply("Please provide a user to meow!");
         let member = await message?.guild.members.fetch(user);
         if (!member) return message?.reply("Please provide a valid user to meow!");
-        if (member.id === message?.author.id)
-            return message?.reply("You can't meow at yourself!");
-        if (member.id === this.client.user.id)
-            return message?.reply("You can't meow at me!");
+        if (member.id === message?.author.id) return message?.reply("You can't meow at yourself!");
+        if (member.id === this.client.user.id) return message?.reply("You can't meow at me!");
 
-        const meow = await nekoClient.sfw.meow();
-        const embed = this.client.util.embed()
+        const meow = await discordActions.meow();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${member.user.username} is meowing!`)
             .setImage(meow.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -50,11 +48,11 @@ module.exports = class Meow extends Command {
         if (!member) return interaction?.reply("Please provide a valid user to meow!");
         if (member.id === interaction?.user.id)
             return interaction?.reply("You can't meow at yourself!");
-        if (member.id === this.client.user.id)
-            return interaction?.reply("You can't meow at me!");
+        if (member.id === this.client.user.id) return interaction?.reply("You can't meow at me!");
 
-        const meow = await nekoClient.sfw.meow();
-        const embed = this.client.util.embed()
+        const meow = await discordActions.meow();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${member.user.username} is meowing!`)
             .setImage(meow.url)
             .setColor(this.client.config.Client.PrimaryColor);

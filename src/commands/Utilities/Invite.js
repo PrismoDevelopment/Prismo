@@ -13,7 +13,7 @@ module.exports = class Invite extends Command {
             guildOnly: true,
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/F2gWafN.png",
+            image: "https://i.imgur.com/F2gWafN.png",
         });
     }
 
@@ -37,7 +37,7 @@ module.exports = class Invite extends Command {
                             emoji: this.client.config.Client.emoji.support,
                             style: 5,
                             url: `https://discord.gg/k2HNyjg5eb`,
-                        }
+                        },
                     ],
                 },
             ],
@@ -74,7 +74,7 @@ module.exports = class Invite extends Command {
                             emoji: this.client.config.Client.emoji.support,
                             style: 5,
                             url: `https://discord.gg/k2HNyjg5eb`,
-                        }
+                        },
                     ],
                 },
             ],

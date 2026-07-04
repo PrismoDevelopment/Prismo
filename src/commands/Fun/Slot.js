@@ -1,4 +1,4 @@
-const { Slots } = require('discord-gamecord');
+const { Slots } = require("discord-gamecord");
 const Command = require("../../abstract/command");
 
 module.exports = class Slot extends Command {
@@ -20,16 +20,16 @@ module.exports = class Slot extends Command {
         const Game = new Slots({
             message: message,
             embed: {
-                title: 'Slots',
+                title: "Slots",
                 color: this.client.config.Client.PrimaryColor,
                 timestamp: true,
             },
             emojis: {
-                active: '🎰',
-                inactive: '🎲',
+                active: "🎰",
+                inactive: "🎲",
             },
-            slots: ['🍇', '🍊', '🍋', '🍌'],
-            othersMessage: 'Only <@{{author}}> can use the buttons!',
+            slots: ["🍇", "🍊", "🍋", "🍌"],
+            othersMessage: "Only <@{{author}}> can use the buttons!",
         });
 
         Game.startGame();
@@ -39,16 +39,16 @@ module.exports = class Slot extends Command {
         const Game = new Slots({
             message: interaction,
             embed: {
-                title: 'Slots',
+                title: "Slots",
                 color: this.client.config.Client.PrimaryColor,
                 timestamp: true,
             },
             emojis: {
-                active: '🎰',
-                inactive: '🎲',
+                active: "🎰",
+                inactive: "🎲",
             },
-            slots: ['🍇', '🍊', '🍋', '🍌'],
-            othersMessage: 'Only <@{{author}}> can use the buttons!',
+            slots: ["🍇", "🍊", "🍋", "🍌"],
+            othersMessage: "Only <@{{author}}> can use the buttons!",
             isSlashGame: true,
         });
 

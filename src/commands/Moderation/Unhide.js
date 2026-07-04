@@ -1,5 +1,5 @@
 const Command = require("../../abstract/command");
-const { Message } = require('discord.js');
+const { Message } = require("discord.js");
 module.exports = class help extends Command {
     constructor(...args) {
         super(...args, {
@@ -9,14 +9,9 @@ module.exports = class help extends Command {
             usage: ["unhide <channel>"],
             category: "Moderation",
             userPerms: ["ManageChannels"],
-            botPerms: [
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-                "ManageChannels",
-            ],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages", "ManageChannels"],
             cooldown: 3,
-            image:"https://i.imgur.com/Mv6W5J4.png",
+            image: "https://i.imgur.com/Mv6W5J4.png",
             options: [
                 {
                     type: 7,
@@ -33,12 +28,11 @@ module.exports = class help extends Command {
      */
     async run({ message, args }) {
         if (args[0] === "all") {
-            const channels = await message?.guild.channels.cache.map(chuuu => chuuu);
+            const channels = await message?.guild.channels.cache.map((chuuu) => chuuu);
             for (let channel of channels) {
-                await channel.permissionOverwrites
-                    .edit(message?.guild.id, {
-                        ViewChannel: true,
-                    })
+                await channel.permissionOverwrites.edit(message?.guild.id, {
+                    ViewChannel: true,
+                });
             }
             return message?.reply({
                 content: "All Channels Have Been Hidden",
@@ -48,9 +42,7 @@ module.exports = class help extends Command {
             message?.mentions.channels.first() ||
             message?.guild.channels.cache.get(args[0]) ||
             message?.guild.channels.cache.find(
-                (r) =>
-                    r.name.toLowerCase() ==
-                    args.slice(0).join(" ").toLowerCase()
+                (r) => r.name.toLowerCase() == args.slice(0).join(" ").toLowerCase()
             ) ||
             message?.channel;
         if (!channel)
@@ -61,7 +53,7 @@ module.exports = class help extends Command {
             .edit(message?.guild.id, {
                 ViewChannel: true,
             })
-            .catch(() => { });
+            .catch(() => {});
         const embed = this.client.util
             .embed()
             .setDescription(`Successfully Unhidden ${channel.name}.`)
@@ -80,7 +72,7 @@ module.exports = class help extends Command {
             .edit(interaction?.guild.id, {
                 ViewChannel: true,
             })
-            .catch(() => { });
+            .catch(() => {});
         const embed = this.client.util
             .embed()
             .setDescription(`Successfully Unhidden ${channel}.`)

@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 const { Collection } = require("@discordjs/collection");
 module.exports = class PresenceUpdateEvent extends Event {
@@ -24,25 +18,24 @@ module.exports = class PresenceUpdateEvent extends Event {
         const user = newPresence?.member?.user;
         if (user?.bot) return;
         const activities = newPresence?.activities;
-        let data = await this.client.cache.get(newPresence?.guild.id + "1")
+        let data = await this.client.cache.get(newPresence?.guild.id + "1");
         if (!data) {
             data = await this.client.database.guildData.get(newPresence?.guild.id);
             await this.client.cache.set(newPresence?.guild.id + "1", data);
         }
         if (data.presenserole.enabled) {
-
             const presenceRoleMapping = {
                 "Grand Theft Auto V": data.presenserole.gtav,
-                "Minecraft": data.presenserole.minecraft,
-                "Fortnite": data.presenserole.fortnite,
-                "Roblox": data.presenserole.roblox,
-                "VALORANT": data.presenserole.valorant,
+                Minecraft: data.presenserole.minecraft,
+                Fortnite: data.presenserole.fortnite,
+                Roblox: data.presenserole.roblox,
+                VALORANT: data.presenserole.valorant,
                 "League of Legends": data.presenserole.leagueoflegends,
-                "Spotify": data.presenserole.spotify,
-                "Netflix": data.presenserole.netflix,
-                "Twitch": data.presenserole.twitch,
+                Spotify: data.presenserole.spotify,
+                Netflix: data.presenserole.netflix,
+                Twitch: data.presenserole.twitch,
                 "Visual Studio Code": data.presenserole.vscode,
-                "Code": data.presenserole.vscode
+                Code: data.presenserole.vscode,
             };
 
             const rolesToAdd = [];
@@ -79,10 +72,10 @@ module.exports = class PresenceUpdateEvent extends Event {
             if (rolesToAdd.length === 0 && rolesToRemove.length === 0) return;
             if (rolesToAdd.includes(rolesToRemove[0])) return;
             if (rolesToRemove.length != 0) {
-                await member?.roles?.remove(rolesToRemove).catch(() => { });
+                await member?.roles?.remove(rolesToRemove).catch(() => {});
             }
             if (rolesToAdd.length != 0) {
-                await member?.roles?.add(rolesToAdd).catch(() => { });
+                await member?.roles?.add(rolesToAdd).catch(() => {});
             }
         }
     }

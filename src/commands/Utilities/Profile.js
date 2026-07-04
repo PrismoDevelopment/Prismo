@@ -11,7 +11,7 @@ module.exports = class Profile extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/maCwrbA.png",
+            image: "https://i.imgur.com/maCwrbA.png",
             guildOnly: true,
         });
     }
@@ -28,63 +28,77 @@ module.exports = class Profile extends Command {
         let marriedAt = marrydata ? marrydata.marriedAt : null;
         let totaldays = marriedAt ? Math.floor((Date.now() - marriedAt) / 86400000) : null;
         let badges = await this.getProfile(member.id);
-        let embed = this.client.util.embed()
-            .setAuthor({ name: member.username, iconURL: member.displayAvatarURL({ dynamic: true }) })
-            .setDescription(`**__Badges__:**
-${badges.length > 0 ? badges.map((badge) => badge).join("\n") : "None"}`)
+        let embed = this.client.util
+            .embed()
+            .setAuthor({
+                name: member.username,
+                iconURL: member.displayAvatarURL({ dynamic: true }),
+            })
+            .setDescription(
+                `**__Badges__:**
+${badges.length > 0 ? badges.map((badge) => badge).join("\n") : "None"}`
+            )
             .setColor(this.client.config.Client.PrimaryColor)
             .setThumbnail(member.displayAvatarURL({ dynamic: true }))
-            .setFooter({ text: `Requested by ${message?.author.username}`, iconURL: message?.author.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: `Requested by ${message?.author.username}`,
+                iconURL: message?.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTimestamp();
         if (marry) {
             embed.addFields({
-                name: "**__Marriage__:**", value: `**Partner** : ${marrywithusername}
+                name: "**__Marriage__:**",
+                value: `**Partner** : ${marrywithusername}
 **Married on**: <t:${Math.floor(marriedAt / 1000)}:f>
 **Days spent**: ${totaldays}
-` });
+`,
+            });
         }
         message?.channel.send({ embeds: [embed] });
-
-
     }
 
     async getProfile(userId) {
         let badgesCollection = [];
-        let badgesfetch = await this.client.util.fetchDetails(`https://badge.prismobot.xyz/getbadges?userid=${userId}`).catch(() => { });
+        let badgesfetch = await this.client.util
+            .fetchDetails(`https://badge.prismobot.xyz/getbadges?userid=${userId}`)
+            .catch(() => {});
         if (badgesfetch.isDeveloper) {
             badgesCollection.push(`${this.client.config.Client.emoji.developerEmoji} Developer`);
-        };
+        }
         if (badgesfetch.isCommunityManager) {
-            badgesCollection.push(`${this.client.config.Client.emoji.communitymanager} Community Manager`);
-        };
+            badgesCollection.push(
+                `${this.client.config.Client.emoji.communitymanager} Community Manager`
+            );
+        }
         if (badgesfetch.isOwner) {
             badgesCollection.push(`${this.client.config.Client.emoji.ownerEmoji} Owner`);
-        };
+        }
         if (badgesfetch.isAdmin) {
             badgesCollection.push(`${this.client.config.Client.emoji.adminEmoji} Admin`);
-        };
+        }
         if (badgesfetch.isManager) {
             badgesCollection.push(`${this.client.config.Client.emoji.managerEmoji} Manager`);
-        };
+        }
         if (badgesfetch.isModerator) {
             badgesCollection.push(`${this.client.config.Client.emoji.moderatorEmoji} Moderator`);
-        };
+        }
         if (badgesfetch.isStaff) {
             badgesCollection.push(`${this.client.config.Client.emoji.staffEmoji} Staff`);
-        };
+        }
         if (badgesfetch.isSupporter) {
             badgesCollection.push(`${this.client.config.Client.emoji.supporterEmoji} Supporter`);
-        };
+        }
         if (badgesfetch.isBugHunters) {
             badgesCollection.push(`${this.client.config.Client.emoji.bughunterEmoji} Bug Hunters`);
-        };
+        }
         if (badgesfetch.isSpecialOnes) {
-            badgesCollection.push(`${this.client.config.Client.emoji.specialonesEmoji} Special Ones`);
-        };
+            badgesCollection.push(
+                `${this.client.config.Client.emoji.specialonesEmoji} Special Ones`
+            );
+        }
 
         return badgesCollection;
     }
-
 
     async exec({ interaction }) {
         const user = interaction?.options.getMember("user") || interaction?.member;
@@ -97,20 +111,31 @@ ${badges.length > 0 ? badges.map((badge) => badge).join("\n") : "None"}`)
         let marrywithuserdiscriminator = marrywithuser ? marrywithuser.discriminator : null;
         let marriedAt = marrydata ? marrydata.marriedAt : null;
         let totaldays = marriedAt ? Math.floor((Date.now() - marriedAt) / 86400000) : null;
-        let embed = this.client.util.embed()
-            .setAuthor({ name: user.user.username, iconURL: user.user.displayAvatarURL({ dynamic: true }) })
-            .setDescription(`**__Badges__:**
-${badges.length > 0 ? badges.map((badge) => badge).join("\n") : "None"}`)
+        let embed = this.client.util
+            .embed()
+            .setAuthor({
+                name: user.user.username,
+                iconURL: user.user.displayAvatarURL({ dynamic: true }),
+            })
+            .setDescription(
+                `**__Badges__:**
+${badges.length > 0 ? badges.map((badge) => badge).join("\n") : "None"}`
+            )
             .setColor(this.client.config.Client.PrimaryColor)
             .setThumbnail(user.user.displayAvatarURL({ dynamic: true }))
-            .setFooter({ text: `Requested by ${interaction?.user.username}`, iconURL: interaction?.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: `Requested by ${interaction?.user.username}`,
+                iconURL: interaction?.user.displayAvatarURL({ dynamic: true }),
+            })
             .setTimestamp();
         if (marry) {
             embed.addFields({
-                name: "**__Marriage__:**", value: `**Partner** : ${marrywithusername}
+                name: "**__Marriage__:**",
+                value: `**Partner** : ${marrywithusername}
     **Married on**: <t:${Math.floor(marriedAt / 1000)}:f>
     **Days spent**: ${totaldays}
-    ` });
+    `,
+            });
         }
         interaction?.reply({ embeds: [embed] });
     }

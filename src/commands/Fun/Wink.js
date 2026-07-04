@@ -1,6 +1,5 @@
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Wink extends Command {
     constructor(...args) {
@@ -32,13 +31,12 @@ module.exports = class Wink extends Command {
         let member = await message?.guild.members.fetch(user);
         if (!member) return message?.reply("Please provide a valid user to wink at!");
 
-        if (member.id === message?.author.id)
-            return message?.reply("You can't wink at yourself!");
-        if (member.id === this.client.user.id)
-            return message?.reply("You can't wink at me!");
+        if (member.id === message?.author.id) return message?.reply("You can't wink at yourself!");
+        if (member.id === this.client.user.id) return message?.reply("You can't wink at me!");
 
-        const wink = await nekoClient.sfw.wink();
-        const embed = this.client.util.embed()
+        const wink = await discordActions.wink();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${message?.author.username} is winking at ${member.user.username}!`)
             .setImage(wink.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -55,11 +53,11 @@ module.exports = class Wink extends Command {
 
         if (member.id === interaction?.user.id)
             return interaction?.reply("You can't wink at yourself!");
-        if (member.id === this.client.user.id)
-            return interaction?.reply("You can't wink at me!");
+        if (member.id === this.client.user.id) return interaction?.reply("You can't wink at me!");
 
-        const wink = await nekoClient.sfw.wink();
-        const embed = this.client.util.embed()
+        const wink = await discordActions.wink();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${interaction?.user.username} is winking at ${member.user.username}!`)
             .setImage(wink.url)
             .setColor(this.client.config.Client.PrimaryColor);

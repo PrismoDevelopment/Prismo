@@ -9,26 +9,31 @@ module.exports = class Setup extends Command {
             aliases: ["setup"],
             usage: "setup",
             cooldown: 5,
-            image:"https://i.imgur.com/tRZAfq3.png",
-            userPerms: ['ManageGuild'],
-            botPerms: ['EmbedLinks', 'ViewChannel', 'SendMessages']
+            image: "https://i.imgur.com/tRZAfq3.png",
+            userPerms: ["ManageGuild"],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
         });
     }
 
     async run({ message }) {
         let oscheck = this.client.util.checkOwner(message.author.id);
         if (!oscheck) {
-            if (message.author.id != message.guild.ownerId) return message.reply({ content: "Only the server owner can use this command." });
+            if (message.author.id != message.guild.ownerId)
+                return message.reply({ content: "Only the server owner can use this command." });
         }
-        await this.client.commandFunctions.SetupFunction.setup(message, false)
+        await this.client.commandFunctions.SetupFunction.setup(message, false);
     }
 
     async exec({ interaction }) {
         let oscheck = this.client.util.checkOwner(interaction?.user.id);
         if (!oscheck) {
-            if (interaction.user.id != interaction.guild.ownerId) return interaction.reply({ content: "Only the server owner can use this command.", ephemeral: true });
+            if (interaction.user.id != interaction.guild.ownerId)
+                return interaction.reply({
+                    content: "Only the server owner can use this command.",
+                    ephemeral: true,
+                });
         }
-        await interaction.reply({ content: 'Starting Setup...', ephemeral: true })
-        await this.client.commandFunctions.SetupFunction.setup(interaction, true)
+        await interaction.reply({ content: "Starting Setup...", ephemeral: true });
+        await this.client.commandFunctions.SetupFunction.setup(interaction, true);
     }
-}
+};

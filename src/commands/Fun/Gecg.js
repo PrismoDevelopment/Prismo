@@ -1,6 +1,5 @@
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Gecg extends Command {
     constructor(...args) {
@@ -32,8 +31,9 @@ module.exports = class Gecg extends Command {
         if (!member) return message?.reply("Please provide a valid user to gecg!");
         if (member.id === message?.author.id) return message?.reply("You can't gecg yourself!");
         if (member.id === this.client.user.id) return message?.reply("You can't gecg me!");
-        const gecg = await nekoClient.sfw.gecg();
-        const embed = this.client.util.embed()
+        const gecg = await discordActions.gecg();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${member.user.username} gecg!`)
             .setImage(gecg.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -45,10 +45,12 @@ module.exports = class Gecg extends Command {
         if (!user) return interaction?.reply("Please provide a user to gecg!");
         let member = await interaction?.guild.members.fetch(user);
         if (!member) return interaction?.reply("Please provide a valid user to gecg!");
-        if (member.id === interaction?.user.id) return interaction?.reply("You can't gecg yourself!");
+        if (member.id === interaction?.user.id)
+            return interaction?.reply("You can't gecg yourself!");
         if (member.id === this.client.user.id) return interaction?.reply("You can't gecg me!");
-        const gecg = await nekoClient.sfw.gecg();
-        const embed = this.client.util.embed()
+        const gecg = await discordActions.gecg();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${member.user.username} gecg!`)
             .setImage(gecg.url)
             .setColor(this.client.config.Client.PrimaryColor);

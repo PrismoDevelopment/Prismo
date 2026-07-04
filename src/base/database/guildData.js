@@ -20,12 +20,12 @@ module.exports = class guildData {
         if (!data) {
             data = new mongoData({ id: id });
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
         }
         if (data) {
             data = value;
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
         }
     }
 
@@ -34,12 +34,12 @@ module.exports = class guildData {
         if (!data) {
             data = new mongoData({ id: id });
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
         }
         if (data) {
             data.autorole = value;
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
             return data;
         }
     }
@@ -49,12 +49,12 @@ module.exports = class guildData {
         if (!data) {
             data = new mongoData({ id: id });
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
         }
         if (data) {
             data.vcrole = value;
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
             return data;
         }
     }
@@ -63,12 +63,12 @@ module.exports = class guildData {
         if (!data) {
             data = new mongoData({ id: id });
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
         }
         if (data) {
             data.greet = value;
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
             return data;
         }
     }
@@ -77,12 +77,12 @@ module.exports = class guildData {
         if (!data) {
             data = new mongoData({ id: id });
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
         }
         if (data) {
             data.welcome = value;
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
             return data;
         }
     }
@@ -99,12 +99,12 @@ module.exports = class guildData {
         if (!data) {
             data = new mongoData({ id: id });
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
         }
         if (data) {
             data.presenserole = value;
             await data.save();
-            await this.database.client.cache.set(id+"1", data);
+            await this.database.client.cache.set(id + "1", data);
             return data;
         }
     }
@@ -118,7 +118,7 @@ module.exports = class guildData {
             data = value;
             await data.save();
             this.database.client.cache.set(id, data);
-            this.database.client.cache.set(id+"1", data);
+            this.database.client.cache.set(id + "1", data);
             return data;
         }
     }

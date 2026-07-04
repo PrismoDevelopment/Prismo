@@ -1,13 +1,5 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Cry extends Command {
     constructor(...args) {
@@ -39,15 +31,14 @@ module.exports = class Cry extends Command {
         const member = await message?.guild.members.fetch(user);
         if (!member) return message?.reply("Please provide a valid user to cry with!");
 
-        if (member.id === message?.author.id)
-            return message?.reply("You can't cry with yourself!");
+        if (member.id === message?.author.id) return message?.reply("You can't cry with yourself!");
 
-        if (member.id === this.client.user.id)
-            return message?.reply("You can't cry with me!");
+        if (member.id === this.client.user.id) return message?.reply("You can't cry with me!");
 
-        const cry = await nekoClient.sfw.cry();
+        const cry = await discordActions.cry();
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle(`${member.user.username} is crying!`)
             .setImage(cry.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -65,12 +56,12 @@ module.exports = class Cry extends Command {
         if (member.id === interaction?.user.id)
             return interaction?.reply("You can't cry with yourself!");
 
-        if (member.id === this.client.user.id)
-            return interaction?.reply("You can't cry with me!");
+        if (member.id === this.client.user.id) return interaction?.reply("You can't cry with me!");
 
-        const cry = await nekoClient.sfw.cry();
+        const cry = await discordActions.cry();
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle(`${member.user.username} is crying!`)
             .setImage(cry.url)
             .setColor(this.client.config.Client.PrimaryColor);

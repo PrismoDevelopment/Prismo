@@ -31,7 +31,7 @@ module.exports = class Command {
             name: this.name,
             description: this.description,
             options: this.options,
-            defaultMemberPermissions: this.userPerms
+            defaultMemberPermissions: this.userPerms,
         };
     }
     get Global() {
@@ -47,6 +47,6 @@ module.exports = class Command {
             vote: this.vote || false,
             premium: this.premium || false,
             image: this.image || null,
-        }
+        };
     }
 };

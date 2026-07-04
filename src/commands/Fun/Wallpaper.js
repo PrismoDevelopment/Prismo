@@ -1,6 +1,5 @@
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class WallpaperCommand extends Command {
     constructor(...args) {
@@ -16,8 +15,9 @@ module.exports = class WallpaperCommand extends Command {
     }
 
     async run({ message, args }) {
-        const wallpaper = await nekoClient.sfw.wallpaper();
-        const embed = this.client.util.embed()
+        const wallpaper = await discordActions.wallpaper();
+        const embed = this.client.util
+            .embed()
             .setTitle("Wallpaper")
             .setImage(wallpaper.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -26,8 +26,9 @@ module.exports = class WallpaperCommand extends Command {
     }
 
     async exec({ interaction }) {
-        const wallpaper = await nekoClient.sfw.wallpaper();
-        const embed = this.client.util.embed()
+        const wallpaper = await discordActions.wallpaper();
+        const embed = this.client.util
+            .embed()
             .setTitle("Wallpaper")
             .setImage(wallpaper.url)
             .setColor(this.client.config.Client.PrimaryColor);

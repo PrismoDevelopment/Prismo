@@ -36,7 +36,7 @@ module.exports = class SimpRate extends Command {
         const emptybarend = this.client.config.Client.emoji.emptybarend;
         const emptybarcount = 10 - Math.floor(love / 10) - 1;
         const filledbarcount = Math.floor(love / 10);
-        let filledbar = null;
+        let filledbar;
 
         if (filledbarcount === 0) {
             filledbar = filledleftbar;
@@ -45,7 +45,8 @@ module.exports = class SimpRate extends Command {
         }
 
         const bar = filledbar + emptybar.repeat(emptybarcount) + emptybarend;
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setColor(this.client.config.Client.PrimaryColor)
             .setTitle("SimpMeter")
             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
@@ -64,7 +65,7 @@ module.exports = class SimpRate extends Command {
         const emptybarend = this.client.config.Client.emoji.emptybarend;
         const emptybarcount = 10 - Math.floor(love / 10) - 1;
         const filledbarcount = Math.floor(love / 10);
-        let filledbar = null;
+        let filledbar;
 
         if (filledbarcount === 0) {
             filledbar = filledleftbar;
@@ -73,11 +74,15 @@ module.exports = class SimpRate extends Command {
         }
 
         const bar = filledbar + emptybar.repeat(emptybarcount) + emptybarend;
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setColor(this.client.config.Client.PrimaryColor)
             .setTitle("SimpMeter")
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-            .addFields({ name: `${member.user.username} is ${love}% simp`, value: `${bar} ${love}%` });
+            .addFields({
+                name: `${member.user.username} is ${love}% simp`,
+                value: `${bar} ${love}%`,
+            });
 
         interaction?.reply({ embeds: [embed] });
     }

@@ -9,12 +9,7 @@ module.exports = class help extends Command {
             usage: ["nuke"],
             category: "Moderation",
             userPerms: ["ManageChannels"],
-            botPerms: [
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-                "ManageChannels",
-            ],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages", "ManageChannels"],
             cooldown: 5,
             image: "https://imgur.com/M2qjy9x",
             options: [
@@ -31,24 +26,21 @@ module.exports = class help extends Command {
     async run({ message, args }) {
         try {
             let serverowner = message.guild.ownerId;
-            if(message.author.id !== serverowner) {
-            if (
-                message?.member.roles.highest.position <
-                message?.guild.members.cache.get(this.client.user.id).roles
-                    .highest.position
-            )
-                return message?.reply({
-                    content: "You need to have a higher role than me.",
-                    ephemeral: true,
-                });
+            if (message.author.id !== serverowner) {
+                if (
+                    message?.member.roles.highest.position <
+                    message?.guild.members.cache.get(this.client.user.id).roles.highest.position
+                )
+                    return message?.reply({
+                        content: "You need to have a higher role than me.",
+                        ephemeral: true,
+                    });
             }
             let channel =
                 message?.mentions.channels.first() ||
                 message?.guild.channels.cache.get(args[0]) ||
                 message?.guild.channels.cache.find(
-                    (r) =>
-                        r.name.toLowerCase() ==
-                        args.slice(0).join(" ").toLowerCase()
+                    (r) => r.name.toLowerCase() == args.slice(0).join(" ").toLowerCase()
                 ) ||
                 message?.channel;
             if (!channel)
@@ -113,27 +105,24 @@ module.exports = class help extends Command {
                     });
                 });
         } catch (e) {
-            return
+            return;
         }
     }
 
     async exec({ interaction }) {
         try {
             let serverowner = interaction.guild.ownerId;
-            if(interaction.user.id !== serverowner) {
-            if (
-                interaction?.member.roles.highest.position <
-                interaction?.guild.members.cache.get(this.client.user.id).roles
-                    .highest.position
-            )
-                return interaction?.reply({
-                    content: "You do not have permission to use this command.",
-                    ephemeral: true,
-                });
+            if (interaction.user.id !== serverowner) {
+                if (
+                    interaction?.member.roles.highest.position <
+                    interaction?.guild.members.cache.get(this.client.user.id).roles.highest.position
+                )
+                    return interaction?.reply({
+                        content: "You do not have permission to use this command.",
+                        ephemeral: true,
+                    });
             }
-            const channel =
-                interaction?.options.getChannel("channel") ||
-                interaction?.channel;
+            const channel = interaction?.options.getChannel("channel") || interaction?.channel;
             if (!channel)
                 return interaction?.reply({
                     content: "I would appreciate it if you provided a valid channel.",
@@ -195,7 +184,7 @@ module.exports = class help extends Command {
                     });
                 });
         } catch (e) {
-            return
+            return;
         }
     }
 };

@@ -1,32 +1,17 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
-module.exports = class ready extends Event {
+module.exports = class clientReady extends Event {
     get name() {
-        return "ready";
+        return "clientReady";
     }
     get once() {
         return true;
     }
     async run() {
         try {
-            await this.client.giveawayManager.init()
-            this.client.logger.log(
-                `Logged in as ${this.client.user.username}`,
-                "ready"
-            );
-            this.client.logger.log(
-                `Loaded ${this.client.commands.size} commands!`,
-                "cmd"
-            );
-            this.client.logger.log(
-                `Loaded ${this.client.events.size} events!`,
-                "cmd"
-            );
+            await this.client.giveawayManager.init();
+            this.client.logger.log(`Logged in as ${this.client.user.username}`, "ready");
+            this.client.logger.log(`Loaded ${this.client.commands.size} commands!`, "cmd");
+            this.client.logger.log(`Loaded ${this.client.events.size} events!`, "cmd");
             const commands = this.client.commands
                 .filter((c) => c.ownerOnly != true)
                 .filter((cd) => cd.category != "Image")
@@ -68,18 +53,13 @@ module.exports = class ready extends Event {
     async premiumCheckGuild() {
         const guilds = await this.client.guilds.fetch();
         for (const guild of guilds) {
-            const guildData = await this.client.database.guildData.get(
-                guild[0]
-            );
+            const guildData = await this.client.database.guildData.get(guild[0]);
             if (guildData.premium) {
                 const premiumUntil = guildData.premiumUntil;
                 if (premiumUntil < Date.now()) {
                     guildData.premium = false;
                     guildData.premiumUntil = null;
-                    await this.client.database.guildData.set(
-                        guild[0],
-                        guildData
-                    );
+                    await this.client.database.guildData.set(guild[0], guildData);
                 }
             }
         }
@@ -103,28 +83,28 @@ module.exports = class ready extends Event {
         const statuses = [
             {
                 name: `/help`,
-                type: 2
+                type: 2,
             },
             {
                 name: `Your server's security`,
-                type: 3
+                type: 3,
             },
             {
                 name: `/setup`,
-                type: 2
+                type: 2,
             },
             {
                 name: `/ai`,
-                type: 2
+                type: 2,
             },
             {
                 name: `/antinuke`,
-                type: 2
-            }
+                type: 2,
+            },
         ];
         const status = statuses[Math.floor(Math.random() * statuses.length)];
         this.client.user.setPresence({
-            activities: [status]
+            activities: [status],
         });
-    }       
+    }
 };

@@ -16,10 +16,13 @@ module.exports = class TruthCommand extends Command {
     }
 
     async run({ message }) {
-        const body = await this.client.fetch("https://badge.prismobot.xyz/truth", { method: "GET" }).then(res => res.json());
+        const body = await this.client
+            .fetch("https://badge.prismobot.xyz/truth", { method: "GET" })
+            .then((res) => res.json());
         if (!body) return message?.channel.send("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Truth")
             .setDescription(body.truth)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -28,10 +31,13 @@ module.exports = class TruthCommand extends Command {
     }
 
     async exec({ interaction }) {
-        const body = await this.client.fetch("https://badge.prismobot.xyz/truth", { method: "GET" }).then(res => res.json());
+        const body = await this.client
+            .fetch("https://badge.prismobot.xyz/truth", { method: "GET" })
+            .then((res) => res.json());
         if (!body) return interaction?.reply("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Truth")
             .setDescription(body.truth)
             .setColor(this.client.config.Client.PrimaryColor);

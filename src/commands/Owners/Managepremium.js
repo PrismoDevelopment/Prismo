@@ -1,9 +1,5 @@
 const Command = require("../../abstract/command");
-const {
-    EmbedBuilder,
-    StringSelectMenuBuilder,
-    ActionRowBuilder,
-} = require("discord.js");
+const { EmbedBuilder, StringSelectMenuBuilder, ActionRowBuilder } = require("discord.js");
 module.exports = class Managepremium extends Command {
     constructor(...args) {
         super(...args, {
@@ -18,10 +14,7 @@ module.exports = class Managepremium extends Command {
         const goahead =
             this.client.util.checkOwner(message?.author.id) ||
             (await this.client.util.checkXhotuOwner(message?.author.id));
-        if (!goahead)
-            return message?.channel.send(
-                `You are not allowed to use this command!`
-            );
+        if (!goahead) return message?.channel.send(`You are not allowed to use this command!`);
         if (!args[0]) {
             return message?.reply(`Choose add,remove & list`);
         }
@@ -33,11 +26,8 @@ module.exports = class Managepremium extends Command {
                 });
             const member = await this.client.users.fetch(user);
             if (!member) return message?.reply({ content: "Invalid User" });
-            const data = await this.client.database.welcomeUserData.get(
-                member.id
-            );
-            if (data.premium)
-                return message?.reply({ content: "User already has premium" });
+            const data = await this.client.database.welcomeUserData.get(member.id);
+            if (data.premium) return message?.reply({ content: "User already has premium" });
             let select = new StringSelectMenuBuilder()
                 .setCustomId("premium")
                 .setPlaceholder("Select Premium")
@@ -120,44 +110,29 @@ module.exports = class Managepremium extends Command {
                 .setTitle("Premium")
                 .setDescription("Select Premium")
                 .setColor(this.client.config.Client.PrimaryColor);
-            message
-                .reply({ embeds: [embed], components: [row] })
-                .then(async (msg) => {
-                    this.client.once(
-                        "interactionCreate",
-                        async (interaction) => {
-                            if (interaction?.isSelectMenu()) {
-                                if (interaction?.customId == "premium") {
-                                    if (
-                                        interaction?.user.id == message?.author.id
-                                    ) {
-                                        let value = interaction?.values[0];
-                                        data.premium = true;
-                                        data.premiumCount = value;
-                                        await this.client.database.welcomeUserData.postAll(
-                                            member.id,
-                                            data
-                                        );
-                                        interaction?.deferUpdate();
-                                        const embed = new EmbedBuilder()
-                                            .setTitle("Premium")
-                                            .setDescription(
-                                                `Added ${value} Premium to ${member.username}`
-                                            )
-                                            .setColor(
-                                                this.client.config.Client
-                                                    .PrimaryColor
-                                            );
-                                        msg.edit({
-                                            embeds: [embed],
-                                            components: [],
-                                        });
-                                    }
-                                }
+            message.reply({ embeds: [embed], components: [row] }).then(async (msg) => {
+                this.client.once("interactionCreate", async (interaction) => {
+                    if (interaction?.isSelectMenu()) {
+                        if (interaction?.customId == "premium") {
+                            if (interaction?.user.id == message?.author.id) {
+                                let value = interaction?.values[0];
+                                data.premium = true;
+                                data.premiumCount = value;
+                                await this.client.database.welcomeUserData.postAll(member.id, data);
+                                interaction?.deferUpdate();
+                                const embed = new EmbedBuilder()
+                                    .setTitle("Premium")
+                                    .setDescription(`Added ${value} Premium to ${member.username}`)
+                                    .setColor(this.client.config.Client.PrimaryColor);
+                                msg.edit({
+                                    embeds: [embed],
+                                    components: [],
+                                });
                             }
                         }
-                    );
+                    }
                 });
+            });
         } else if (args[0] == "remove") {
             const user = await this.client.util.userQuery(args[1]);
             if (!user)
@@ -166,11 +141,8 @@ module.exports = class Managepremium extends Command {
                 });
             const member = await this.client.users.fetch(user);
             if (!member) return message?.reply({ content: "Invalid User" });
-            const data = await this.client.database.welcomeUserData.get(
-                member.id
-            );
-            if (!data.premium)
-                return message?.reply({ content: "User does not have premium" });
+            const data = await this.client.database.welcomeUserData.get(member.id);
+            if (!data.premium) return message?.reply({ content: "User does not have premium" });
             data.premium = false;
             data.premiumCount = 0;
             await this.client.database.welcomeUserData.postAll(member.id, data);
@@ -181,13 +153,10 @@ module.exports = class Managepremium extends Command {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].premium) {
                     const user = await this.client.users.fetch(data[i].id);
-                    array.push(
-                        `**${user.username}** - ${data[i].premiumCount} Premium`
-                    );
+                    array.push(`**${user.username}** - ${data[i].premiumCount} Premium`);
                 }
             }
-            if (array.length == 0)
-                return message?.reply({ content: "No Premium Users" });
+            if (array.length == 0) return message?.reply({ content: "No Premium Users" });
             const embed = new EmbedBuilder()
                 .setTitle("Premium Users")
                 .setDescription(array.join("\n"))

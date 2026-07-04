@@ -12,7 +12,7 @@ module.exports = class help extends Command {
             userPerms: ["SendMessages", "ManageGuild"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/akMyNgP.png",
+            image: "https://i.imgur.com/akMyNgP.png",
             options: [
                 {
                     type: 3,
@@ -38,13 +38,9 @@ module.exports = class help extends Command {
     }
 
     async exec({ interaction }) {
-        const data = await this.client.database.guildData.get(
-            interaction?.guild.id
-        );
+        const data = await this.client.database.guildData.get(interaction?.guild.id);
         if (!interaction?.options.getString("prefix")) {
-            return interaction?.reply(
-                `The current prefix is \`${data.prefix}\``
-            );
+            return interaction?.reply(`The current prefix is \`${data.prefix}\``);
         }
         if (interaction?.options.getString("prefix").length > 5) {
             return interaction?.reply("Prefix can only be 5 characters long");

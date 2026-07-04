@@ -9,14 +9,9 @@ module.exports = class help extends Command {
             usage: ["clear (type) <amount>"],
             category: "Moderation",
             userPerms: ["ManageMessages"],
-            botPerms: [
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-                "ManageMessages",
-            ],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages", "ManageMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/OkakjBY.png",
+            image: "https://i.imgur.com/OkakjBY.png",
             options: [
                 {
                     type: 3,
@@ -64,8 +59,7 @@ module.exports = class help extends Command {
     async run({ message, args }) {
         const type = args[0].toLowerCase();
         const amount = parseInt(args[1]) || 100;
-        if (!amount)
-            return message?.reply({ content: "Please provide a valid amount." });
+        if (!amount) return message?.reply({ content: "Please provide a valid amount." });
         if (amount > 100)
             return message?.reply({
                 content: "You can only clear 100 messages at a time.",
@@ -75,9 +69,7 @@ module.exports = class help extends Command {
                 content: "You must clear at least 1 message?.",
             });
         if (type === "all" || type === "everything") {
-            await message?.channel
-                .bulkDelete(amount, true)
-                .catch(() => { });
+            await message?.channel.bulkDelete(amount, true).catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} Messages.`)
@@ -90,11 +82,9 @@ module.exports = class help extends Command {
                 .fetch({ limit: amount })
                 .then(async (messages) => {
                     const botMessages = messages.filter((m) => m.author.bot);
-                    await message?.channel
-                        .bulkDelete(botMessages, true)
-                        .catch(() => { });
+                    await message?.channel.bulkDelete(botMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} Bot Messages.`)
@@ -109,11 +99,9 @@ module.exports = class help extends Command {
                 .fetch({ limit: amount })
                 .then(async (messages) => {
                     const userMessages = messages.filter((m) => member.id);
-                    await message?.channel
-                        .bulkDelete(userMessages, true)
-                        .catch(() => { });
+                    await message?.channel.bulkDelete(userMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} User Messages.`)
@@ -138,16 +126,12 @@ module.exports = class help extends Command {
                     const containsMessages = messages.filter((m) =>
                         m.content.toLowerCase().includes(contains.toLowerCase())
                     );
-                    await message?.channel
-                        .bulkDelete(containsMessages, true)
-                        .catch(() => { });
+                    await message?.channel.bulkDelete(containsMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
-                .setDescription(
-                    `Successfully Cleared ${amount} Messages Containing ${contains}.`
-                )
+                .setDescription(`Successfully Cleared ${amount} Messages Containing ${contains}.`)
                 .setColor(this.client.config.Client.PrimaryColor);
             return message?.channel
                 .send({ embeds: [embed] })
@@ -159,38 +143,28 @@ module.exports = class help extends Command {
                     const emojiMessages = messages.filter((m) =>
                         m.content.match(/<a?:\w{2,32}:\d{17,19}>/)
                     );
-                    await message?.channel
-                        .bulkDelete(emojiMessages, true)
-                        .catch(() => { });
+                    await message?.channel.bulkDelete(emojiMessages, true).catch(() => {});
                 })
-                .catch(() => { })
+                .catch(() => {})
                 .then((m) => setTimeout(() => m.delete(), 10000));
             const embed = this.client.util
                 .embed()
-                .setDescription(
-                    `Successfully Cleared ${amount} Messages Containing Emojis.`
-                )
+                .setDescription(`Successfully Cleared ${amount} Messages Containing Emojis.`)
                 .setColor(this.client.config.Client.PrimaryColor);
             return message?.reply({ embeds: [embed] });
-        }   else if (type === "link" || type === "links") {
+        } else if (type === "link" || type === "links") {
             await message?.channel.messages
                 .fetch({ limit: amount })
                 .then(async (messages) => {
                     const linkMessages = messages.filter((m) =>
-                        m.content.match(
-                            /(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+/
-                        )
+                        m.content.match(/(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+/)
                     );
-                    await message?.channel
-                        .bulkDelete(linkMessages, true)
-                        .catch(() => { });
+                    await message?.channel.bulkDelete(linkMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
-                .setDescription(
-                    `Successfully Cleared ${amount} Messages Containing Links.`
-                )
+                .setDescription(`Successfully Cleared ${amount} Messages Containing Links.`)
                 .setColor(this.client.config.Client.PrimaryColor);
             return message?.reply({ embeds: [embed] });
         } else if (args[0].match(/<@!?(\d{17,19})>/)) {
@@ -200,11 +174,9 @@ module.exports = class help extends Command {
                 .fetch({ limit: amount })
                 .then(async (messages) => {
                     const userMessages = messages.filter((m) => member.id.match(m.author.id));
-                    await message?.channel
-                        .bulkDelete(userMessages, true)
-                        .catch(() => { });
+                    await message?.channel.bulkDelete(userMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} User Messages.`)
@@ -212,7 +184,7 @@ module.exports = class help extends Command {
             return message?.channel
                 .send({ embeds: [embed] })
                 .then((m) => setTimeout(() => m.delete(), 10000));
-            } else if (args[0].match(/^\d+$/)) {
+        } else if (args[0].match(/^\d+$/)) {
             const ammount = parseInt(args[0]) || 100;
             if (!ammount)
                 return message?.reply({
@@ -226,9 +198,7 @@ module.exports = class help extends Command {
                 return message?.reply({
                     content: "You must clear at least 1 message?.",
                 });
-            await message?.channel
-                .bulkDelete(ammount, true)
-                .catch(() => { });
+            await message?.channel.bulkDelete(ammount, true).catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${ammount} Messages.`)
@@ -236,7 +206,7 @@ module.exports = class help extends Command {
             return message?.channel
                 .send({ embeds: [embed] })
                 .then((m) => setTimeout(() => m.delete(), 10000));
-            }
+        }
     }
 
     async exec({ interaction }) {
@@ -258,9 +228,7 @@ module.exports = class help extends Command {
                 ephemeral: true,
             });
         if (type === "all" || type === "everything") {
-            await interaction?.channel
-                .bulkDelete(amount, true)
-                .catch(() => { });
+            await interaction?.channel.bulkDelete(amount, true).catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} Messages.`)
@@ -273,11 +241,9 @@ module.exports = class help extends Command {
                 .fetch({ limit: amount })
                 .then(async (messages) => {
                     const botMessages = messages.filter((m) => m.author.bot);
-                    await interaction?.channel
-                        .bulkDelete(botMessages, true)
-                        .catch(() => { });
+                    await interaction?.channel.bulkDelete(botMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} Bot Messages.`)
@@ -290,11 +256,9 @@ module.exports = class help extends Command {
                 .fetch({ limit: amount })
                 .then(async (messages) => {
                     const userMessages = messages.filter((m) => !m.author.bot);
-                    await interaction?.channel
-                        .bulkDelete(userMessages, true)
-                        .catch(() => { });
+                    await interaction?.channel.bulkDelete(userMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} User Messages.`)
@@ -319,16 +283,12 @@ module.exports = class help extends Command {
                     const containsMessages = messages.filter((m) =>
                         m.content.toLowerCase().includes(contains.toLowerCase())
                     );
-                    await interaction?.channel
-                        .bulkDelete(containsMessages, true)
-                        .catch(() => { });
+                    await interaction?.channel.bulkDelete(containsMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
-                .setDescription(
-                    `Successfully Cleared ${amount} Messages Containing ${contains}.`
-                )
+                .setDescription(`Successfully Cleared ${amount} Messages Containing ${contains}.`)
                 .setColor(this.client.config.Client.PrimaryColor);
             return interaction
                 .reply({ embeds: [embed] })
@@ -340,16 +300,12 @@ module.exports = class help extends Command {
                     const emojiMessages = messages.filter((m) =>
                         m.content.match(/<a?:\w{2,32}:\d{17,19}>/)
                     );
-                    await interaction?.channel
-                        .bulkDelete(emojiMessages, true)
-                        .catch(() => { });
+                    await interaction?.channel.bulkDelete(emojiMessages, true).catch(() => {});
                 })
-                .catch(() => { });
+                .catch(() => {});
             const embed = this.client.util
                 .embed()
-                .setDescription(
-                    `Successfully Cleared ${amount} Messages Containing Emojis.`
-                )
+                .setDescription(`Successfully Cleared ${amount} Messages Containing Emojis.`)
                 .setColor(this.client.config.Client.PrimaryColor);
             return interaction?.reply({ embeds: [embed] });
         } else {
@@ -368,9 +324,7 @@ module.exports = class help extends Command {
                     content: "You must clear at least 1 message?.",
                     ephemeral: true,
                 });
-            await interaction?.channel
-                .bulkDelete(amount, true)
-                .catch(() => { });
+            await interaction?.channel.bulkDelete(amount, true).catch(() => {});
             const embed = this.client.util
                 .embed()
                 .setDescription(`Successfully Cleared ${amount} Messages.`)

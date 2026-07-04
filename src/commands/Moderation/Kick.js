@@ -9,14 +9,9 @@ module.exports = class help extends Command {
             usage: ["Kick <user> [reason]"],
             category: "Moderation",
             userPerms: ["KickMembers"],
-            botPerms: [
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-                "KickMembers",
-            ],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages", "KickMembers"],
             cooldown: 20,
-            image:"https://i.imgur.com/vC7D4x0.png",
+            image: "https://i.imgur.com/vC7D4x0.png",
             options: [
                 {
                     type: 6,
@@ -36,20 +31,17 @@ module.exports = class help extends Command {
 
     async run({ message, args }) {
         let owner = this.client.util.checkOwner(message?.author.id);
-        let serverowner = message.guild.ownerId
-        if (!args)
-            return message?.reply({ content: "Please provide a user to kick!" });
+        let serverowner = message.guild.ownerId;
+        if (!args) return message?.reply({ content: "Please provide a user to kick!" });
         const user = await this.client.util.userQuery(args[0]);
         if (!user)
             return message?.reply({
                 content: "Provide a valid user ID or mention a user",
             });
         const member = await message?.guild.members.fetch(user); // Get the member from the guild
-        if (!member)
-            return message?.reply({ content: "That user isn't in this guild!" });
+        if (!member) return message?.reply({ content: "That user isn't in this guild!" });
         let membercheckowner = this.client.util.checkOwner(member.user.id);
-        if (membercheckowner)
-            return message?.reply({ content: "You can't kick the bot owner!" });
+        if (membercheckowner) return message?.reply({ content: "You can't kick the bot owner!" });
         if (owner) {
             if (member.id === message?.author.id)
                 return message?.reply({
@@ -67,33 +59,29 @@ module.exports = class help extends Command {
                 return message?.reply({ content: "You can't kick me!" });
         }
         if (!owner) {
-            if(message?.member.id !== serverowner) {
-            if (
-                message?.member.roles.highest.position <=
-                message?.guild.members.cache.get(this.client.user.id).roles
-                    .highest.position
-            )
-                return message?.reply({
-                    content:
-                        "To kick this user, you need a higher role than mine!",
-                });
-            if (member.id === message?.guild.ownerId)
-                return message?.reply({
-                    content: "You can't kick the server owner!",
-                });
-            if (
-                member.roles.highest.position >=
-                message?.member.roles.highest.position
-            )
-                return message?.reply({
-                    content:
-                        "It is not possible for you to kick a user with the same or higher roles than you!",
-                });
+            if (message?.member.id !== serverowner) {
+                if (
+                    message?.member.roles.highest.position <=
+                    message?.guild.members.cache.get(this.client.user.id).roles.highest.position
+                )
+                    return message?.reply({
+                        content: "To kick this user, you need a higher role than mine!",
+                    });
+                if (member.id === message?.guild.ownerId)
+                    return message?.reply({
+                        content: "You can't kick the server owner!",
+                    });
+                if (member.roles.highest.position >= message?.member.roles.highest.position)
+                    return message?.reply({
+                        content:
+                            "It is not possible for you to kick a user with the same or higher roles than you!",
+                    });
             }
         }
-        if (!member.kickable)
-            return message?.reply({ content: "I can't kick that user!" });
-        const reason = args.slice(1).join(" ") + " | Kicked By " + message?.author.username || "No reason provided" + " | Kicked By " + message?.author.username;
+        if (!member.kickable) return message?.reply({ content: "I can't kick that user!" });
+        const reason =
+            args.slice(1).join(" ") + " | Kicked By " + message?.author.username ||
+            "No reason provided" + " | Kicked By " + message?.author.username;
         await member.kick({ reason: reason });
         const embed = this.client.util
             .embed()
@@ -116,7 +104,7 @@ module.exports = class help extends Command {
                 ephemeral: true,
             });
         let membercheckowner = this.client.util.checkOwner(member.user.id);
-        let serverowner = interaction?.guild.ownerId
+        let serverowner = interaction?.guild.ownerId;
         if (membercheckowner)
             return interaction?.reply({
                 content: "You can' t ban the bot owner!",
@@ -137,25 +125,21 @@ module.exports = class help extends Command {
                 content: "You can't kick the server owner!",
                 ephemeral: true,
             });
-        if(interaction?.user.id !== interaction?.guild.ownerId) {
-        if (
-            interaction?.member.roles.highest.position <=
-            interaction?.guild.members.cache.get(this.client.user.id).roles.highest
-                .position
-        )
-            return interaction?.reply({
-                content: "You can't kick a user with same or higher roles as you!",
-                ephemeral: true,
-            });
-        if (
-            member.roles.highest.position >=
-            interaction?.member.roles.highest.position
-        )
-            return interaction?.reply({
-                content:
-                    "It is not possible for you to kick a user with the same or higher roles than you!",
-                ephemeral: true,
-            });
+        if (interaction?.user.id !== interaction?.guild.ownerId) {
+            if (
+                interaction?.member.roles.highest.position <=
+                interaction?.guild.members.cache.get(this.client.user.id).roles.highest.position
+            )
+                return interaction?.reply({
+                    content: "You can't kick a user with same or higher roles as you!",
+                    ephemeral: true,
+                });
+            if (member.roles.highest.position >= interaction?.member.roles.highest.position)
+                return interaction?.reply({
+                    content:
+                        "It is not possible for you to kick a user with the same or higher roles than you!",
+                    ephemeral: true,
+                });
         }
         if (!member.kickable)
             return interaction?.reply({
@@ -163,7 +147,10 @@ module.exports = class help extends Command {
                 ephemeral: true,
             });
         const reason =
-            interaction?.options.getString("reason")  + " | Kicked By " + interaction?.user.username || "No reason provided" + " | Kicked By " + interaction?.user.username;
+            interaction?.options.getString("reason") +
+                " | Kicked By " +
+                interaction?.user.username ||
+            "No reason provided" + " | Kicked By " + interaction?.user.username;
         await member.kick({ reason: reason });
         const embed = this.client.util
             .embed()

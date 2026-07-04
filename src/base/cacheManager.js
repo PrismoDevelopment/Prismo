@@ -71,4 +71,4 @@ module.exports = class CacheManager {
             return { status: false, error: error.message };
         }
     }
-}
+};

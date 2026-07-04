@@ -33,21 +33,17 @@ module.exports = class help extends Command {
         try {
             if (!args[0] || !args[1])
                 return message?.reply({
-                    content:
-                        "Please Provide A Role And An Emoji To Set As Icon!",
+                    content: "Please Provide A Role And An Emoji To Set As Icon!",
                     ephemeral: true,
                 });
-            const role =
-                message?.mentions.roles.first() ||
-                message?.guild.roles.cache.get(args[0]);
+            const role = message?.mentions.roles.first() || message?.guild.roles.cache.get(args[0]);
             if (!role)
                 return message?.reply({
                     content: "Please Provide A Valid Role!",
                     ephemeral: true,
                 });
             let emoji = args[1]?.trim();
-            let url = (id) =>
-                `https://cdn.discordapp.com/emojis/${id}.png?quality=lossless`;
+            let url = (id) => `https://cdn.discordapp.com/emojis/${id}.png?quality=lossless`;
             const parsedEmoji = parseEmoji(emoji);
             if (!parsedEmoji.id || !parsedEmoji)
                 return message?.reply({
@@ -65,10 +61,11 @@ module.exports = class help extends Command {
                     });
                 })
                 .catch((e) => {
-                    if(e.message.includes("Missing Permissions")) return message?.reply({
-                        content: `I Don't Have Permissions To Manage Roles!`,
-                        ephemeral: true,
-                    });
+                    if (e.message.includes("Missing Permissions"))
+                        return message?.reply({
+                            content: `I Don't Have Permissions To Manage Roles!`,
+                            ephemeral: true,
+                        });
                     message?.reply({
                         content: `Guild Is Not In Level 2 Boosting Tier!`,
                         ephemeral: true,
@@ -86,8 +83,7 @@ module.exports = class help extends Command {
             const roleData = interaction?.options.getRole("role");
             const emojiData = interaction?.options.getString("emoji");
             let emoji = emojiData.trim();
-            let url = (id) =>
-                `https://cdn.discordapp.com/emojis/${id}.png?quality=lossless`;
+            let url = (id) => `https://cdn.discordapp.com/emojis/${id}.png?quality=lossless`;
             const parsedEmoji = parseEmoji(emojiData);
             if (!parsedEmoji.id || !parsedEmoji)
                 return interaction?.reply({
@@ -106,10 +102,11 @@ module.exports = class help extends Command {
                     });
                 })
                 .catch((e) => {
-                    if(e.message.includes("Missing Permissions")) return interaction?.reply({
-                        content: `I Don't Have Permissions To Manage Roles!`,
-                        ephemeral: true,
-                    });
+                    if (e.message.includes("Missing Permissions"))
+                        return interaction?.reply({
+                            content: `I Don't Have Permissions To Manage Roles!`,
+                            ephemeral: true,
+                        });
                     interaction?.reply({
                         content: `Guild Is Not In Level 2 Boosting Tier!`,
                         ephemeral: true,

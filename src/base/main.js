@@ -47,16 +47,11 @@ const client = new AriaClient({
     shards: Cluster.ClusterClient.getInfo().SHARD_LIST,
     shardCount: Cluster.ClusterClient.getInfo().TOTAL_SHARDS,
     debugger: true,
-    partials: [
-        Partials.Message,
-        Partials.GuildMember,
-        Partials.Reaction,
-        Partials.User,
-    ],
+    partials: [Partials.Message, Partials.GuildMember, Partials.Reaction, Partials.User],
 });
 
 client.login(Client.Token);
-process.on('uncaughtException', (error) => {
+process.on("uncaughtException", (error) => {
     if (error.code == 10008) return;
     if (error.code == 4000) return;
     if (error.code == 10001) return;

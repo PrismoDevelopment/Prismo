@@ -11,7 +11,7 @@ module.exports = class Premium extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/4bQaIwF.png",
+            image: "https://i.imgur.com/4bQaIwF.png",
             guildOnly: true,
             options: [
                 {
@@ -30,17 +30,12 @@ module.exports = class Premium extends Command {
         });
     }
     async run({ message, args }) {
-        const user =
-            (await this.client.util.userQuery(args[0])) || message?.author;
+        const user = (await this.client.util.userQuery(args[0])) || message?.author;
         const member = await this.client.users.fetch(user);
-        const premium = await this.client.database.welcomeUserData.get(
-            member.id
-        );
-        const guild = await this.client.database.guildData.get(
-            message?.guild.id
-        );
+        const premium = await this.client.database.welcomeUserData.get(member.id);
+        const guild = await this.client.database.guildData.get(message?.guild.id);
         if (!args[0] === "activate" || !args[0] === "show") {
-            return
+            return;
         }
         if (args[0] === "activate") {
             if (premium.premiumCount < 1)
@@ -52,10 +47,7 @@ module.exports = class Premium extends Command {
                     content: "This server already has premium.",
                 });
             premium.premiumCount = premium.premiumCount - 1;
-            await this.client.database.welcomeUserData.postAll(
-                member.id,
-                premium
-            );
+            await this.client.database.welcomeUserData.postAll(member.id, premium);
             let premiumExpires = new Date();
             premiumExpires.setMonth(premiumExpires.getMonth() + 1);
             guild.premiumUntil = premiumExpires.getTime();
@@ -64,17 +56,12 @@ module.exports = class Premium extends Command {
             message?.channel.send({ content: "Activated premium." });
             if (premium.premiumCount < 1) {
                 premium.premiumCount = 0;
-                await this.client.database.welcomeUserData.postAll(
-                    member.id,
-                    premium
-                );
+                await this.client.database.welcomeUserData.postAll(member.id, premium);
             }
         } else if (args[0] === "show") {
             const embed = new this.client.embed()
                 .setTitle("Premium")
-                .setDescription(
-                    `You have ${premium.premiumCount} premium left.`
-                )
+                .setDescription(`You have ${premium.premiumCount} premium left.`)
                 .setColor(this.client.config.Client.PrimaryColor);
             message?.channel.send({ embeds: [embed] });
         } else {
@@ -86,9 +73,7 @@ module.exports = class Premium extends Command {
 **Premium Count**: ${premium.premiumCount}`
                 )
                 .setColor(this.client.config.Client.PrimaryColor)
-                .setThumbnail(
-                    member.displayAvatarURL({ dynamic: true, size: 2048 })
-                );
+                .setThumbnail(member.displayAvatarURL({ dynamic: true, size: 2048 }));
             let datetime = this.client.util.formatDateTime(guild.premiumUntil);
             let timestamp = this.client.util.dateToTimestamp(datetime);
             let exacttime = ~~(timestamp / 1000);
@@ -107,9 +92,7 @@ Premium Ends: <t:${exacttime}:R>`,
     async exec({ interaction }) {
         const user = interaction?.user;
         const premium = await this.client.database.welcomeUserData.get(user.id);
-        const guild = await this.client.database.guildData.get(
-            interaction?.guild.id
-        );
+        const guild = await this.client.database.guildData.get(interaction?.guild.id);
         if (interaction?.options.getSubcommand() === "activate") {
             if (premium.premiumCount < 1)
                 return interaction?.reply({
@@ -122,32 +105,22 @@ Premium Ends: <t:${exacttime}:R>`,
                     ephemeral: true,
                 });
             premium.premiumCount = premium.premiumCount - 1;
-            await this.client.database.welcomeUserData.postAll(
-                user.id,
-                premium
-            );
+            await this.client.database.welcomeUserData.postAll(user.id, premium);
             let premiumExpires = new Date();
             premiumExpires.setMonth(premiumExpires.getMonth() + 1);
             guild.premiumUntil = premiumExpires.getTime();
             guild.premium = true;
-            await this.client.database.guildData.set(
-                interaction?.guild.id,
-                guild
-            );
+            await this.client.database.guildData.set(interaction?.guild.id, guild);
             interaction?.reply({ content: "Activated premium." });
             if (premium.premiumCount < 1) {
                 premium.premiumCount = 0;
-                await this.client.database.welcomeUserData.postAll(
-                    user.id,
-                    premium
-                );
+                await this.client.database.welcomeUserData.postAll(user.id, premium);
             }
         } else if (interaction?.options.getSubcommand() === "show") {
-            const embed = this.client.util.embed()
+            const embed = this.client.util
+                .embed()
                 .setTitle("Premium")
-                .setDescription(
-                    `You have ${premium.premiumCount} premium left.`
-                )
+                .setDescription(`You have ${premium.premiumCount} premium left.`)
                 .setColor(this.client.config.Client.PrimaryColor);
             interaction?.reply({ embeds: [embed] });
         }

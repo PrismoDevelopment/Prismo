@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Command = require("../../abstract/command");
 
 module.exports = class Dare extends Command {
@@ -22,10 +16,13 @@ module.exports = class Dare extends Command {
     }
 
     async run({ message }) {
-        const body = await this.client.fetch("https://badge.prismobot.xyz/dare", { method: "GET" }).then(res => res.json());
+        const body = await this.client
+            .fetch("https://badge.prismobot.xyz/dare", { method: "GET" })
+            .then((res) => res.json());
         if (!body) return message?.channel.send("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Dare")
             .setDescription(body.dare)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -34,10 +31,13 @@ module.exports = class Dare extends Command {
     }
 
     async exec({ interaction }) {
-        const body = await this.client.fetch("https://badge.prismobot.xyz/dare", { method: "GET" }).then(res => res.json());
+        const body = await this.client
+            .fetch("https://badge.prismobot.xyz/dare", { method: "GET" })
+            .then((res) => res.json());
         if (!body) return interaction?.reply("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Dare")
             .setDescription(body.dare)
             .setColor(this.client.config.Client.PrimaryColor);

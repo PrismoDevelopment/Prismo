@@ -10,17 +10,21 @@ module.exports = class introduction extends Command {
             usage: "introduction",
             cooldown: 5,
             image: "https://imgur.com/34I3wSk",
-            userPerms: ['SendMessages', 'ViewChannel'],
-            botPerms: ['EmbedLinks', 'ViewChannel', 'SendMessages'],
+            userPerms: ["SendMessages", "ViewChannel"],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             vote: false,
         });
     }
 
     async run({ message, args }) {
-        await message?.channel.send({ content: `Hey bud! I'm Prismo, a bot, here to make your discord experience even better. Need help with commands? Type \`.help\` to see what I can do. `});
+        await message?.channel.send({
+            content: `Hey bud! I'm Prismo, a bot, here to make your discord experience even better. Need help with commands? Type \`.help\` to see what I can do. `,
+        });
     }
 
     async exec({ interaction }) {
-        await interaction.reply({ content: `Hey bud! I'm Prismo, a bot, here to make your discord experience even better. Need help with commands? Type \`.help\` to see what I can do. `});
+        await interaction.reply({
+            content: `Hey bud! I'm Prismo, a bot, here to make your discord experience even better. Need help with commands? Type \`.help\` to see what I can do. `,
+        });
     }
-}
+};

@@ -4,14 +4,15 @@ module.exports = class starboard extends Command {
     constructor(...args) {
         super(...args, {
             name: "starboard",
-            description: "enabling you to highlight and amplify a specific sentence within a designated channel.",
+            description:
+                "enabling you to highlight and amplify a specific sentence within a designated channel.",
             category: "Utilities",
             aliases: ["starboard"],
             usage: "starboard <enable/disable> <channel> <emoji> <count>",
             cooldown: 5,
             image: "https://imgur.com/vy4InwJ",
-            userPerms: ['ManageGuild'],
-            botPerms: ['EmbedLinks', 'ViewChannel', 'SendMessages'],
+            userPerms: ["ManageGuild"],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             options: [
                 {
                     type: 1,
@@ -22,33 +23,34 @@ module.exports = class starboard extends Command {
                             type: 7,
                             name: "channel",
                             description: "The channel to send the starboard messages",
-                            required: true
+                            required: true,
                         },
                         {
                             type: 3,
                             name: "emoji",
                             description: "The emoji to use as the star",
-                            required: false
+                            required: false,
                         },
                         {
                             type: 4,
                             name: "count",
                             description: "The amount of stars needed to post the message",
-                            required: false
-                        }
-                    ]
+                            required: false,
+                        },
+                    ],
                 },
                 {
                     type: 1,
                     name: "disable",
-                    description: "Disable the starboard"
-                }
-            ]
+                    description: "Disable the starboard",
+                },
+            ],
         });
     }
 
     async run({ message, args }) {
-        if (!args[0]) return message.reply({ content: "Please specify a subcommand (enable/disable)." });
+        if (!args[0])
+            return message.reply({ content: "Please specify a subcommand (enable/disable)." });
         if (args[0] == "enable") {
             if (!args[1]) return message.reply({ content: "Please specify a channel." });
             let channel = message.guild.channels.cache.get(args[1].replace(/[\\<>#&!]/g, ""));
@@ -59,9 +61,10 @@ module.exports = class starboard extends Command {
             data.starboard = true;
             data.starboardChannel = channel.id;
             const emojiId = args[2];
-            const emojiName = emojiId.startsWith(':') && emojiId.endsWith(':')
-                ? /:(.*):/.exec(emojiId)[1]
-                : emojiId;
+            const emojiName =
+                emojiId.startsWith(":") && emojiId.endsWith(":")
+                    ? /:(.*):/.exec(emojiId)[1]
+                    : emojiId;
             data.starboardEmoji = emojiName;
             data.starboardCount = count;
             await data.save();
@@ -88,9 +91,10 @@ module.exports = class starboard extends Command {
             data.starboardChannel = channel.id;
             // we need the name of the emoji, not the id of the emoji and not <> around it just the name like <a:emoji:123456789> -> emoji
             const emojiId = emoji;
-            const emojiName = emojiId.startsWith(':') && emojiId.endsWith(':')
-                ? /:(.*):/.exec(emojiId)[1]
-                : emojiId;
+            const emojiName =
+                emojiId.startsWith(":") && emojiId.endsWith(":")
+                    ? /:(.*):/.exec(emojiId)[1]
+                    : emojiId;
             data.starboardEmoji = emojiName;
             data.starboardCount = count;
             await data.save();
@@ -106,4 +110,4 @@ module.exports = class starboard extends Command {
             interaction.reply({ content: "Starboard disabled.", ephemeral: true });
         }
     }
-}
+};

@@ -1,6 +1,5 @@
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Kill extends Command {
     constructor(...args) {
@@ -32,8 +31,9 @@ module.exports = class Kill extends Command {
         if (!member) return message?.reply("Please provide a valid user to kill!");
         if (member.id === message?.author.id) return message?.reply("You can't kill yourself!");
         if (member.id === this.client.user.id) return message?.reply("You can't kill me!");
-        const kill = await nekoClient.sfw.kill();
-        const embed = this.client.util.embed()
+        const kill = await discordActions.kill();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${message?.author.username} killed ${member.user.username}`)
             .setImage(kill.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -45,10 +45,12 @@ module.exports = class Kill extends Command {
         if (!user) return interaction?.reply("Please provide a user to kill!");
         let member = await interaction?.guild.members.fetch(user);
         if (!member) return interaction?.reply("Please provide a valid user to kill!");
-        if (member.id === interaction?.user.id) return interaction?.reply("You can't kill yourself!");
+        if (member.id === interaction?.user.id)
+            return interaction?.reply("You can't kill yourself!");
         if (member.id === this.client.user.id) return interaction?.reply("You can't kill me!");
-        const kill = await nekoClient.sfw.kill();
-        const embed = this.client.util.embed()
+        const kill = await discordActions.kill();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${interaction?.user.username} kills ${member.user.username}!`)
             .setImage(kill.url)
             .setColor(this.client.config.Client.PrimaryColor);

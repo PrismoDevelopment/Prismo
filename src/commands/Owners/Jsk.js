@@ -1,9 +1,5 @@
 const Command = require("../../abstract/command");
-const {
-    ActionRowBuilder,
-    ButtonBuilder,
-    AttachmentBuilder,
-} = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, AttachmentBuilder } = require("discord.js");
 
 module.exports = class Jsk extends Command {
     constructor(...args) {
@@ -16,15 +12,56 @@ module.exports = class Jsk extends Command {
     }
 
     async run({ message, args }) {
-        let check = this.client.util.checkQuiteJsk(message?.author.id) || this.client.util.checkOwner(message?.author.id);
+        let check =
+            this.client.util.checkQuiteJsk(message?.author.id) ||
+            this.client.util.checkOwner(message?.author.id);
         if (!check) {
             return message?.channel.send("You are not allowed to use this command.");
         }
         let toEval = args.join(" ");
 
-        if (toEval.includes("client") || toEval.includes("token") || toEval.includes("config") || toEval.includes("process") || toEval.includes("env") || toEval.includes("require") || toEval.includes("global") || toEval.includes("fs") || toEval.includes("path") || toEval.includes("child_process") || toEval.includes("exec") || toEval.includes("spawn") || toEval.includes("execFile") || toEval.includes("fork") || toEval.includes("cluster") || toEval.includes("worker") || toEval.includes("djs") || toEval.includes("discord.js") || toEval.includes("discordjs") || toEval.includes("for") || toEval.includes("while") || toEval.includes("do") || toEval.includes("if") || toEval.includes("else") || toEval.includes("switch") || toEval.includes("case") || toEval.includes("break") || toEval.includes("continue") || toEval.includes("return") || toEval.includes("function") || toEval.includes("async") || toEval.includes("await") || toEval.includes("new") || toEval.includes("delete") || toEval.includes("message") || toEval.includes("this")) {
-            return message.channel.send("Sorry, the command you entered includes a dangerous keyword and cannot be executed.");
-        }        
+        if (
+            toEval.includes("client") ||
+            toEval.includes("token") ||
+            toEval.includes("config") ||
+            toEval.includes("process") ||
+            toEval.includes("env") ||
+            toEval.includes("require") ||
+            toEval.includes("global") ||
+            toEval.includes("fs") ||
+            toEval.includes("path") ||
+            toEval.includes("child_process") ||
+            toEval.includes("exec") ||
+            toEval.includes("spawn") ||
+            toEval.includes("execFile") ||
+            toEval.includes("fork") ||
+            toEval.includes("cluster") ||
+            toEval.includes("worker") ||
+            toEval.includes("djs") ||
+            toEval.includes("discord.js") ||
+            toEval.includes("discordjs") ||
+            toEval.includes("for") ||
+            toEval.includes("while") ||
+            toEval.includes("do") ||
+            toEval.includes("if") ||
+            toEval.includes("else") ||
+            toEval.includes("switch") ||
+            toEval.includes("case") ||
+            toEval.includes("break") ||
+            toEval.includes("continue") ||
+            toEval.includes("return") ||
+            toEval.includes("function") ||
+            toEval.includes("async") ||
+            toEval.includes("await") ||
+            toEval.includes("new") ||
+            toEval.includes("delete") ||
+            toEval.includes("message") ||
+            toEval.includes("this")
+        ) {
+            return message.channel.send(
+                "Sorry, the command you entered includes a dangerous keyword and cannot be executed."
+            );
+        }
 
         let result;
         try {
@@ -37,17 +74,12 @@ module.exports = class Jsk extends Command {
         }
 
         const row = new ActionRowBuilder().setComponents(
-            new ButtonBuilder()
-                .setCustomId("eval_delete")
-                .setLabel("Delete")
-                .setStyle("Danger")
+            new ButtonBuilder().setCustomId("eval_delete").setLabel("Delete").setStyle("Danger")
         );
         const embed = this.client.util
             .embed()
             .setColor(0xff0000)
-            .setDescription(
-                `**Executed.**`
-            )
+            .setDescription(`**Executed.**`)
             .setTitle("Eval")
             .addFields(
                 {

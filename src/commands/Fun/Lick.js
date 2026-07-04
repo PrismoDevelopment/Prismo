@@ -1,6 +1,5 @@
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Lick extends Command {
     constructor(...args) {
@@ -32,8 +31,9 @@ module.exports = class Lick extends Command {
         if (!member) return message?.reply("Please provide a valid user to lick!");
         if (member.id === message?.author.id) return message?.reply("You can't lick yourself!");
         if (member.id === this.client.user.id) return message?.reply("You can't lick me!");
-        const lick = await nekoClient.sfw.lick();
-        const embed = this.client.util.embed()
+        const lick = await discordActions.lick();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${message?.author.username} licked ${member.user.username}`)
             .setImage(lick.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -45,10 +45,12 @@ module.exports = class Lick extends Command {
         if (!user) return interaction?.reply("Please provide a user to lick!");
         let member = await interaction?.guild.members.fetch(user);
         if (!member) return interaction?.reply("Please provide a valid user to lick!");
-        if (member.id === interaction?.user.id) return interaction?.reply("You can't lick yourself!");
+        if (member.id === interaction?.user.id)
+            return interaction?.reply("You can't lick yourself!");
         if (member.id === this.client.user.id) return interaction?.reply("You can't lick me!");
-        const lick = await nekoClient.sfw.lick();
-        const embed = this.client.util.embed()
+        const lick = await discordActions.lick();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${interaction?.user.username} licks ${member.user.username}!`)
             .setImage(lick.url)
             .setColor(this.client.config.Client.PrimaryColor);

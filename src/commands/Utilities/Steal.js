@@ -1,5 +1,5 @@
 const Command = require("../../abstract/command");
-const axios = require('axios')
+const axios = require("axios");
 
 module.exports = class steal extends Command {
     constructor(...args) {
@@ -10,11 +10,7 @@ module.exports = class steal extends Command {
             usage: ["steal <emojis>"],
             category: "Utilities",
             userPerms: ["ManageEmojisAndStickers"],
-            botPerms: [
-                "ManageEmojisAndStickers",
-                "ViewChannel",
-                "SendMessages",
-            ],
+            botPerms: ["ManageEmojisAndStickers", "ViewChannel", "SendMessages"],
             options: [
                 {
                     name: "emojis",
@@ -30,28 +26,43 @@ module.exports = class steal extends Command {
     async run({ message, args }) {
         if (message?.stickers?.size != 0) {
             let sticker = message?.stickers?.first();
-            let nunu = await message.guild.stickers.create({
-                name: sticker.name,
-                description: sticker.description ? sticker.description : "No description",
-                tags: sticker.tags,
-                file: sticker.url,
-            }).catch((err) => { return message?.reply({ content: `An error occured while adding the sticker!` }); });
+            let nunu = await message.guild.stickers
+                .create({
+                    name: sticker.name,
+                    description: sticker.description ? sticker.description : "No description",
+                    tags: sticker.tags,
+                    file: sticker.url,
+                })
+                .catch((err) => {
+                    return message?.reply({
+                        content: `An error occured while adding the sticker!`,
+                    });
+                });
             await message?.reply({
-                content: `Sticker **${sticker.name}** has been added to the server!`, stickers: [nunu],
+                content: `Sticker **${sticker.name}** has been added to the server!`,
+                stickers: [nunu],
             });
             return;
-        } else if (message?.reference){
+        } else if (message?.reference) {
             let refmsg = message?.reference?.messageId;
             if (refmsg) {
                 let ref = await message?.channel.messages.fetch(refmsg);
                 if (ref?.stickers?.size != 0) {
                     let sticker = ref?.stickers?.first();
-                    let nunu = await message.guild.stickers.create({
-                        name: sticker.name,
-                        description: sticker.description ? sticker.description : "No description",
-                        tags: sticker.tags,
-                        file: sticker.url,
-                    }).catch((err) => { return message?.reply({ content: `An error occured while adding the sticker!` }); });
+                    let nunu = await message.guild.stickers
+                        .create({
+                            name: sticker.name,
+                            description: sticker.description
+                                ? sticker.description
+                                : "No description",
+                            tags: sticker.tags,
+                            file: sticker.url,
+                        })
+                        .catch((err) => {
+                            return message?.reply({
+                                content: `An error occured while adding the sticker!`,
+                            });
+                        });
                     await message?.reply({
                         content: `Sticker **${sticker.name}** has been added to the server!`,
                         stickers: [nunu],
@@ -60,12 +71,16 @@ module.exports = class steal extends Command {
                 }
             }
         } else {
-            if (!args[0]) { return message?.reply({ content: "Please provide the emojis/sticker to steal!" }); }
+            if (!args[0]) {
+                return message?.reply({ content: "Please provide the emojis/sticker to steal!" });
+            }
             // check if the user has provided a valid emoji using regex
             const emojiargs = args.join("");
             let animemojis = emojiargs.match(/[a][:]([A-Za-z0-9_~])+[:]\d{15,}/g);
             let normemojis = emojiargs.match(/[^a][:]([A-Za-z0-9_~])+[:]\d{15,}/g);
-            if(!animemojis && !normemojis) { return message?.reply({ content: "Please provide a valid emoji/sticker!" }); }
+            if (!animemojis && !normemojis) {
+                return message?.reply({ content: "Please provide a valid emoji/sticker!" });
+            }
             try {
                 const emojiargs = args.join("");
                 let animemojis = emojiargs.match(/[a][:]([A-Za-z0-9_~])+[:]\d{15,}/g);
@@ -88,7 +103,7 @@ module.exports = class steal extends Command {
                     for (let aemoji in animemojis) {
                         const list = animemojis[aemoji].split(":");
                         const Url = `https://cdn.discordapp.com/emojis/${list[2]}.gif`;
-                        const buffer = await axios.get(Url, { responseType: 'arraybuffer' });
+                        const buffer = await axios.get(Url, { responseType: "arraybuffer" });
                         const size = Buffer.byteLength(buffer.data);
                         if (size > 256000) {
                             return message?.reply({
@@ -97,9 +112,7 @@ module.exports = class steal extends Command {
                         }
                         await message?.guild.emojis
                             .create({ attachment: Url, name: list[1] })
-                            .then(
-                                (emoji) => (desc += `<a:${emoji.name}:${emoji.id}> `)
-                            );
+                            .then((emoji) => (desc += `<a:${emoji.name}:${emoji.id}> `));
                     }
                 }
 
@@ -112,7 +125,7 @@ module.exports = class steal extends Command {
                     for (let emojis in normemojis) {
                         const list = normemojis[emojis].split(":");
                         const Url = `https://cdn.discordapp.com/emojis/${list[2]}.png`;
-                        const buffer = await axios.get(Url, { responseType: 'arraybuffer' });
+                        const buffer = await axios.get(Url, { responseType: "arraybuffer" });
                         const size = Buffer.byteLength(buffer.data);
                         if (size > 256000) {
                             return message?.reply({
@@ -140,7 +153,6 @@ module.exports = class steal extends Command {
         }
     }
 
-
     async exec({ interaction, args }) {
         if (!args) return interaction?.reply({ content: `No emojis provided!` });
         const emojiargs = args.join("");
@@ -164,7 +176,7 @@ module.exports = class steal extends Command {
             for (let aemoji in animemojis) {
                 const list = animemojis[aemoji].split(":");
                 const Url = `https://cdn.discordapp.com/emojis/${list[2]}.gif`;
-                const buffer = await axios.get(Url, { responseType: 'arraybuffer' });
+                const buffer = await axios.get(Url, { responseType: "arraybuffer" });
                 const size = Buffer.byteLength(buffer.data);
                 if (size > 256000) {
                     return interaction?.reply({
@@ -173,9 +185,7 @@ module.exports = class steal extends Command {
                 }
                 await interaction?.guild.emojis
                     .create({ attachment: Url, name: list[1] })
-                    .then(
-                        (emoji) => (desc += `<a:${emoji.name}:${emoji.id}> `)
-                    );
+                    .then((emoji) => (desc += `<a:${emoji.name}:${emoji.id}> `));
             }
         }
 
@@ -188,7 +198,7 @@ module.exports = class steal extends Command {
             for (let emojis in normemojis) {
                 const list = normemojis[emojis].split(":");
                 const Url = `https://cdn.discordapp.com/emojis/${list[2]}.png`;
-                const buffer = await axios.get(Url, { responseType: 'arraybuffer' });
+                const buffer = await axios.get(Url, { responseType: "arraybuffer" });
                 const size = Buffer.byteLength(buffer.data);
                 if (size > 256000) {
                     return interaction?.reply({
@@ -206,7 +216,7 @@ module.exports = class steal extends Command {
             .setTitle("Successfully added emojis to server.")
             .setColor(this.client.util.color(interaction))
             .setDescription(desc);
-            
+
         interaction?.reply({ embeds: [embed] });
     }
-}       
+};

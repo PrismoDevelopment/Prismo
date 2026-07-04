@@ -1,7 +1,7 @@
 module.exports = class Giveaway {
     /**
-     * 
-     * @param {import('./manager')} manager 
+     *
+     * @param {import('./manager')} manager
      */
     constructor(manager, options) {
         this.manager = manager;
@@ -70,7 +70,7 @@ module.exports = class Giveaway {
         /**
          * The people who entered the giveaway
          * @type {String[]}
-        */
+         */
         this.entered = options.entered || [];
         /**
          * Extra data of the giveaway
@@ -114,8 +114,8 @@ module.exports = class Giveaway {
             entered: this.entered,
             extraData: this.extraData,
             messages: this.messages,
-            reaction: this.reaction
-        }
+            reaction: this.reaction,
+        };
     }
 
     setMessageId(messageId) {
@@ -127,13 +127,18 @@ module.exports = class Giveaway {
             if (this.ended) return;
             this.ended = true;
             this.message = await this.fetchMessage().catch((err) => {
-                if (err.includes('Try later!')) this.ended = false;
+                if (err.includes("Try later!")) this.ended = false;
                 return reject(err);
             });
             if (!this.message) return;
-            const channel = this.message.channel.isThread() && !this.message.channel.sendable ? this.message.channel.parent : this.message.channel;
+            const channel =
+                this.message.channel.isThread() && !this.message.channel.sendable
+                    ? this.message.channel.parent
+                    : this.message.channel;
             if (this.entered.length === 0) {
-                const reactions = await this.message?.reactions?.cache?.get(this.reaction)?.users?.fetch();
+                const reactions = await this.message?.reactions?.cache
+                    ?.get(this.reaction)
+                    ?.users?.fetch();
                 reactions?.forEach((user) => {
                     if (user.bot) return;
                     this.entered.push(user.id);
@@ -143,21 +148,25 @@ module.exports = class Giveaway {
             await this.roll(this.entered);
             await this.manager.editData(this.data);
             this.message?.edit({
-                embeds: [(await this.manager.endEmbed(this.data))],
+                embeds: [await this.manager.endEmbed(this.data)],
                 content: `${this.client.config.Client.emoji.gift} **GIVEAWAY ENDED** ${this.client.config.Client.emoji.gift}`,
-            })
-            channel?.send({
-                content: this.winners.length ? `Congratulations ${this.winners.map((w) => `<@${w}>`).join(', ')}! You won **${this.prize}**!` : 'No one won the giveaway!',
-                allowedMentions: {
-                    parse: ['users']
-                },
-                reply: {
-                    messageReference: this.messageId,
-                    failIfNotExists: false
-                }
-            }).catch(() => { });
+            });
+            channel
+                ?.send({
+                    content: this.winners.length
+                        ? `Congratulations ${this.winners.map((w) => `<@${w}>`).join(", ")}! You won **${this.prize}**!`
+                        : "No one won the giveaway!",
+                    allowedMentions: {
+                        parse: ["users"],
+                    },
+                    reply: {
+                        messageReference: this.messageId,
+                        failIfNotExists: false,
+                    },
+                })
+                .catch(() => {});
             resolve();
-        })
+        });
     }
 
     /**
@@ -179,23 +188,26 @@ module.exports = class Giveaway {
      */
     async edit(options = {}) {
         return new Promise(async (resolve, reject) => {
-            if (this.ended) return reject('The giveaway is ended!');
-            this.message ??= await this.fetchMessage().catch(() => { });
-            if (!this.message) return reject('The giveaway message is not found!');
-            if (typeof options.prize === 'string') this.prize = options.prize;
-            if (typeof options.messages.image === 'string') this.messages.image = options.messages.image;
+            if (this.ended) return reject("The giveaway is ended!");
+            this.message ??= await this.fetchMessage().catch(() => {});
+            if (!this.message) return reject("The giveaway message is not found!");
+            if (typeof options.prize === "string") this.prize = options.prize;
+            if (typeof options.messages.image === "string")
+                this.messages.image = options.messages.image;
             if (options.extraData) this.extraData = options.extraData;
             if (Number.isInteger(options.winnerCount)) this.winnerCount = options.winnerCount;
             if (Number.isFinite(options.duration)) this.endsAt = this.endsAt + options.duration;
             this.manager.editData(this.data);
             let embed = await this.manager.mainEmbed(this.data);
             let button = await this.manager.embedButton(this.data);
-            this.message?.edit({
-                embeds: [embed],
-                components: [this.client.util.row().addComponents(button)]
-            }).catch(() => { });
+            this.message
+                ?.edit({
+                    embeds: [embed],
+                    components: [this.client.util.row().addComponents(button)],
+                })
+                .catch(() => {});
             resolve(this);
-        })
+        });
     }
 
     /**
@@ -207,15 +219,25 @@ module.exports = class Giveaway {
     async reroll(options = {}) {
         return new Promise(async (resolve, reject) => {
             // if (this.ended) return reject('The giveaway is ended!');
-            this.message ??= await this.fetchMessage().catch(() => { });
-            if (!this.message) return reject('The giveaway message is not found!');
-            if (options.winnerCount && (!Number.isInteger(options.winnerCount) || options.winnerCount < 1)) {
-                return reject(`options.winnerCount is not a positive integer. (val=${options.winnerCount})`);
+            this.message ??= await this.fetchMessage().catch(() => {});
+            if (!this.message) return reject("The giveaway message is not found!");
+            if (
+                options.winnerCount &&
+                (!Number.isInteger(options.winnerCount) || options.winnerCount < 1)
+            ) {
+                return reject(
+                    `options.winnerCount is not a positive integer. (val=${options.winnerCount})`
+                );
             }
             if (options.winnerCount) this.winnerCount = options.winnerCount;
-            const channel = this.message.channel.isThread() && !this.message.channel.sendable ? this.message.channel.parent : this.message.channel;
+            const channel =
+                this.message.channel.isThread() && !this.message.channel.sendable
+                    ? this.message.channel.parent
+                    : this.message.channel;
             if (!this.entered) {
-                const reactions = await this.message?.reactions?.cache?.get(this.reaction)?.users?.fetch();
+                const reactions = await this.message?.reactions?.cache
+                    ?.get(this.reaction)
+                    ?.users?.fetch();
                 reactions?.forEach((user) => {
                     if (user.bot) return;
                     this.entered.push(user.id);
@@ -231,20 +253,24 @@ module.exports = class Giveaway {
             await this.manager.editData(this.data);
             let embed = await this.manager.mainEmbed(this.data);
             this.message?.edit({
-                embeds: [embed]
-            })
-            channel?.send({
-                content: this.winners.length ? ` New winner(s): ${this.winners.map((w) => `<@${w}>`).join(', ')}! Congratulations, You won **${this.prize}**!` : 'No one won the giveaway!',
-                allowedMentions: {
-                    parse: ['users']
-                },
-                reply: {
-                    messageReference: this.messageId,
-                    failIfNotExists: false
-                }
-            }).catch(() => { });
+                embeds: [embed],
+            });
+            channel
+                ?.send({
+                    content: this.winners.length
+                        ? ` New winner(s): ${this.winners.map((w) => `<@${w}>`).join(", ")}! Congratulations, You won **${this.prize}**!`
+                        : "No one won the giveaway!",
+                    allowedMentions: {
+                        parse: ["users"],
+                    },
+                    reply: {
+                        messageReference: this.messageId,
+                        failIfNotExists: false,
+                    },
+                })
+                .catch(() => {});
             resolve(this);
-        })
+        });
     }
 
     async roll(winners, winnerCount = this.winnerCount) {
@@ -270,14 +296,19 @@ module.exports = class Giveaway {
             });
             if (!message) {
                 if (!tryLater) {
-                    this.manager.giveaways = this.manager.giveaways.filter((g) => g.messageId !== this.messageId);
+                    this.manager.giveaways = this.manager.giveaways.filter(
+                        (g) => g.messageId !== this.messageId
+                    );
                     await this.manager.deleteData(this.data);
                 }
                 return reject(
-                    'Unable to fetch message with Id ' + this.messageId + '.' + (tryLater ? ' Try later!' : '')
+                    "Unable to fetch message with Id " +
+                        this.messageId +
+                        "." +
+                        (tryLater ? " Try later!" : "")
                 );
             }
             resolve(message);
         });
     }
-}
+};

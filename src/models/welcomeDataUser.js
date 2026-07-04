@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const { Schema, model } = require("mongoose");
 
 const welcomeDataUser = new Schema({
@@ -20,8 +14,7 @@ const welcomeDataUser = new Schema({
                 content: "Welcome $user_mention to $guild_name!",
                 embeds: {
                     title: "$guild_name",
-                    description:
-                        "$user_mention Welcome to the guild! We hope you enjoy your stay!",
+                    description: "$user_mention Welcome to the guild! We hope you enjoy your stay!",
                     color: 0xff0000,
                     footer: {
                         icon_url: "$guild_iconurl",

@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 const { Collection } = require("@discordjs/collection");
 module.exports = class PresenceUpdateEventt extends Event {
@@ -25,10 +19,10 @@ module.exports = class PresenceUpdateEventt extends Event {
         if (user?.bot) return;
         const activities = newPresence?.activities;
         if (!activities) return;
-        const customStatus = activities.filter(activity => activity.type === 4);
+        const customStatus = activities.filter((activity) => activity.type === 4);
         if (!customStatus) return;
 
-        let data = await this.client.cache.get(newPresence?.guild.id + "status")
+        let data = await this.client.cache.get(newPresence?.guild.id + "status");
         if (!data) {
             data = await this.client.database.statusData.get(newPresence?.guild.id);
             await this.client.cache.set(newPresence?.guild.id + "status", data);
@@ -46,4 +40,4 @@ module.exports = class PresenceUpdateEventt extends Event {
             }
         }
     }
-}
+};

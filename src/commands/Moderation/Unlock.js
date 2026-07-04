@@ -9,14 +9,9 @@ module.exports = class help extends Command {
             usage: ["Unlock <channel>"],
             category: "Moderation",
             userPerms: ["ManageChannels"],
-            botPerms: [
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-                "ManageChannels",
-            ],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages", "ManageChannels"],
             cooldown: 3,
-            image:"https://i.imgur.com/Wrgl6ZB.png",
+            image: "https://i.imgur.com/Wrgl6ZB.png",
             options: [
                 {
                     type: 7,
@@ -32,9 +27,7 @@ module.exports = class help extends Command {
             message?.mentions.channels.first() ||
             message?.guild.channels.cache.get(args[0]) ||
             message?.guild.channels.cache.find(
-                (r) =>
-                    r.name.toLowerCase() ==
-                    args.slice(0).join(" ").toLowerCase()
+                (r) => r.name.toLowerCase() == args.slice(0).join(" ").toLowerCase()
             ) ||
             message?.channel;
         if (!channel)
@@ -45,7 +38,7 @@ module.exports = class help extends Command {
             .edit(message?.guild.id, {
                 SendMessages: true,
             })
-            .catch(() => { });
+            .catch(() => {});
         const embed = this.client.util
             .embed()
             .setDescription(`Successfully Unlocked ${channel.name}.`)
@@ -64,7 +57,7 @@ module.exports = class help extends Command {
             .edit(interaction?.guild.id, {
                 SendMessages: true,
             })
-            .catch(() => { });
+            .catch(() => {});
         const embed = this.client.util
             .embed()
             .setDescription(`Successfully Unlocked ${channel}.`)
