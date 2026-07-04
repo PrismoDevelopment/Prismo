@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Command = require("../../abstract/command");
 
 module.exports = class Divorce extends Command {
@@ -58,7 +52,7 @@ module.exports = class Divorce extends Command {
         let filter = (i) => i.user.id === message?.author.id;
         let collector = confirmation.createMessageComponentCollector({
             filter,
-            time: 15000
+            time: 15000,
         });
         collector.on("collect", async (i) => {
             if (i.customId === "yes") {
@@ -88,7 +82,7 @@ module.exports = class Divorce extends Command {
                 let filter = (i) => i.user.id === partner.id;
                 let collector2 = confmsg.createMessageComponentCollector({
                     filter,
-                    time: 15000
+                    time: 15000,
                 });
                 collector2.on("collect", async (i) => {
                     if (i.customId === "yes_2") {
@@ -99,22 +93,34 @@ module.exports = class Divorce extends Command {
                         return;
                     }
                     if (i.customId === "no_2") {
-                        return i.update({ content: `You canceled the divorce with ${message?.author.username}.`, components: [] });
+                        return i.update({
+                            content: `You canceled the divorce with ${message?.author.username}.`,
+                            components: [],
+                        });
                     }
                 });
                 collector2.once("end", async (collected, reason) => {
                     if (reason === "time") {
-                        return confirmation.edit({ content: "You didn't respond in time.", components: [] });
+                        return confirmation.edit({
+                            content: "You didn't respond in time.",
+                            components: [],
+                        });
                     }
                 });
             }
             if (i.customId === "no") {
-                return i.update({ content: `You canceled the divorce with ${partner.username}.`, components: [] });
+                return i.update({
+                    content: `You canceled the divorce with ${partner.username}.`,
+                    components: [],
+                });
             }
         });
         collector.once("end", async (collected, reason) => {
             if (reason === "time") {
-                return confirmation.edit({ content: "You didn't respond in time.", components: [] });
+                return confirmation.edit({
+                    content: "You didn't respond in time.",
+                    components: [],
+                });
             }
         });
     }
@@ -157,7 +163,7 @@ module.exports = class Divorce extends Command {
         let filter = (i) => i.user.id === interaction?.user.id;
         let collector = confirmation.createMessageComponentCollector({
             filter,
-            time: 15000
+            time: 15000,
         });
 
         collector.once("collect", async (i) => {
@@ -190,34 +196,48 @@ module.exports = class Divorce extends Command {
                 let filter = (i) => i.user.id === partner.id;
                 let collector2 = confmsg.createMessageComponentCollector({
                     filter,
-                    time: 15000
+                    time: 15000,
                 });
                 collector2.once("collect", async (i) => {
                     if (i.customId === "yes_2") {
                         await this.client.database.marryData.post(interaction?.user.id, data);
                         await this.client.database.marryData.post(partner.id, partnerdata);
                         i.message?.delete();
-                        interaction?.channel.send(`${interaction?.user} and <@${partner.id}> divorced.`);
+                        interaction?.channel.send(
+                            `${interaction?.user} and <@${partner.id}> divorced.`
+                        );
                         return;
                     }
                     if (i.customId === "no_2") {
-                        return i.update({ content: `You canceled the divorce with ${interaction?.user.username}.`, components: [] });
+                        return i.update({
+                            content: `You canceled the divorce with ${interaction?.user.username}.`,
+                            components: [],
+                        });
                     }
                 });
                 collector2.once("end", async (collected, reason) => {
                     if (reason === "time") {
-                        return confirmation.edit({ content: "You didn't respond in time.", components: [] });
+                        return confirmation.edit({
+                            content: "You didn't respond in time.",
+                            components: [],
+                        });
                     }
                 });
             }
             if (i.customId === "no") {
-                return i.update({ content: `You canceled the divorce with ${partner.username}.`, components: [] });
+                return i.update({
+                    content: `You canceled the divorce with ${partner.username}.`,
+                    components: [],
+                });
             }
         });
 
         collector.once("end", async (collected, reason) => {
             if (reason === "time") {
-                return confirmation.edit({ content: "You didn't respond in time.", components: [] });
+                return confirmation.edit({
+                    content: "You didn't respond in time.",
+                    components: [],
+                });
             }
         });
     }

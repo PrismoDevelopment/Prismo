@@ -20,10 +20,13 @@ module.exports = class WouldYouRather extends Command {
         if (!guildData) return message?.channel.send("Guild data not found!");
 
         const ratingQuery = guildData.rratings ? "?rating=r" : "";
-        const body = await this.client.util.requestget(`https://api.truthordarebot.xyz/v1/wyr${ratingQuery}`);
+        const body = await this.client.util.requestget(
+            `https://api.truthordarebot.xyz/v1/wyr${ratingQuery}`
+        );
         if (!body) return message?.channel.send("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Would You Rather")
             .setDescription(body.question)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -36,10 +39,13 @@ module.exports = class WouldYouRather extends Command {
         if (!guildData) return interaction?.reply("Guild data not found!");
 
         const ratingQuery = guildData.rratings ? "?rating=r" : "";
-        const body = await this.client.util.requestget(`https://api.truthordarebot.xyz/v1/wyr${ratingQuery}`);
+        const body = await this.client.util.requestget(
+            `https://api.truthordarebot.xyz/v1/wyr${ratingQuery}`
+        );
         if (!body) return interaction?.reply("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Would You Rather")
             .setDescription(body.question)
             .setColor(this.client.config.Client.PrimaryColor);

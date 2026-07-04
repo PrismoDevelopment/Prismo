@@ -9,12 +9,7 @@ module.exports = class help extends Command {
             usage: ["<snick @user nickname>"],
             category: "Utilities",
             userPerms: ["ManageNicknames"],
-            botPerms: [
-                "ManageEmojisAndStickers",
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-            ],
+            botPerms: ["ManageEmojisAndStickers", "EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
             image: "https://imgur.com/CSk5Sn9",
             options: [
@@ -63,31 +58,23 @@ module.exports = class help extends Command {
                 });
             if (args[0].toLowerCase() == "set" || args[0].toLowerCase() == "add") {
                 args.shift();
-                if (!args[1])
-                    return message?.reply({ content: "Please provide a user." });
+                if (!args[1]) return message?.reply({ content: "Please provide a user." });
                 const user =
                     message?.mentions.members.first() ||
-                    message?.guild.members.cache.find(
-                        (m) => m.user.username === args[1]
-                    ) ||
+                    message?.guild.members.cache.find((m) => m.user.username === args[1]) ||
                     message?.guild.members.cache.get(args[1]);
                 if (!user)
                     return message?.reply({
-                        content:
-                            "Please mention a user or provide a valid user ID",
+                        content: "Please mention a user or provide a valid user ID",
                     });
                 const member = message?.guild.members.cache.get(user.id);
                 if (!member)
                     return message?.reply({
                         content: "That user isn't in this guild!",
                     });
-                if (
-                    member.roles.highest.position >
-                    message?.member.roles.highest.position
-                )
+                if (member.roles.highest.position > message?.member.roles.highest.position)
                     return message?.reply({
-                        content:
-                            "You can't do that with a user with higher roles than you!",
+                        content: "You can't do that with a user with higher roles than you!",
                     });
                 args.shift();
                 if (args.length == 0)
@@ -133,14 +120,11 @@ module.exports = class help extends Command {
             if (args[0].toLowerCase() == "remove") {
                 const user =
                     message?.mentions.members.first() ||
-                    message?.guild.members.cache.find(
-                        (m) => m.user.username === args[1]
-                    ) ||
+                    message?.guild.members.cache.find((m) => m.user.username === args[1]) ||
                     message?.guild.members.cache.get(args[1]);
                 if (!user)
                     return message?.reply({
-                        content:
-                            "Please mention a user or provide a valid user ID",
+                        content: "Please mention a user or provide a valid user ID",
                     });
                 const member = await message?.guild.members.fetch(user);
                 if (!member)
@@ -162,8 +146,7 @@ module.exports = class help extends Command {
                 if (data) message?.reply({ embeds: [embed] });
                 if (!data)
                     message?.reply({
-                        content:
-                            "Sticky Nick doesn't exist for this user in this guild.",
+                        content: "Sticky Nick doesn't exist for this user in this guild.",
                     });
                 if (data) member.setNickname(null);
                 return;
@@ -196,22 +179,14 @@ module.exports = class help extends Command {
                         "Sticky Nick already exists for this user in this guild. Remove it first!",
                 });
             if (!data)
-                await this.client.database.stickynickData.set(
-                    user.id,
-                    interaction?.guild.id,
-                    nick
-                );
+                await this.client.database.stickynickData.set(user.id, interaction?.guild.id, nick);
 
-            await interaction?.guild.members.cache
-                .get(user.id)
-                .setNickname(nick);
+            await interaction?.guild.members.cache.get(user.id).setNickname(nick);
             let embed = this.client.util
                 .embed()
                 .setTitle("StickyNickname Added!")
                 .setColor("Aqua")
-                .setDescription(
-                    `\`\`\`User: ${user.username}\nNickname : ${nick}\`\`\``
-                );
+                .setDescription(`\`\`\`User: ${user.username}\nNickname : ${nick}\`\`\``);
 
             await interaction?.reply({ embeds: [embed] });
         }

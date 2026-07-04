@@ -1,12 +1,6 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 const { EmbedBuilder } = require("discord.js");
-const {  ButtonInteraction } = require('discord.js');
+const { ButtonInteraction } = require("discord.js");
 module.exports = class serverVerificationCreate extends Event {
     get name() {
         return "serverVerificationCreate";
@@ -33,10 +27,10 @@ module.exports = class serverVerificationCreate extends Event {
             ),
         ];
         const modal = this.client.util
-        .model()
-        .setCustomId(`modal_verification_sumbit`)
-        .addComponents(rows)
-        .setTitle(`Enter code ${randomsixdigit} to verify`)
-      return  await interaction?.showModal(modal);
+            .model()
+            .setCustomId(`modal_verification_sumbit`)
+            .addComponents(rows)
+            .setTitle(`Enter code ${randomsixdigit} to verify`);
+        return await interaction?.showModal(modal);
     }
 };

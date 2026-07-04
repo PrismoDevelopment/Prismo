@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Command = require("../../abstract/command");
 const akinator = require("discord.js-akinator");
 
@@ -31,21 +25,21 @@ module.exports = class Akinator extends Command {
                             choices: [
                                 {
                                     name: "character",
-                                    value: "character"
+                                    value: "character",
                                 },
                                 {
                                     name: "animal",
-                                    value: "animal"
+                                    value: "animal",
                                 },
                                 {
                                     name: "object",
-                                    value: "object"
-                                }
+                                    value: "object",
+                                },
                             ],
-                            required: true
-                        }
+                            required: true,
+                        },
                     ],
-                }
+                },
             ],
         });
     }
@@ -56,7 +50,8 @@ module.exports = class Akinator extends Command {
         const useButtons = true; //Whether to use Discord's buttons instead of message input for answering questions. Defaults to "true".
         const embedColor = this.client.PrimaryColor; //The color of the embeds. Defaults to "#2b2d31".
         const msg = await message?.reply({
-            content: "Please select an option what I need to guess.", components: [
+            content: "Please select an option what I need to guess.",
+            components: [
                 {
                     type: 1,
                     components: [
@@ -77,25 +72,34 @@ module.exports = class Akinator extends Command {
                             label: "Object",
                             style: 2,
                             custom_id: "object",
-                        }
-                    ]
-                }
-            ]
+                        },
+                    ],
+                },
+            ],
         });
         const filter = (interaction) => interaction.user.id === message?.author.id;
         const collector = msg.createMessageComponentCollector({ filter, time: 60000 });
         collector.on("collect", async (interaction) => {
             if (interaction.customId === "character") {
                 gameType = "character";
-                await interaction.update({ content: "Alright, now think of a character and I will try to guess it.", components: [] });
+                await interaction.update({
+                    content: "Alright, now think of a character and I will try to guess it.",
+                    components: [],
+                });
                 collector.stop();
             } else if (interaction.customId === "animal") {
                 gameType = "animal";
-                await interaction.update({ content: "Alright, now think of an animal and I will try to guess it.", components: [] });
+                await interaction.update({
+                    content: "Alright, now think of an animal and I will try to guess it.",
+                    components: [],
+                });
                 collector.stop();
             } else if (interaction.customId === "object") {
                 gameType = "object";
-                await interaction.update({ content: "Alright, now think of an object and I will try to guess it.", components: [] });
+                await interaction.update({
+                    content: "Alright, now think of an object and I will try to guess it.",
+                    components: [],
+                });
                 collector.stop();
             }
         });
@@ -108,7 +112,7 @@ module.exports = class Akinator extends Command {
                 gameType,
                 useButtons,
                 embedColor,
-            })
+            });
         });
     }
 
@@ -119,19 +123,28 @@ module.exports = class Akinator extends Command {
         const embedColor = this.client.PrimaryColor; //The color of the embeds. Defaults to "#2b2d31".
         if (interaction.options.get("type").value === "character") {
             gameType = "character";
-            await interaction.reply({ content: "Alright, now think of a character and I will try to guess it.", ephemeral: true });
+            await interaction.reply({
+                content: "Alright, now think of a character and I will try to guess it.",
+                ephemeral: true,
+            });
         } else if (interaction.options.get("type").value === "animal") {
             gameType = "animal";
-            await interaction.reply({ content: "Alright, now think of an animal and I will try to guess it.", ephemeral: true });
+            await interaction.reply({
+                content: "Alright, now think of an animal and I will try to guess it.",
+                ephemeral: true,
+            });
         } else if (interaction.options.get("type").value === "object") {
             gameType = "object";
-            await interaction.reply({ content: "Alright, now think of an object and I will try to guess it.", ephemeral: true });
+            await interaction.reply({
+                content: "Alright, now think of an object and I will try to guess it.",
+                ephemeral: true,
+            });
         }
         akinator(interaction, {
             language,
             gameType,
             useButtons,
             embedColor,
-        })
+        });
     }
 };

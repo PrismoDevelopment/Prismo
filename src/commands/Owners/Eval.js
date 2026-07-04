@@ -1,8 +1,5 @@
 const Command = require("../../abstract/command");
-const {
-    ActionRowBuilder,
-    ButtonBuilder,
-} = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder } = require("discord.js");
 
 module.exports = class Eval extends Command {
     constructor(...args) {
@@ -58,10 +55,7 @@ module.exports = class Eval extends Command {
                     let hrDiff;
                     hrDiff = process.hrtime(hrStart);
                     if (evaluated.length > 1024) {
-                        let hehfilel = await this.client.util.largeMessage(
-                            evaluated,
-                            "js"
-                        );
+                        let hehfilel = await this.client.util.largeMessage(evaluated, "js");
                         return message?.channel
                             .send({
                                 content: null,

@@ -11,7 +11,7 @@ module.exports = class Xhotuprem extends Command {
             cooldown: 0,
         });
     }
-    async run({ message, args }) {
+    async exec({ client, message, args, interaction }) {
         if (!args[0]) {
             return message?.reply(`Choose add,remove & list`);
         }
@@ -23,9 +23,7 @@ module.exports = class Xhotuprem extends Command {
                 });
             const member = await this.client.users.fetch(user);
             if (!member) return message?.reply({ content: "Invalid User" });
-            const data = await this.client.database.xhotuPermsData.get(
-                member.id
-            );
+            const data = await this.client.database.xhotuPermsData.get(member.id);
             if (data.xhotu)
                 return message?.reply({
                     content: "User already has Xhotu Owner",
@@ -44,9 +42,7 @@ module.exports = class Xhotuprem extends Command {
                 });
             const member = await this.client.users.fetch(user);
             if (!member) return message?.reply({ content: "Invalid User" });
-            const data = await this.client.database.xhotuPermsData.get(
-                member.id
-            );
+            const data = await this.client.database.xhotuPermsData.get(member.id);
             if (!data.xhotu)
                 return message?.reply({
                     content: "User does not have Xhotu Owner",
@@ -62,32 +58,16 @@ module.exports = class Xhotuprem extends Command {
             const backId = "back";
             const nextId = "next";
             const lastId = "last";
-            const first = new ButtonBuilder()
-                .setCustomId(firstId)
-                .setLabel("First")
-                .setStyle(1);
-            const back = new ButtonBuilder()
-                .setCustomId(backId)
-                .setLabel("Back")
-                .setStyle(1);
-            const next = new ButtonBuilder()
-                .setCustomId(nextId)
-                .setLabel("Next")
-                .setStyle(1);
-            const last = new ButtonBuilder()
-                .setCustomId(lastId)
-                .setLabel("Last")
-                .setStyle(1);
-            const row = new ActionRowBuilder().addComponents(
-                first,
-                back,
-                next,
-                last
-            );
+            const first = new ButtonBuilder().setCustomId(firstId).setLabel("First").setStyle(1);
+            const back = new ButtonBuilder().setCustomId(backId).setLabel("Back").setStyle(1);
+            const next = new ButtonBuilder().setCustomId(nextId).setLabel("Next").setStyle(1);
+            const last = new ButtonBuilder().setCustomId(lastId).setLabel("Last").setStyle(1);
+            const row = new ActionRowBuilder().addComponents(first, back, next, last);
             const data = await this.client.database.xhotuPermsData.all();
             const xhotuOwners = data.filter((x) => x.xhotu == true);
             const xhotuOwnersList = xhotuOwners.map((x) => x.id);
-            let xhotuOwnersListEmbed = this.client.util.embed()
+            let xhotuOwnersListEmbed = this.client.util
+                .embed()
                 .setTitle(`Xhotu Owners List`)
                 .setDescription(
                     xhotuOwnersList
@@ -103,9 +83,10 @@ module.exports = class Xhotuprem extends Command {
             const filter = (i) =>
                 i.user.id === message?.author.id &&
                 [firstId, backId, nextId, lastId].includes(i.customId);
-            const collector = xhotuOwnersListMessage?.createMessageComponentCollector(
-                { filter, time: 60000 }
-            );
+            const collector = xhotuOwnersListMessage?.createMessageComponentCollector({
+                filter,
+                time: 60000,
+            });
             let currentPage = 1;
             collector?.on("collect", async (i) => {
                 if (interaction?.customId === firstId) {
@@ -116,7 +97,9 @@ module.exports = class Xhotuprem extends Command {
                             .map((x) => `<@${x}> - ${x}`)
                             .join("\n")
                     );
-                    xhotuOwnersListEmbed.setFooter({ text: `Page 1 of ${Math.ceil(xhotuOwnersList.length / 10)}` });
+                    xhotuOwnersListEmbed.setFooter({
+                        text: `Page 1 of ${Math.ceil(xhotuOwnersList.length / 10)}`,
+                    });
                     await i.update({ embeds: [xhotuOwnersListEmbed] });
                 }
                 if (interaction?.customId === backId) {
@@ -128,7 +111,9 @@ module.exports = class Xhotuprem extends Command {
                                 .map((x) => `<@${x}> - ${x}`)
                                 .join("\n")
                         );
-                        xhotuOwnersListEmbed.setFooter({ text: `Page ${currentPage} of ${Math.ceil(xhotuOwnersList.length / 10)}` });
+                        xhotuOwnersListEmbed.setFooter({
+                            text: `Page ${currentPage} of ${Math.ceil(xhotuOwnersList.length / 10)}`,
+                        });
                         await i.update({ embeds: [xhotuOwnersListEmbed] });
                     }
                 }
@@ -141,7 +126,9 @@ module.exports = class Xhotuprem extends Command {
                                 .map((x) => `<@${x}> - ${x}`)
                                 .join("\n")
                         );
-                        xhotuOwnersListEmbed.setFooter({ text: `Page ${currentPage} of ${Math.ceil(xhotuOwnersList.length / 10)}` });
+                        xhotuOwnersListEmbed.setFooter({
+                            text: `Page ${currentPage} of ${Math.ceil(xhotuOwnersList.length / 10)}`,
+                        });
                         await i.update({ embeds: [xhotuOwnersListEmbed] });
                     }
                 }
@@ -149,14 +136,13 @@ module.exports = class Xhotuprem extends Command {
                     currentPage = Math.ceil(xhotuOwnersList.length / 10);
                     xhotuOwnersListEmbed.setDescription(
                         xhotuOwnersList
-                            .slice(
-                                currentPage * 10 - 10,
-                                currentPage * 10
-                            )
+                            .slice(currentPage * 10 - 10, currentPage * 10)
                             .map((x) => `<@${x}> - ${x}`)
                             .join("\n")
                     );
-                    xhotuOwnersListEmbed.setFooter({ text: `Page ${currentPage} of ${Math.ceil(xhotuOwnersList.length / 10)}` });
+                    xhotuOwnersListEmbed.setFooter({
+                        text: `Page ${currentPage} of ${Math.ceil(xhotuOwnersList.length / 10)}`,
+                    });
                     await i.update({ embeds: [xhotuOwnersListEmbed] });
                 }
             });

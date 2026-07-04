@@ -11,8 +11,7 @@ module.exports = class Membercount extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 2,
-            image:""
-
+            image: "",
         });
     }
 
@@ -25,12 +24,30 @@ module.exports = class Membercount extends Command {
                 .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
                 .setTitle("Membercount")
                 .setColor(this.client.config.Client.PrimaryColor)
-                .setDescription(`${this.client.config.Client.emoji.member} **Total Members:**\`\`\`${memberCount}\`\`\``)
+                .setDescription(
+                    `${this.client.config.Client.emoji.member} **Total Members:**\`\`\`${memberCount}\`\`\``
+                )
                 .setThumbnail(guild.iconURL({ dynamic: true }))
-                .addFields({ name: `${this.client.config.Client.emoji.online} Online`, value: `\`\`\`${guild.members.cache.filter(m => m.presence?.status === "online").size}\`\`\``, inline: true }, { name: `${this.client.config.Client.emoji.idle} Idle`, value: `\`\`\`${guild.members.cache.filter(m => m.presence?.status === "idle").size}\`\`\``, inline: true }, { name: `${this.client.config.Client.emoji.dnd} DND`, value: `\`\`\`${guild.members.cache.filter(m => m.presence?.status === "dnd").size}\`\`\``, inline: true });
+                .addFields(
+                    {
+                        name: `${this.client.config.Client.emoji.online} Online`,
+                        value: `\`\`\`${guild.members.cache.filter((m) => m.presence?.status === "online").size}\`\`\``,
+                        inline: true,
+                    },
+                    {
+                        name: `${this.client.config.Client.emoji.idle} Idle`,
+                        value: `\`\`\`${guild.members.cache.filter((m) => m.presence?.status === "idle").size}\`\`\``,
+                        inline: true,
+                    },
+                    {
+                        name: `${this.client.config.Client.emoji.dnd} DND`,
+                        value: `\`\`\`${guild.members.cache.filter((m) => m.presence?.status === "dnd").size}\`\`\``,
+                        inline: true,
+                    }
+                );
             message?.reply({ embeds: [embed] });
         } catch (error) {
-            return
+            return;
         }
     }
 
@@ -43,12 +60,30 @@ module.exports = class Membercount extends Command {
                 .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
                 .setTitle("Membercount")
                 .setColor(this.client.config.Client.PrimaryColor)
-                .setDescription(`${this.client.config.Client.emoji.member} **Total Members:**\`\`\`${memberCount}\`\`\``)
+                .setDescription(
+                    `${this.client.config.Client.emoji.member} **Total Members:**\`\`\`${memberCount}\`\`\``
+                )
                 .setThumbnail(guild.iconURL({ dynamic: true }))
-                .addFields({ name: `${this.client.config.Client.emoji.online} Online`, value: `\`\`\`${guild.members.cache.filter(m => m.presence?.status === "online").size}\`\`\``, inline: true }, { name: `${this.client.config.Client.emoji.idle} Idle`, value: `\`\`\`${guild.members.cache.filter(m => m.presence?.status === "idle").size}\`\`\``, inline: true }, { name: `${this.client.config.Client.emoji.dnd} DND`, value: `\`\`\`${guild.members.cache.filter(m => m.presence?.status === "dnd").size}\`\`\``, inline: true });
+                .addFields(
+                    {
+                        name: `${this.client.config.Client.emoji.online} Online`,
+                        value: `\`\`\`${guild.members.cache.filter((m) => m.presence?.status === "online").size}\`\`\``,
+                        inline: true,
+                    },
+                    {
+                        name: `${this.client.config.Client.emoji.idle} Idle`,
+                        value: `\`\`\`${guild.members.cache.filter((m) => m.presence?.status === "idle").size}\`\`\``,
+                        inline: true,
+                    },
+                    {
+                        name: `${this.client.config.Client.emoji.dnd} DND`,
+                        value: `\`\`\`${guild.members.cache.filter((m) => m.presence?.status === "dnd").size}\`\`\``,
+                        inline: true,
+                    }
+                );
             interaction?.reply({ embeds: [embed] });
         } catch (error) {
-            return  
+            return;
         }
     }
 };

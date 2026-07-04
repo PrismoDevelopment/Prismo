@@ -40,7 +40,7 @@ module.exports = class EmbedFunction {
             const filter = (i) => {
                 if (i?.member?.id === message?.member.id) return true;
                 return false;
-            }
+            };
             const collector = await message?.channel?.createMessageCollector({
                 filter,
                 max: 3,
@@ -66,18 +66,29 @@ module.exports = class EmbedFunction {
             collector.on("end", async (collected, reason) => {
                 if (reason === "time") {
                     await collector?.stop();
-                    this.editReply(message, {
-                        content: "You took too long to respond!",
-                        ephemeral: true,
-                    }, slash);
+                    this.editReply(
+                        message,
+                        {
+                            content: "You took too long to respond!",
+                            ephemeral: true,
+                        },
+                        slash
+                    );
                 }
-                const embed = this.client.util.embed().setTitle("Title").setDescription("Description").setColor(0x000000);
+                const embed = this.client.util
+                    .embed()
+                    .setTitle("Title")
+                    .setDescription("Description")
+                    .setColor(0x000000);
                 await this.sendNormal(msg, "Content", embed, slash);
                 let filter = (i) => {
                     if (i.user.id === message?.member.id) return true;
                     return false;
-                }
-                const selected = await message?.channel?.createMessageComponentCollector({ filter, time: 20 * 60 * 1000 });
+                };
+                const selected = await message?.channel?.createMessageComponentCollector({
+                    filter,
+                    time: 20 * 60 * 1000,
+                });
                 selected.on("collect", async (i) => {
                     if (i.componentType == 2) {
                         if (i.customId == "body") {
@@ -91,12 +102,11 @@ module.exports = class EmbedFunction {
                         }
                         if (i.customId == "cancel") {
                             selected.stop();
-                            return this.msg?.edit
-                                ({
-                                    content: "Successfully Cancelled The Embed!",
-                                    embeds: [],
-                                    components: [],
-                                });
+                            return this.msg?.edit({
+                                content: "Successfully Cancelled The Embed!",
+                                embeds: [],
+                                components: [],
+                            });
                         }
                         if (i.customId == "save") {
                             selected.stop();
@@ -105,28 +115,31 @@ module.exports = class EmbedFunction {
                                 embeds: [embed],
                                 components: [],
                             });
-                            try{
+                            try {
                                 // console.log(`Exec: ${data.name} | ${data.content} | ${embedData}`);
-                                return await this.client.database.welcomeUserData.post(message?.member.user.id, {
-                                    name: data.name,
-                                    content: data.content,
-                                    embeds: embedData,
-                                });
+                                return await this.client.database.welcomeUserData.post(
+                                    message?.member.user.id,
+                                    {
+                                        name: data.name,
+                                        content: data.content,
+                                        embeds: embedData,
+                                    }
+                                );
                             } catch (e) {
                                 return message?.reply({
                                     content: "An error occurred while saving the embed!",
                                     ephemeral: true,
                                 });
                             }
-                            
                         }
                     }
                 });
             });
         }
-        if ((args == "show") || (args == "list")) {
+        if (args == "show" || args == "list") {
             const data = await this.client.database.welcomeUserData.get(message?.member.user.id);
-            if (!data.message.length) return await message?.reply({ content: "You Don't Have Any Presets Saved!" });
+            if (!data.message.length)
+                return await message?.reply({ content: "You Don't Have Any Presets Saved!" });
             let max = data.message?.length;
             let okie = data.message?.slice(0, max);
             let resultMessage = await message?.reply({
@@ -147,7 +160,10 @@ module.exports = class EmbedFunction {
                 ],
                 fetchReply: true,
             });
-            const selected = await message?.client.util.awaitSelectionMenu(resultMessage, (message) => message?.member.id == message?.user.id);
+            const selected = await message?.client.util.awaitSelectionMenu(
+                resultMessage,
+                (message) => message?.member.id == message?.user.id
+            );
             if (!selected) {
                 return await message
                     .editReply({
@@ -163,12 +179,17 @@ module.exports = class EmbedFunction {
             });
             const embedValue = data.message?.filter((g) => g.id == selected.values[0])[0];
             // await resultMessage.reply({content:`h`})
-            await this.editReply(resultMessage, {
-                content: `Here Is The Embed Preview For ${"`" + embedValue.name + "`"} Preset ${this.client.config.Client.emoji.down}`,
-                components: [],
-            }, slash);
+            await this.editReply(
+                resultMessage,
+                {
+                    content: `Here Is The Embed Preview For ${"`" + embedValue.name + "`"} Preset ${this.client.config.Client.emoji.down}`,
+                    components: [],
+                },
+                slash
+            );
             embedValue.embeds.color = embedValue.embeds.color ? Number(embedValue.embeds.color) : 0;
-            if (embedValue.content != " ") embedValue.content = await this.client.util.replace(embedValue.content, message);
+            if (embedValue.content != " ")
+                embedValue.content = await this.client.util.replace(embedValue.content, message);
             const dataEmbed = await this.client.util.replacerString(embedValue.embeds, message);
             await message?.channel.send({
                 content: embedValue.content,
@@ -177,7 +198,8 @@ module.exports = class EmbedFunction {
         }
         if (args === "delete") {
             const data = await this.client.database.welcomeUserData.get(message?.member.user.id);
-            if (!data.message.length) return await message?.reply({ content: "You Don't Have Any Presets Saved!" });
+            if (!data.message.length)
+                return await message?.reply({ content: "You Don't Have Any Presets Saved!" });
             let max = data.message?.length;
             let okie = data.message?.slice(0, max);
             let resultMessage = await message?.reply({
@@ -198,7 +220,10 @@ module.exports = class EmbedFunction {
                 ],
                 fetchReply: true,
             });
-            const selected = await message?.client.util.awaitSelectionMenu(resultMessage, (message) => message?.member.id == message?.user.id);
+            const selected = await message?.client.util.awaitSelectionMenu(
+                resultMessage,
+                (message) => message?.member.id == message?.user.id
+            );
             if (!selected) {
                 return await message
                     .editReply({
@@ -233,14 +258,21 @@ module.exports = class EmbedFunction {
                     this.client.util
                         .row()
                         .setComponents(
-                            this.client.util.button().setStyle(3).setLabel("Yes").setCustomId("yes"),
+                            this.client.util
+                                .button()
+                                .setStyle(3)
+                                .setLabel("Yes")
+                                .setCustomId("yes"),
                             this.client.util.button().setStyle(4).setLabel("No").setCustomId("no")
                         ),
                 ],
                 fetchReply: true,
                 ephemeral: true,
             });
-            const selected2 = await this.client.util.awaitSelectionButton(okayMsg, (message) => message?.member.id == message?.user.id);
+            const selected2 = await this.client.util.awaitSelectionButton(
+                okayMsg,
+                (message) => message?.member.id == message?.user.id
+            );
             if (!selected2) {
                 return await selected
                     .editReply({
@@ -252,7 +284,10 @@ module.exports = class EmbedFunction {
                     });
             }
             if (selected2.customId == "yes") {
-                await this.client.database.welcomeUserData.delete(message?.member.user.id, embedValue.id);
+                await this.client.database.welcomeUserData.delete(
+                    message?.member.user.id,
+                    embedValue.id
+                );
                 await selected.editReply({
                     content: `Successfully Deleted The Preset **${embedValue.name}**`,
                     components: [],
@@ -275,7 +310,8 @@ module.exports = class EmbedFunction {
         }
         if (args === "edit") {
             let data = await this.client.database.welcomeUserData.get(message?.member.user.id);
-            if (!data.message.length) return await message?.reply({ content: "You Don't Have Any Presets Saved!" });
+            if (!data.message.length)
+                return await message?.reply({ content: "You Don't Have Any Presets Saved!" });
             const dataToSave = {
                 name: "",
                 content: " ",
@@ -290,21 +326,34 @@ module.exports = class EmbedFunction {
                 footer: { text: undefined, icon_url: undefined },
             };
 
-            const userData = await this.client.database.welcomeUserData.get(message?.member.user.id);
+            const userData = await this.client.database.welcomeUserData.get(
+                message?.member.user.id
+            );
             const max = userData.message?.length;
-            const options = userData.message?.slice(0, max).map((x, i) => ({ label: x.name, value: x.id }));
+            const options = userData.message
+                ?.slice(0, max)
+                .map((x, i) => ({ label: x.name, value: x.id }));
 
             const resultMessage = await message?.reply({
                 content: "Select a preset to edit",
                 components: [
                     this.client.util
                         .row()
-                        .setComponents(this.client.util.menu().setCustomId("edit").setPlaceholder("Select a preset to edit").setOptions(options)),
+                        .setComponents(
+                            this.client.util
+                                .menu()
+                                .setCustomId("edit")
+                                .setPlaceholder("Select a preset to edit")
+                                .setOptions(options)
+                        ),
                 ],
                 fetchReply: true,
             });
 
-            const selected = await message?.client.util.awaitSelectionMenu(resultMessage, (message) => message?.member.id === message?.user.id);
+            const selected = await message?.client.util.awaitSelectionMenu(
+                resultMessage,
+                (message) => message?.member.id === message?.user.id
+            );
 
             if (!selected) {
                 return await message
@@ -365,11 +414,15 @@ module.exports = class EmbedFunction {
                             components: [],
                         });
                         collector.stop();
-                        return await this.client.database.welcomeUserData.put(message?.member.user.id, embedValue.id, {
-                            name: dataToSave.name,
-                            content: dataToSave.content,
-                            embeds: embedData,
-                        });
+                        return await this.client.database.welcomeUserData.put(
+                            message?.member.user.id,
+                            embedValue.id,
+                            {
+                                name: dataToSave.name,
+                                content: dataToSave.content,
+                                embeds: embedData,
+                            }
+                        );
                     }
                 }
             });
@@ -377,7 +430,9 @@ module.exports = class EmbedFunction {
     }
 
     async sendNormal(message, content, embed, slash = false) {
-        await message?.delete().catch((e) => { return; });
+        await message?.delete().catch((e) => {
+            return;
+        });
         this.msg = await message.channel.send({
             content: content || " ",
             embeds: [embed],
@@ -385,15 +440,40 @@ module.exports = class EmbedFunction {
                 this.client.util
                     .row()
                     .setComponents(
-                        this.client.util.button().setCustomId("body").setEmoji("1010055851328946227").setLabel("Body").setStyle(1),
-                        this.client.util.button().setCustomId("images").setEmoji("1010056682526736445").setLabel("Images").setStyle(1),
-                        this.client.util.button().setCustomId("misc").setEmoji("1001043777596694558").setLabel("Misc").setStyle(1)
+                        this.client.util
+                            .button()
+                            .setCustomId("body")
+                            .setEmoji("1010055851328946227")
+                            .setLabel("Body")
+                            .setStyle(1),
+                        this.client.util
+                            .button()
+                            .setCustomId("images")
+                            .setEmoji("1010056682526736445")
+                            .setLabel("Images")
+                            .setStyle(1),
+                        this.client.util
+                            .button()
+                            .setCustomId("misc")
+                            .setEmoji("1001043777596694558")
+                            .setLabel("Misc")
+                            .setStyle(1)
                     ),
                 this.client.util
                     .row()
                     .setComponents(
-                        this.client.util.button().setCustomId("save").setEmoji("1001064958450208788").setLabel("Save").setStyle(3),
-                        this.client.util.button().setCustomId("cancel").setEmoji("1001064990079471679").setLabel("Cancel").setStyle(4)
+                        this.client.util
+                            .button()
+                            .setCustomId("save")
+                            .setEmoji("1001064958450208788")
+                            .setLabel("Save")
+                            .setStyle(3),
+                        this.client.util
+                            .button()
+                            .setCustomId("cancel")
+                            .setEmoji("1001064990079471679")
+                            .setLabel("Cancel")
+                            .setStyle(4)
                     ),
             ],
         });
@@ -442,7 +522,11 @@ module.exports = class EmbedFunction {
                     .setValue(embedData.description || "")
             ),
         ];
-        const modal = this.client.util.model().setCustomId(`modal-${i.id}`).addComponents(rows).setTitle("Body");
+        const modal = this.client.util
+            .model()
+            .setCustomId(`modal-${i.id}`)
+            .addComponents(rows)
+            .setTitle("Body");
         const modalSubmitInteraction = await this.client.util.addModel(i, modal);
         const contentData =
             modalSubmitInteraction.fields.getTextInputValue("content") == ""
@@ -482,7 +566,7 @@ module.exports = class EmbedFunction {
         modalSubmitInteraction.deferUpdate().catch((e) => {
             return;
         });
-        return embedData, embed;
+        return (embedData, embed);
     }
     async image(message, data, embedData, i, embed, slash = false) {
         const rows = [
@@ -494,7 +578,13 @@ module.exports = class EmbedFunction {
                     .setStyle(1)
                     .setRequired(false)
                     .setPlaceholder("Top Right Of The Embed!")
-                    .setValue(embedData.thumbnail ? (!embedData.thumbnail.url ? "" : embedData.thumbnail.url) : "")
+                    .setValue(
+                        embedData.thumbnail
+                            ? !embedData.thumbnail.url
+                                ? ""
+                                : embedData.thumbnail.url
+                            : ""
+                    )
             ),
             this.client.util.row().setComponents(
                 this.client.util
@@ -504,7 +594,9 @@ module.exports = class EmbedFunction {
                     .setStyle(1)
                     .setRequired(false)
                     .setPlaceholder("Bottom Of The Embed!")
-                    .setValue(embedData.image ? (!embedData.image.url ? "" : embedData.image.url) : "")
+                    .setValue(
+                        embedData.image ? (!embedData.image.url ? "" : embedData.image.url) : ""
+                    )
             ),
         ];
         if (!embedData.thumbnail) {
@@ -514,7 +606,11 @@ module.exports = class EmbedFunction {
             embedData.image = {};
         }
 
-        const modal = this.client.util.model().setCustomId(`modal-${i.id}`).addComponents(rows).setTitle("Images");
+        const modal = this.client.util
+            .model()
+            .setCustomId(`modal-${i.id}`)
+            .addComponents(rows)
+            .setTitle("Images");
         const modalSubmitInteraction = await this.client.util.addModel(i, modal);
 
         const thumbnailData =
@@ -524,7 +620,9 @@ module.exports = class EmbedFunction {
         const dataThumbnail = await this.client.util.replaceIcon(thumbnailData, message);
 
         const imageData =
-            modalSubmitInteraction.fields.getTextInputValue("image") === "" ? null : modalSubmitInteraction.fields.getTextInputValue("image");
+            modalSubmitInteraction.fields.getTextInputValue("image") === ""
+                ? null
+                : modalSubmitInteraction.fields.getTextInputValue("image");
         const dataImage = await this.client.util.replaceIcon(imageData, message);
 
         embed.setThumbnail(dataThumbnail);
@@ -536,8 +634,8 @@ module.exports = class EmbedFunction {
             embeds: [embed],
         });
 
-        modalSubmitInteraction.deferUpdate().catch(() => { });
-        return embedData, embed;
+        modalSubmitInteraction.deferUpdate().catch(() => {});
+        return (embedData, embed);
     }
     async misc(message, data, embedData, i, embed, slash = false) {
         const rows = [
@@ -549,7 +647,13 @@ module.exports = class EmbedFunction {
                     .setStyle(1)
                     .setRequired(false)
                     .setPlaceholder("Author Name")
-                    .setValue(embedData.author ? (!embedData.author.name ? "" : embedData.author.name) : "")
+                    .setValue(
+                        embedData.author
+                            ? !embedData.author.name
+                                ? ""
+                                : embedData.author.name
+                            : ""
+                    )
             ),
             this.client.util.row().setComponents(
                 this.client.util
@@ -559,7 +663,13 @@ module.exports = class EmbedFunction {
                     .setStyle(1)
                     .setRequired(false)
                     .setPlaceholder("Author Icon")
-                    .setValue(embedData.author ? (!embedData.author.icon_url ? "" : embedData.author.icon_url) : "")
+                    .setValue(
+                        embedData.author
+                            ? !embedData.author.icon_url
+                                ? ""
+                                : embedData.author.icon_url
+                            : ""
+                    )
             ),
             this.client.util.row().setComponents(
                 this.client.util
@@ -569,7 +679,13 @@ module.exports = class EmbedFunction {
                     .setStyle(1)
                     .setRequired(false)
                     .setPlaceholder("Footer Text")
-                    .setValue(embedData.footer ? (!embedData.footer.text ? "" : embedData.footer.text) : "")
+                    .setValue(
+                        embedData.footer
+                            ? !embedData.footer.text
+                                ? ""
+                                : embedData.footer.text
+                            : ""
+                    )
             ),
             this.client.util.row().setComponents(
                 this.client.util
@@ -579,7 +695,13 @@ module.exports = class EmbedFunction {
                     .setStyle(1)
                     .setRequired(false)
                     .setPlaceholder("Footer Icon")
-                    .setValue(embedData.footer ? (!embedData.footer.icon_url ? "" : embedData.footer.icon_url) : "")
+                    .setValue(
+                        embedData.footer
+                            ? !embedData.footer.icon_url
+                                ? ""
+                                : embedData.footer.icon_url
+                            : ""
+                    )
             ),
         ];
         if (!embedData.author) {
@@ -588,11 +710,17 @@ module.exports = class EmbedFunction {
         if (!embedData.footer) {
             embedData.footer = {};
         }
-        const modal = this.client.util.model().setCustomId(`modal-${i.id}`).addComponents(rows).setTitle("Misc");
+        const modal = this.client.util
+            .model()
+            .setCustomId(`modal-${i.id}`)
+            .addComponents(rows)
+            .setTitle("Misc");
         const modalSubmitInteraction = await this.client.util.addModel(i, modal);
 
         const authorData =
-            modalSubmitInteraction.fields.getTextInputValue("author") === "" ? null : modalSubmitInteraction.fields.getTextInputValue("author");
+            modalSubmitInteraction.fields.getTextInputValue("author") === ""
+                ? null
+                : modalSubmitInteraction.fields.getTextInputValue("author");
         const dataAuthor = await this.client.util.replace(authorData, message);
 
         const authorIconData =
@@ -602,7 +730,9 @@ module.exports = class EmbedFunction {
         const dataAuthorIcon = await this.client.util.replaceIcon(authorIconData, message);
 
         const footerData =
-            modalSubmitInteraction.fields.getTextInputValue("footer") === "" ? null : modalSubmitInteraction.fields.getTextInputValue("footer");
+            modalSubmitInteraction.fields.getTextInputValue("footer") === ""
+                ? null
+                : modalSubmitInteraction.fields.getTextInputValue("footer");
         const dataFooter = await this.client.util.replace(footerData, message);
 
         const footerIconData =
@@ -622,8 +752,8 @@ module.exports = class EmbedFunction {
             embeds: [embed],
         });
 
-        modalSubmitInteraction.deferUpdate().catch(() => { });
-        return embedData, embed;
+        modalSubmitInteraction.deferUpdate().catch(() => {});
+        return (embedData, embed);
     }
     async editReply(message, data, slash = false) {
         if (slash) {
@@ -632,4 +762,4 @@ module.exports = class EmbedFunction {
             await message?.edit(data);
         }
     }
-}
+};

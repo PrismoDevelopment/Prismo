@@ -35,9 +35,13 @@ module.exports = class GayRate extends Command {
         let emptybarend = this.client.config.Client.emoji.emptybarend;
         let emptybarcount = 10 - Math.floor(love / 10) - 1;
         let filledbarcount = Math.floor(love / 10);
-        let filledbar = filledbarcount === 0 ? filledleftbar : filledleftbar + filledmidbar.repeat(filledbarcount - 2) + filledrightbar;
+        let filledbar =
+            filledbarcount === 0
+                ? filledleftbar
+                : filledleftbar + filledmidbar.repeat(filledbarcount - 2) + filledrightbar;
         let bar = filledbar + emptybar.repeat(emptybarcount) + emptybarend;
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setColor(this.client.config.Client.PrimaryColor)
             .setTitle(`GayMeter`)
             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
@@ -55,13 +59,20 @@ module.exports = class GayRate extends Command {
         let emptybarend = this.client.config.Client.emoji.emptybarend;
         let emptybarcount = 10 - Math.floor(love / 10) - 1;
         let filledbarcount = Math.floor(love / 10);
-        let filledbar = filledbarcount === 0 ? filledleftbar : filledleftbar + filledmidbar.repeat(filledbarcount - 2) + filledrightbar;
+        let filledbar =
+            filledbarcount === 0
+                ? filledleftbar
+                : filledleftbar + filledmidbar.repeat(filledbarcount - 2) + filledrightbar;
         let bar = filledbar + emptybar.repeat(emptybarcount) + emptybarend;
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setColor(this.client.config.Client.PrimaryColor)
             .setTitle(`GayMeter`)
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-            .addFields({ name: `${member.user.username} is ${love}% Gay`, value: `${bar} ${love}%` });
+            .addFields({
+                name: `${member.user.username} is ${love}% Gay`,
+                value: `${bar} ${love}%`,
+            });
         interaction?.reply({ embeds: [embed] });
     }
 };

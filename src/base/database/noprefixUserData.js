@@ -28,6 +28,5 @@ module.exports = class noprefixUserData {
         let data = await mongoData.find();
         if (data) return data;
     }
-    
 };
 // Path: src\base\database\prefix.js

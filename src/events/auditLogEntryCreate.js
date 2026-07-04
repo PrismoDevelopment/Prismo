@@ -1,15 +1,9 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 const fetch = require("node-fetch");
 
 module.exports = class GuildAuditLogEntryCreate extends Event {
     get name() {
-        return 'guildAuditLogEntryCreate';
+        return "guildAuditLogEntryCreate";
     }
 
     get once() {
@@ -21,10 +15,12 @@ module.exports = class GuildAuditLogEntryCreate extends Event {
             let logs, log, antiNukeData, user, exeMember, bot, logChannel, embed;
 
             if (entry.action == 21) {
-                logs = await guild?.fetchAuditLogs({
-                    type: 21,
-                    limit: 1
-                }).catch(() => {});
+                logs = await guild
+                    ?.fetchAuditLogs({
+                        type: 21,
+                        limit: 1,
+                    })
+                    .catch(() => {});
                 log = logs.entries.first();
                 if (!log) return;
 
@@ -35,14 +31,27 @@ module.exports = class GuildAuditLogEntryCreate extends Event {
                 if (antiNukeData?.whitelistusers?.includes(user.id)) return;
 
                 exeMember = await guild?.members.fetch(user.id);
-                if (this.client.util.checkOwner(user.id) || user.id == this.client.user.id || user.id == guild?.ownerId || exeMember?.roles.highest.position > guild?.members.resolve(this.client.user).roles.highest.position) return;
+                if (
+                    this.client.util.checkOwner(user.id) ||
+                    user.id == this.client.user.id ||
+                    user.id == guild?.ownerId ||
+                    exeMember?.roles.highest.position >
+                        guild?.members.resolve(this.client.user).roles.highest.position
+                )
+                    return;
 
-                this.client.eventRestrict(antiNukeData.punishment, user.id, guild?.id, `Anti Member Prune | Prismo Antinuke`);
+                this.client.eventRestrict(
+                    antiNukeData.punishment,
+                    user.id,
+                    guild?.id,
+                    `Anti Member Prune | Prismo Antinuke`
+                );
 
                 logChannel = guild?.channels.cache.get(antiNukeData.logchannelid);
                 if (!logChannel) return;
 
-                embed = this.client.util.embed()
+                embed = this.client.util
+                    .embed()
                     .setTitle(`Anti Member Prune`)
                     .setDescription(`**User:** ${user.username} (${user.id})\n**Action:** Punished`)
                     .setColor(this.client.ErrorColor)
@@ -53,10 +62,12 @@ module.exports = class GuildAuditLogEntryCreate extends Event {
             }
 
             if (entry.action == 80) {
-                logs = await guild?.fetchAuditLogs({
-                    type: 80,
-                    limit: 1
-                }).catch(() => {});
+                logs = await guild
+                    ?.fetchAuditLogs({
+                        type: 80,
+                        limit: 1,
+                    })
+                    .catch(() => {});
                 log = logs.entries.first();
                 if (!log) return;
 
@@ -71,7 +82,14 @@ module.exports = class GuildAuditLogEntryCreate extends Event {
                 if (antiNukeData?.whitelistusers?.includes(user.id)) return;
 
                 exeMember = await guild?.members.fetch(user.id);
-                if (this.client.util.checkOwner(user.id) || user.id == this.client.user.id || user.id == guild?.ownerId || exeMember?.roles.highest.position > guild?.members.resolve(this.client.user).roles.highest.position) return;
+                if (
+                    this.client.util.checkOwner(user.id) ||
+                    user.id == this.client.user.id ||
+                    user.id == guild?.ownerId ||
+                    exeMember?.roles.highest.position >
+                        guild?.members.resolve(this.client.user).roles.highest.position
+                )
+                    return;
 
                 bot = guild?.members.cache.get(log.target.account.id);
                 if (!bot) {
@@ -79,12 +97,18 @@ module.exports = class GuildAuditLogEntryCreate extends Event {
                 }
                 bot.kick({ reason: "Anti Bot Add | Prismo Antinuke" });
 
-                this.client.eventRestrict(antiNukeData.punishment, user.id, guild?.id, `Anti Bot Add | Prismo Antinuke`);
+                this.client.eventRestrict(
+                    antiNukeData.punishment,
+                    user.id,
+                    guild?.id,
+                    `Anti Bot Add | Prismo Antinuke`
+                );
 
                 logChannel = guild?.channels.cache.get(antiNukeData.logchannelid);
                 if (!logChannel) return;
 
-                embed = this.client.util.embed()
+                embed = this.client.util
+                    .embed()
                     .setTitle(`Anti Bot Add`)
                     .setDescription(`**User:** ${user.username} (${user.id})\n**Action:** Kicked`)
                     .setColor(this.client.ErrorColor)

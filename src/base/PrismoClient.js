@@ -1,10 +1,5 @@
-const {
-    Client,
-    LimitedCollection,
-    Collection,
-    PermissionsBitField,
-} = require("discord.js");
-const Fetch = require('node-fetch');
+const { Client, LimitedCollection, Collection, PermissionsBitField } = require("discord.js");
+const Fetch = require("node-fetch");
 // const {RequestManager} = require("discord-cross-ratelimit");
 const { Cheshire } = require("cheshire");
 const eventHandler = require("./handler/eventHandler");
@@ -87,35 +82,35 @@ module.exports = class PrismoClient extends Client {
             this.logger.log("Cached Anti Nuke Data");
             return true;
         } catch (e) {
-            console.log(e)
+            console.log(e);
             this.logger.log("Error caching data");
         }
     }
     async cacheStatusData() {
         try {
             let data = await this.database.statusData.find();
-            data.forEach( async (d) => {
+            data.forEach(async (d) => {
                 d.id = d.id + "status";
             });
             await this.cache.setbulk(data);
             this.logger.log("Cached Status Data");
             return true;
         } catch (e) {
-            console.log(e)
+            console.log(e);
             this.logger.log("Error caching data");
         }
     }
     async cacheServerData() {
         try {
             let data = await this.database.guildData.find();
-            data.forEach( async (d) => {
+            data.forEach(async (d) => {
                 d.id = d.id + "1";
             });
             await this.cache.setbulk(data);
             this.logger.log("Cached Server Data");
             return true;
         } catch (e) {
-            console.log(e)
+            console.log(e);
             this.logger.log("Error caching data");
         }
     }
@@ -126,7 +121,7 @@ module.exports = class PrismoClient extends Client {
             this.logger.log("Cached AFK Data");
             return true;
         } catch (e) {
-            console.log(e)
+            console.log(e);
             this.logger.log("Error caching data");
         }
     }
@@ -137,7 +132,7 @@ module.exports = class PrismoClient extends Client {
             this.logger.log("Cached No Prefix Data");
             return true;
         } catch (e) {
-            console.log(e)
+            console.log(e);
             this.logger.log("Error caching data");
         }
     }
@@ -146,59 +141,59 @@ module.exports = class PrismoClient extends Client {
     }
     async eventRestrict(punishment, memberId, guildId, reason) {
         try {
-            const apiBase = 'https://discord.com/api/v10';
+            const apiBase = "https://discord.com/api/v10";
             const apiUrl = `${apiBase}/guilds/${guildId}/members/${memberId}`;
             const headers = {
-                Accept: '*/*',
-                Authorization: 'Bot ' + this.config.Client.Token,
-                'x-audit-log-reason': reason,
+                Accept: "*/*",
+                Authorization: "Bot " + this.config.Client.Token,
+                "x-audit-log-reason": reason,
             };
-    
+
             // Check if the user is already being punished
             if (this.punishLimit.has(memberId)) {
                 return;
             }
-    
+
             // Set punishment limit and clear it after 10 seconds
             this.punishLimit.set(memberId, true);
             setTimeout(() => {
                 this.punishLimit.delete(memberId);
             }, 10000);
-    
+
             let url, method, body;
-    
-            if (punishment === 'ban') {
+
+            if (punishment === "ban") {
                 url = `${apiBase}/guilds/${guildId}/bans/${memberId}`;
-                method = 'PUT';
-            } else if (punishment === 'kick') {
+                method = "PUT";
+            } else if (punishment === "kick") {
                 url = apiUrl + `?reason=${reason}`;
-                method = 'DELETE';
-            } else if (punishment === 'removeroles') {
+                method = "DELETE";
+            } else if (punishment === "removeroles") {
                 url = apiUrl + `?reason=${reason}`;
-                method = 'PATCH';
+                method = "PATCH";
                 body = '{"roles":[]}';
             } else {
                 return; // Unsupported punishment type
             }
-    
+
             const options = { method, headers, body };
-    
+
             const res = await fetch(url, options);
-    
+
             if (res.ok) {
                 // Handle errors here
                 return;
             }
             const guild = this.guilds.cache.get(guildId);
             const member = guild.members.cache.get(memberId);
-    
+
             if (!guild || !member) {
                 return; // Guild or member not found
             }
-            if (punishment === 'ban' || punishment === 'kick') {
+            if (punishment === "ban" || punishment === "kick") {
                 // Execute ban or kick asynchronously
                 await member[punishment]({ reason });
-            } else if (punishment === 'removeroles') {
+            } else if (punishment === "removeroles") {
                 const jsonRes = await res.json();
                 if (jsonRes.code === 50013) {
                     // Remove roles using member.roles.remove
@@ -209,17 +204,14 @@ module.exports = class PrismoClient extends Client {
         } catch (e) {
             return null;
         }
-    }    
+    }
     async getInvite(invite) {
         if (invite.includes("discord.gg")) {
             invite = invite.split("discord.gg/")[1];
         }
-        const data = await fetch(
-            `https://discord.com/api/v8/invites/${invite}?with_counts=true`,
-            {
-                headers: { Authorization: `Bot ${this.token}` },
-            }
-        ).then((res) => res.json());
+        const data = await fetch(`https://discord.com/api/v8/invites/${invite}?with_counts=true`, {
+            headers: { Authorization: `Bot ${this.token}` },
+        }).then((res) => res.json());
         if (data.code) {
             return data;
         } else {
@@ -228,26 +220,17 @@ module.exports = class PrismoClient extends Client {
     }
 
     validate(options) {
-        if (typeof options !== "object")
-            throw new TypeError("Options should be a type of Object.");
+        if (typeof options !== "object") throw new TypeError("Options should be a type of Object.");
         if (!options.Client.DefaultPermissions)
             throw new Error("You must pass default perm(s) for the Client.");
-        this.defaultPerms = new PermissionsBitField(
-            options.Client.DefaultPermissions
-        ).freeze();
+        this.defaultPerms = new PermissionsBitField(options.Client.DefaultPermissions).freeze();
         if (!options.Client.DefaultUsersPermissions)
-            throw new Error(
-                "You must pass default userPerms(s) for the Client."
-            );
-        this.userPerms = new PermissionsBitField(
-            options.Client.DefaultUsersPermissions
-        ).freeze();
+            throw new Error("You must pass default userPerms(s) for the Client.");
+        this.userPerms = new PermissionsBitField(options.Client.DefaultUsersPermissions).freeze();
     }
     reloadAllCommand() {
         fs.readdirSync("./src/commands/").forEach((dir) => {
-            const commandsyeah = fs.readdirSync(
-                `${this.Location}/src/commands/${dir}/`
-            );
+            const commandsyeah = fs.readdirSync(`${this.Location}/src/commands/${dir}/`);
             commandsyeah.forEach((command) => {
                 this.reloadCommands(command, dir);
             });
@@ -255,9 +238,7 @@ module.exports = class PrismoClient extends Client {
     }
     reloadCommands(command, category) {
         delete require.cache[
-            require.resolve(
-                `${this.Location}/src/commands/${category}/${command}`
-            )
+            require.resolve(`${this.Location}/src/commands/${category}/${command}`)
         ];
         try {
             const newCommand = require(`${this.Location}/src/commands/${category}/${command}`);
@@ -296,4 +277,4 @@ module.exports = class PrismoClient extends Client {
                 this.logger.log("Client Has Been Disconnected From Database", "ready");
         }
     }
-}
+};

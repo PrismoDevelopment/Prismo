@@ -11,7 +11,7 @@ module.exports = class help extends Command {
             userPerms: ["SendMessages"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/2y93K5z.png",
+            image: "https://i.imgur.com/2y93K5z.png",
             guildOnly: true,
             options: [
                 {
@@ -25,26 +25,27 @@ module.exports = class help extends Command {
     }
 
     async run({ message, args }) {
-        let user = args[0]
-            ? await this.client.util.userQuery(args[0])
-            : message?.author;
-        if (!user)
-            return this.client.util.errorDelete(
-                message,
-                "Invalid user provided."
-            );
+        let user = args[0] ? await this.client.util.userQuery(args[0]) : message?.author;
+        if (!user) return this.client.util.errorDelete(message, "Invalid user provided.");
         let customavatar = false;
         const member = await this.client.users.fetch(user);
         let globaluser = null;
         try {
-            globaluser = await this.client.users.fetch(user).then(c => c.avatarURL({
-                dynamic: true,
-                size: 2048,
-            }));
+            globaluser = await this.client.users.fetch(user).then((c) =>
+                c.avatarURL({
+                    dynamic: true,
+                    size: 2048,
+                })
+            );
         } catch (err) {
             globaluser = null;
         }
-        if (globaluser === null) return message?.reply({ embeds: [this.client.util.errorDelete(message, "This user does not have an avatar.")] });
+        if (globaluser === null)
+            return message?.reply({
+                embeds: [
+                    this.client.util.errorDelete(message, "This user does not have an avatar."),
+                ],
+            });
         let guilduser = null;
         try {
             guilduser = await message?.guild.members
@@ -59,34 +60,40 @@ module.exports = class help extends Command {
         if (customavatar == false) {
             embed = this.client.util
                 .embed()
-                .setAuthor({ name: `${member.username}'s Avatar`, iconURL: member.avatarURL({ dynamic: true }) })
+                .setAuthor({
+                    name: `${member.username}'s Avatar`,
+                    iconURL: member.avatarURL({ dynamic: true }),
+                })
                 .setImage(globaluser)
                 .setColor(this.client.config.Client.PrimaryColor)
-                .setFooter({ text: `Requested by ${message?.author.username}`, iconURL: message?.author.avatarURL({ dynamic: true }) })
+                .setFooter({
+                    text: `Requested by ${message?.author.username}`,
+                    iconURL: message?.author.avatarURL({ dynamic: true }),
+                });
             let newcomponent = [
-                    {
-                        type: 2,
-                        style: 5,
-                        label: "JPEG",
-                        url: globaluser.replace("webp", "jpeg"),
-                    },
-                    {
-                        type: 2,
-                        style: 5,
-                        label: "PNG",
-                        url: globaluser.replace("webp", "png"),
-                    },
-                ];
-                if (globaluser.includes("a_")) {
-                    newcomponent.push({
-                        type: 2,
-                        style: 5,
-                        label: "GIF",
-                        url: globaluser.replace("webp", "gif"),
-                    });
-                    newcomponent[0].url = globaluser.replace("gif", "jpeg");
-                    newcomponent[1].url = globaluser.replace("gif", "png");
-                }
+                {
+                    type: 2,
+                    style: 5,
+                    label: "JPEG",
+                    url: globaluser.replace("webp", "jpeg"),
+                },
+                {
+                    type: 2,
+                    style: 5,
+                    label: "PNG",
+                    url: globaluser.replace("webp", "png"),
+                },
+            ];
+            if (globaluser.includes("a_")) {
+                newcomponent.push({
+                    type: 2,
+                    style: 5,
+                    label: "GIF",
+                    url: globaluser.replace("webp", "gif"),
+                });
+                newcomponent[0].url = globaluser.replace("gif", "jpeg");
+                newcomponent[1].url = globaluser.replace("gif", "png");
+            }
             return message?.channel.send({
                 embeds: [embed],
                 components: [
@@ -135,9 +142,15 @@ module.exports = class help extends Command {
                 collector.once("collect", async (i) => {
                     if (i.customId === "global") {
                         embed.setImage(globaluser);
-                        embed.setAuthor({ name: `${member.username}'s Avatar`, iconURL: member.avatarURL({ dynamic: true }) });
-                        embed.setDescription(null)
-                        embed.setFooter({ text: `Requested by ${message?.author.username}`, iconURL: message?.author.avatarURL({ dynamic: true }) })
+                        embed.setAuthor({
+                            name: `${member.username}'s Avatar`,
+                            iconURL: member.avatarURL({ dynamic: true }),
+                        });
+                        embed.setDescription(null);
+                        embed.setFooter({
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.avatarURL({ dynamic: true }),
+                        });
                         let compos = [
                             {
                                 type: 2,
@@ -174,9 +187,15 @@ module.exports = class help extends Command {
                     }
                     if (i.customId === "guild") {
                         embed.setImage(guilduser);
-                        embed.setAuthor({ name: `${member.username}'s Avatar`, iconURL: member.avatarURL({ dynamic: true }) });
-                        embed.setDescription(null)
-                        embed.setFooter({ text: `Requested by ${message?.author.username}`, iconURL: message?.author.avatarURL({ dynamic: true }) })
+                        embed.setAuthor({
+                            name: `${member.username}'s Avatar`,
+                            iconURL: member.avatarURL({ dynamic: true }),
+                        });
+                        embed.setDescription(null);
+                        embed.setFooter({
+                            text: `Requested by ${message?.author.username}`,
+                            iconURL: message?.author.avatarURL({ dynamic: true }),
+                        });
                         let compos = [
                             {
                                 type: 2,
@@ -214,10 +233,8 @@ module.exports = class help extends Command {
                 });
                 collector.once("end", async (collected) => {
                     if (collected.size === 0) {
-                        embed.setDescription(
-                            `You didn't select an avatar in time!`
-                        );
-                        await i.update({
+                        embed.setDescription(`You didn't select an avatar in time!`);
+                        await msg.edit({
                             embeds: [embed],
                             components: [],
                         });
@@ -234,14 +251,20 @@ module.exports = class help extends Command {
         const member = await this.client.users.fetch(user);
         let globaluser = null;
         try {
-            globaluser = await this.client.users.fetch(user).then(c => c.avatarURL({
-                dynamic: true,
-                size: 2048,
-            }));
+            globaluser = await this.client.users.fetch(user).then((c) =>
+                c.avatarURL({
+                    dynamic: true,
+                    size: 2048,
+                })
+            );
         } catch (err) {
             globaluser = null;
         }
-        if (globaluser === null) return interaction?.reply({ content: `This user doesn't have an avatar!`, ephemeral: true });
+        if (globaluser === null)
+            return interaction?.reply({
+                content: `This user doesn't have an avatar!`,
+                ephemeral: true,
+            });
         let guilduser = null;
         try {
             guilduser = await interaction?.guild.members
@@ -256,7 +279,10 @@ module.exports = class help extends Command {
             .embed()
             .setDescription(`which avatar would you like to see?`)
             .setColor(this.client.config.Client.PrimaryColor)
-            .setFooter({ text: `Requested by ${interaction?.user.username}`, iconURL: interaction?.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: `Requested by ${interaction?.user.username}`,
+                iconURL: interaction?.user.displayAvatarURL({ dynamic: true }),
+            });
 
         interaction?.reply({
             embeds: [embed],
@@ -289,9 +315,15 @@ module.exports = class help extends Command {
         collector.once("collect", async (i) => {
             if (i.customId === "global") {
                 embed.setImage(globaluser);
-                embed.setAuthor({ name: `${member.username}'s Avatar`, iconURL: member.avatarURL({ dynamic: true }) });
-                embed.setDescription(null)
-                embed.setFooter({ text: `Requested by ${interaction?.user.username}`, iconURL: interaction?.user.displayAvatarURL({ dynamic: true }) })
+                embed.setAuthor({
+                    name: `${member.username}'s Avatar`,
+                    iconURL: member.avatarURL({ dynamic: true }),
+                });
+                embed.setDescription(null);
+                embed.setFooter({
+                    text: `Requested by ${interaction?.user.username}`,
+                    iconURL: interaction?.user.displayAvatarURL({ dynamic: true }),
+                });
                 let compos = [
                     {
                         type: 2,
@@ -328,9 +360,15 @@ module.exports = class help extends Command {
             }
             if (i.customId === "guild") {
                 embed.setImage(guilduser);
-                embed.setAuthor({ name: `${member.username}'s Avatar`, iconURL: member.avatarURL({ dynamic: true }) });
-                embed.setDescription(null)
-                embed.setFooter({ text: `Requested by ${interaction?.user.username}`, iconURL: interaction?.user.displayAvatarURL({ dynamic: true }) })
+                embed.setAuthor({
+                    name: `${member.username}'s Avatar`,
+                    iconURL: member.avatarURL({ dynamic: true }),
+                });
+                embed.setDescription(null);
+                embed.setFooter({
+                    text: `Requested by ${interaction?.user.username}`,
+                    iconURL: interaction?.user.displayAvatarURL({ dynamic: true }),
+                });
                 let compos = [
                     {
                         type: 2,
@@ -369,7 +407,7 @@ module.exports = class help extends Command {
         collector.once("end", async (collected) => {
             if (collected.size === 0) {
                 embed.setDescription(`You didn't select an avatar in time!`);
-                await i.update({
+                await interaction?.editReply({
                     embeds: [embed],
                     components: [],
                 });

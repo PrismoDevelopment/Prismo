@@ -17,15 +17,10 @@ module.exports = class Reaction extends Command {
     }
 
     async run({ message }) {
-        const emojis = [
-            "🍊",
-            "🍓",
-            "🍇",
-            "🍑",
-            "🍉",
-        ];
+        const emojis = ["🍊", "🍓", "🍇", "🍑", "🍉"];
 
-        let embed = this.client.util.embed()
+        let embed = this.client.util
+            .embed()
             .setTitle("Reaction Time")
             .setDescription("After 1-10 seconds, I will reveal an emoji.")
             .setColor(this.client.config.Client.PrimaryColor);
@@ -53,8 +48,10 @@ module.exports = class Reaction extends Command {
             if (reaction.emoji.name === random_emoji) {
                 collector.stop();
                 msg.reactionEndTimeStamp = Date.now();
-                let timeTaken = ((msg.reactionEndTimeStamp - msg.reactionStartTimeStamp) / 1000);
-                embed.setDescription(`${user.toString()} reacted to the emoji in ${timeTaken} seconds!`);
+                let timeTaken = (msg.reactionEndTimeStamp - msg.reactionStartTimeStamp) / 1000;
+                embed.setDescription(
+                    `${user.toString()} reacted to the emoji in ${timeTaken} seconds!`
+                );
                 embed.setColor(this.client.config.Client.SuccessColor);
                 msg.edit({ embeds: [embed] });
             }
@@ -62,15 +59,10 @@ module.exports = class Reaction extends Command {
     }
 
     async exec({ interaction }) {
-        const emojis = [
-            "🍊",
-            "🍓",
-            "🍇",
-            "🍑",
-            "🍉",
-        ];
+        const emojis = ["🍊", "🍓", "🍇", "🍑", "🍉"];
 
-        let embed = this.client.util.embed()
+        let embed = this.client.util
+            .embed()
             .setTitle("Reaction Time")
             .setDescription("After 1-10 seconds, I will reveal an emoji.")
             .setColor(this.client.config.Client.PrimaryColor);
@@ -99,8 +91,10 @@ module.exports = class Reaction extends Command {
 
             if (reaction.emoji.name === random_emoji) {
                 collector.stop();
-                let timeTaken = ((msg.reactionEndTimeStamp - msg.reactionStartTimeStamp) / 1000);
-                embed.setDescription(`${user.toString()} reacted to the emoji in ${timeTaken} seconds!`);
+                let timeTaken = (msg.reactionEndTimeStamp - msg.reactionStartTimeStamp) / 1000;
+                embed.setDescription(
+                    `${user.toString()} reacted to the emoji in ${timeTaken} seconds!`
+                );
                 embed.setColor(this.client.config.Client.SuccessColor);
                 msg.edit({ embeds: [embed] });
             }

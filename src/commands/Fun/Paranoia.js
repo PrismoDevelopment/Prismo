@@ -24,7 +24,8 @@ module.exports = class Paranoia extends Command {
         const body = await this.client.util.requestget(url);
         if (!body) return message?.channel.send("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Paranoia")
             .setDescription(body.question)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -41,7 +42,8 @@ module.exports = class Paranoia extends Command {
         const body = await this.client.util.requestget(url);
         if (!body) return interaction?.reply("An error occurred, please try again.");
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle("Paranoia")
             .setDescription(body.question)
             .setColor(this.client.config.Client.PrimaryColor);

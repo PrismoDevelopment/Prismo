@@ -1,8 +1,8 @@
 module.exports = class RoleFunction {
     /**
- *
- * @param {import('../commandFunctions')} commandFunction
- */
+     *
+     * @param {import('../commandFunctions')} commandFunction
+     */
     constructor(client, commandFunction) {
         this.client = client;
         this.commandFunction = commandFunction;
@@ -18,8 +18,8 @@ module.exports = class RoleFunction {
                 });
         }
         if (
-            message?.guild.members.cache.get(this.client.user.id).roles.highest
-                .position <= role.position
+            message?.guild.members.cache.get(this.client.user.id).roles.highest.position <=
+            role.position
         )
             return message?.reply({
                 content: `I Can't Add Role To User Because My Role Is Lower Then **${role.name}** Role.`,
@@ -27,7 +27,7 @@ module.exports = class RoleFunction {
             });
         if (role.managed) {
             return message?.reply(
-                `I Can't Add Role To User Because **${role.name}** Is A Managed Role.`,
+                `I Can't Add Role To User Because **${role.name}** Is A Managed Role.`
             );
         }
         if (user._roles.includes(role.id)) {
@@ -84,8 +84,8 @@ module.exports = class RoleFunction {
                 });
         }
         if (
-            message?.guild.members.cache.get(this.client.user.id).roles.highest
-                .position <= role.position
+            message?.guild.members.cache.get(this.client.user.id).roles.highest.position <=
+            role.position
         )
             return message?.reply({
                 content: `I Can't Add Role To User Because My Role Is Lower Then **${role.name}** Role.`,
@@ -105,9 +105,8 @@ module.exports = class RoleFunction {
             });
         }
         if (
-            (await message?.guild.members.fetch()).filter(
-                (m) => !m.roles.cache.has(role.id)
-            ).size == 0
+            (await message?.guild?.members.fetch())?.filter((m) => !m.roles.cache.has(role.id))
+                .size == 0
         )
             return message?.reply({
                 content: `All Members Already Have **${role.name}** Role.`,
@@ -124,16 +123,17 @@ module.exports = class RoleFunction {
                 }),
             })
             .setDescription(
-                `Started Adding Role To \`${(await message?.guild.members.fetch()).filter(
-                    (m) => !m.roles.cache.has(role.id)
-                ).size
+                `Started Adding Role To \`${
+                    (await message?.guild?.members.fetch())?.filter(
+                        (m) => !m.roles.cache.has(role.id)
+                    ).size
                 }\` Members!`
             )
             .setTimestamp();
         const msg = await message?.reply({
             embeds: [embed],
         });
-        for (const member of (await message?.guild.members.fetch()).filter(
+        for (const member of (await message?.guild?.members.fetch())?.filter(
             (m) => !m.roles.cache.has(role.id)
         )) {
             await member[1].roles
@@ -141,18 +141,18 @@ module.exports = class RoleFunction {
                     role.id,
                     `Added By ${message?.member.user.username} | ${this.client.user.username}`
                 )
-                .catch(() => { });
+                .catch(() => {});
         }
         embed.setDescription(
             `<:icons_Correct:1001064958450208788> Finished Adding Role To All Members!`
         );
         slash
             ? await message?.editReply({
-                embeds: [embed],
-            })
+                  embeds: [embed],
+              })
             : await msg.edit({
-                embeds: [embed],
-            });
+                  embeds: [embed],
+              });
         return (this.inProcess[serverId] = false);
     }
     async human(message, role, slash = false) {
@@ -171,8 +171,8 @@ module.exports = class RoleFunction {
                 });
         }
         if (
-            message?.guild.members.cache.get(this.client.user.id).roles.highest
-                .position <= role.position
+            message?.guild.members.cache.get(this.client.user.id).roles.highest.position <=
+            role.position
         )
             return message?.reply({
                 content: `I Can't Add Role To User Because My Role Is Lower Then **${role.name}** Role.`,
@@ -192,7 +192,7 @@ module.exports = class RoleFunction {
             });
         }
         if (
-            (await message?.guild.members.fetch()).filter(
+            (await message?.guild?.members.fetch())?.filter(
                 (m) => !m.user.bot && !m.roles.cache.has(role.id)
             ).size == 0
         )
@@ -211,16 +211,17 @@ module.exports = class RoleFunction {
                 }),
             })
             .setDescription(
-                `Started Adding Role To \`${(await message?.guild.members.fetch()).filter(
-                    (m) => !m.user.bot && !m.roles.cache.has(role.id)
-                ).size
+                `Started Adding Role To \`${
+                    (await message?.guild?.members.fetch())?.filter(
+                        (m) => !m.user.bot && !m.roles.cache.has(role.id)
+                    ).size
                 }\` Humans!`
             )
             .setTimestamp();
         const msg = await message?.reply({
             embeds: [embed],
         });
-        for (const member of (await message?.guild.members.fetch()).filter(
+        for (const member of (await message?.guild?.members.fetch())?.filter(
             (m) => m.user.bot == false && !m.roles.cache.has(role.id)
         )) {
             await member[1].roles
@@ -228,18 +229,18 @@ module.exports = class RoleFunction {
                     role.id,
                     `Added By ${message?.member.user.username} | ${this.client.user.username}`
                 )
-                .catch(() => { });
+                .catch(() => {});
         }
         embed.setDescription(
             `<:icons_Correct:1001064958450208788> Finished Adding Role To Humans!`
         );
         slash
             ? await message?.editReply({
-                embeds: [embed],
-            })
+                  embeds: [embed],
+              })
             : await msg.edit({
-                embeds: [embed],
-            });
+                  embeds: [embed],
+              });
         return (this.inProcess[serverId] = false);
     }
     async bot(message, role, slash = false) {
@@ -258,8 +259,8 @@ module.exports = class RoleFunction {
                 });
         }
         if (
-            message?.guild.members.cache.get(this.client.user.id).roles.highest
-                .position <= role.position
+            message?.guild.members.cache.get(this.client.user.id).roles.highest.position <=
+            role.position
         )
             return message?.reply({
                 content: `I Can't Add Role To User Because My Role Is Lower Then **${role.name}** Role.`,
@@ -277,10 +278,9 @@ module.exports = class RoleFunction {
                 content: `I Can't Add **${role.name}** Role Because It Has Administrator Permissions.`,
                 ephemeral: true,
             });
-
         }
         if (
-            (await message?.guild.members.fetch()).filter(
+            (await message?.guild?.members.fetch())?.filter(
                 (m) => m.user.bot == true && !m.roles.cache.has(role.id)
             ).size == 0
         )
@@ -303,7 +303,7 @@ module.exports = class RoleFunction {
         const msg = await message?.reply({
             embeds: [embed],
         });
-        for (const member of (await message?.guild.members.fetch()).filter(
+        for (const member of (await message?.guild?.members.fetch())?.filter(
             (m) => m.user.bot && !m.roles.cache.has(role.id)
         )) {
             await member[1].roles
@@ -311,18 +311,16 @@ module.exports = class RoleFunction {
                     role.id,
                     `Added By ${message?.member.user.username} | ${this.client.user.username}`
                 )
-                .catch((e) => { });
+                .catch((e) => {});
         }
-        embed.setDescription(
-            `<:icons_Correct:1001064958450208788> Finished Adding Role To Bots!`
-        );
+        embed.setDescription(`<:icons_Correct:1001064958450208788> Finished Adding Role To Bots!`);
         slash
             ? await message?.editReply({
-                embeds: [embed],
-            })
+                  embeds: [embed],
+              })
             : await msg.edit({
-                embeds: [embed],
-            });
+                  embeds: [embed],
+              });
         return (this.inProcess[serverId] = false);
     }
 };

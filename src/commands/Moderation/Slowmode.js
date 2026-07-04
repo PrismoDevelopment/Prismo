@@ -46,17 +46,21 @@ module.exports = class slowmode extends Command {
         else if (timeArg.includes("h")) timeArg = timeArg.replace("h", "") * 60 * 60;
         else if (timeArg.includes("d")) timeArg = timeArg.replace("d", "") * 60 * 60 * 24;
         muteTime = timeArg * 1000;
-        if (muteTime > maxMuteTime) return message.channel.createMessage(`You can't set slowmode to more than 6 hours!`);
+        if (muteTime > maxMuteTime)
+            return message.channel.createMessage(`You can't set slowmode to more than 6 hours!`);
         await channel.edit({ rateLimitPerUser: timeArg });
-        timeArg = args[0]
+        timeArg = args[0];
         message.channel.send(`Successfully set slowmode to ${timeArg} seconds in ${channel}`);
     }
 
     async exec({ interaction }) {
-        if (!interaction.data.options[0]) return interaction.reply(`You need to provide a time to set slowmode!`);
+        if (!interaction.data.options[0])
+            return interaction.reply(`You need to provide a time to set slowmode!`);
         let timeArg = interaction.data.options[0].value;
         let muteTime;
-        const channel = interaction.data.options[1] ? interaction.data.options[1].value : interaction.channel_id;
+        const channel = interaction.data.options[1]
+            ? interaction.data.options[1].value
+            : interaction.channel_id;
         // max time is 6 hrs
         let maxMuteTime = 21600000;
         if (!timeArg) timeArg = "600";
@@ -65,9 +69,10 @@ module.exports = class slowmode extends Command {
         else if (timeArg.includes("h")) timeArg = timeArg.replace("h", "") * 60 * 60;
         else if (timeArg.includes("d")) timeArg = timeArg.replace("d", "") * 60 * 60 * 24;
         muteTime = timeArg * 1000;
-        if (muteTime > maxMuteTime) return interaction.createMessage(`You can't set slowmode to more than 6 hours!`);
+        if (muteTime > maxMuteTime)
+            return interaction.createMessage(`You can't set slowmode to more than 6 hours!`);
         await this.client.editChannel(channel, { rateLimitPerUser: timeArg });
-        timeArg = interaction.data.options[0].value
+        timeArg = interaction.data.options[0].value;
         interaction.send(`Successfully set slowmode to ${timeArg} seconds in <#${channel}>`);
     }
-}
+};

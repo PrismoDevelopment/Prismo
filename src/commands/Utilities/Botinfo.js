@@ -19,19 +19,20 @@ module.exports = class Botinfo extends Command {
         let owner = owners.map((o) => this.client.users.cache.get(o)).join(", ");
         let totalGuilds, totalUsers;
 
-        await this.client.Cluster.fetchClientValues('guilds.cache.size').then(results => {
+        await this.client.Cluster.fetchClientValues("guilds.cache.size").then((results) => {
             totalGuilds = results.reduce((prev, guildCount) => {
                 return prev + guildCount;
             }, 0);
         });
 
-        await this.client.Cluster.fetchClientValues('users.cache.size').then(results => {
+        await this.client.Cluster.fetchClientValues("users.cache.size").then((results) => {
             totalUsers = results.reduce((prev, memberCount) => {
                 return prev + memberCount;
             }, 0);
         });
-        
-        let embed = this.client.util.embed()
+
+        let embed = this.client.util
+            .embed()
             .setTitle(`${this.client.config.Client.emoji.prismoemo} __Bot Information__`)
             .setColor(this.client.config.Client.PrimaryColor)
             .setThumbnail(this.client.user.displayAvatarURL())
@@ -45,10 +46,15 @@ module.exports = class Botinfo extends Command {
 **Cached Channels** : ${this.client.channels.cache.size.toLocaleString()}
 **Commands** : ${this.client.commands.size.toLocaleString()}
 **Users** : ${totalUsers}
-    `)
-            .setFooter({ text: `Requested by ${message?.author.username}`, iconURL: message?.author.displayAvatarURL() });
+    `
+            )
+            .setFooter({
+                text: `Requested by ${message?.author.username}`,
+                iconURL: message?.author.displayAvatarURL(),
+            });
         message?.channel.send({
-            embeds: [embed], components: [
+            embeds: [embed],
+            components: [
                 {
                     type: 1,
                     components: [
@@ -66,7 +72,7 @@ module.exports = class Botinfo extends Command {
                         },
                     ],
                 },
-            ]
+            ],
         });
     }
 
@@ -74,18 +80,19 @@ module.exports = class Botinfo extends Command {
         let owners = this.client.config.Client.Owners;
         let owner = owners.map((o) => this.client.users.cache.get(o)).join(", ");
         let totalGuilds, totalUsers;
-        await this.client.Cluster.fetchClientValues('guilds.cache.size').then(results => {
+        await this.client.Cluster.fetchClientValues("guilds.cache.size").then((results) => {
             totalGuilds = results.reduce((prev, guildCount) => {
                 return prev + guildCount;
             }, 0);
         });
 
-        await this.client.Cluster.fetchClientValues('users.cache.size').then(results => {
+        await this.client.Cluster.fetchClientValues("users.cache.size").then((results) => {
             totalUsers = results.reduce((prev, memberCount) => {
                 return prev + memberCount;
             }, 0);
         });
-        let embed = this.client.util.embed()
+        let embed = this.client.util
+            .embed()
             .setTitle(`${this.client.config.Client.emoji.prismoemo} __Bot Information__`)
             .setColor(this.client.config.Client.PrimaryColor)
             .setThumbnail(this.client.user.displayAvatarURL())
@@ -99,9 +106,12 @@ module.exports = class Botinfo extends Command {
 **Channels :** ${this.client.channels.cache.size.toLocaleString()}
 **Commands :** ${this.client.commands.size.toLocaleString()}
 **Users :** ${totalUsers}
-    `)
-            .setFooter({ text: `Requested by ${interaction?.user.username}`, iconURL: interaction?.user.displayAvatarURL() });
+    `
+            )
+            .setFooter({
+                text: `Requested by ${interaction?.user.username}`,
+                iconURL: interaction?.user.displayAvatarURL(),
+            });
         interaction?.reply({ embeds: [embed] });
     }
 };
-

@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 
 module.exports = class guildMemberUpdate extends Event {
@@ -37,11 +31,13 @@ module.exports = class guildMemberUpdate extends Event {
             await this.client.cache.set(newMember?.guild.id, antiNukeData);
         }
         if (!antiNukeData.enabled) return;
-        const logs = await newMember?.guild.fetchAuditLogs({
-            type: 25,
-            limit: 1
-        }).catch(() => { });
-        if(!logs) return;
+        const logs = await newMember?.guild
+            .fetchAuditLogs({
+                type: 25,
+                limit: 1,
+            })
+            .catch(() => {});
+        if (!logs) return;
         const log = logs.entries.first();
         if (!log) return;
         let user = log.executor;
@@ -55,7 +51,10 @@ module.exports = class guildMemberUpdate extends Event {
         if (this.client.util.checkOwner(user.id)) return;
         if (user.id == this.client.user.id) return;
         if (user.id == newMember?.guild.ownerId) return;
-        if (exeMember?.roles.highest.position > newMember?.guild.members.resolve(this.client.user).roles.highest.position) {
+        if (
+            exeMember?.roles.highest.position >
+            newMember?.guild.members.resolve(this.client.user).roles.highest.position
+        ) {
             const Check = newMember?._roles.filter((r) => !oldMember._roles.includes(r));
             if (Check.length == 0) return;
             const roles = newMember?.guild.roles.cache.filter((r) => Check.includes(r.id));
@@ -79,15 +78,17 @@ module.exports = class guildMemberUpdate extends Event {
                     if (dangerousPerms.includes(perm)) return true;
                 }
                 return false;
-            }
-            );
+            });
             if (dangerousRoles.size == 0) return;
             newMember?.roles.remove(dangerousRoles, `Anti Role Add | Prismo Antinuke`);
             const logChannel = newMember?.guild.channels.cache.get(antiNukeData.logchannelid);
             if (!logChannel) return;
-            const embed = this.client.util.embed()
+            const embed = this.client.util
+                .embed()
                 .setTitle(`Anti Role Add`)
-                .setDescription(`**User:** ${user.username} (${user.id})\n**Member:** ${newMember?.user.username} (${newMember?.id})\n**Roles:** ${dangerousRoles.map((r) => r.name).join(", ")}\n**Action:** Removed`)
+                .setDescription(
+                    `**User:** ${user.username} (${user.id})\n**Member:** ${newMember?.user.username} (${newMember?.id})\n**Roles:** ${dangerousRoles.map((r) => r.name).join(", ")}\n**Action:** Removed`
+                )
                 .setColor(this.client.ErrorColor)
                 .setTimestamp();
             logChannel.send({ embeds: [embed] });
@@ -110,10 +111,14 @@ module.exports = class guildMemberUpdate extends Event {
                 if (dangerousPerms.includes(perm)) return true;
             }
             return false;
-        }
-        );
+        });
         if (dangerousRoles.size == 0) return;
         newMember?.roles.remove(dangerousRoles, `Anti Role Add`);
-        this.client.eventRestrict(antiNukeData.punishment, user.id, newMember?.guild.id, `Anti Member Update | Prismo Antinuke`);
+        this.client.eventRestrict(
+            antiNukeData.punishment,
+            user.id,
+            newMember?.guild.id,
+            `Anti Member Update | Prismo Antinuke`
+        );
     }
 };

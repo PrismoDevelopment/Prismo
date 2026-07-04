@@ -49,11 +49,14 @@ module.exports = class help extends Command {
                 });
             if (member.id === this.client.user.id)
                 return message?.reply({
-                    content: "You wanted to ban me? Rude owner <:FHT_godfather_Huh:1047391502751506462> I knew that you don't love me at all",
+                    content:
+                        "You wanted to ban me? Rude owner <:FHT_godfather_Huh:1047391502751506462> I knew that you don't love me at all",
                 });
         } else {
-            if (member.id === message?.author.id) return message?.reply({ content: "You can't ban yourself!" });
-            if (member.id === this.client.user.id) return message?.reply({ content: "You can't ban me!" });
+            if (member.id === message?.author.id)
+                return message?.reply({ content: "You can't ban yourself!" });
+            if (member.id === this.client.user.id)
+                return message?.reply({ content: "You can't ban me!" });
         }
         if (member.id === message?.guild.ownerId)
             return message?.reply({
@@ -61,9 +64,13 @@ module.exports = class help extends Command {
             });
         if (!owner) {
             if (message?.author.id != message?.guild.ownerId) {
-                if (message?.member.roles.highest.position <= message?.guild.members.cache.get(this.client.user.id).roles.highest.position)
+                if (
+                    message?.member.roles.highest.position <=
+                    message?.guild.members.cache.get(this.client.user.id).roles.highest.position
+                )
                     return message?.reply({
-                        content: "You need to be higher than me in the role hierarchy to ban this user!",
+                        content:
+                            "You need to be higher than me in the role hierarchy to ban this user!",
                     });
                 if (member.roles.highest.position >= message?.member.roles.highest.position)
                     return message?.reply({
@@ -72,8 +79,13 @@ module.exports = class help extends Command {
             }
         }
         if (!member.bannable) return message?.reply({ content: "I can't ban that user!" });
-        const reason = args.slice(1).join(" ") + " | Banned By: " + message?.author.username || "No reason provided | Banned By: " + message?.author.username;
-        const embed = this.client.util.embed().setDescription(`**${member.user.username}** has been banned!`).setColor(this.client.config.Client.PrimaryColor);
+        const reason =
+            args.slice(1).join(" ") + " | Banned By: " + message?.author.username ||
+            "No reason provided | Banned By: " + message?.author.username;
+        const embed = this.client.util
+            .embed()
+            .setDescription(`**${member.user.username}** has been banned!`)
+            .setColor(this.client.config.Client.PrimaryColor);
         message?.reply({ embeds: [embed] });
         member
             .send({
@@ -108,9 +120,13 @@ module.exports = class help extends Command {
                 ephemeral: true,
             });
         if (interaction?.user.id !== interaction?.guild.ownerId) {
-            if (interaction?.member.roles.highest.position <= interaction?.guild.members.cache.get(this.client.user.id).roles.highest.position)
+            if (
+                interaction?.member.roles.highest.position <=
+                interaction?.guild.members.cache.get(this.client.user.id).roles.highest.position
+            )
                 return interaction?.reply({
-                    content: "If you want to ban this user, you need to be higher in the role hierarchy than me!",
+                    content:
+                        "If you want to ban this user, you need to be higher in the role hierarchy than me!",
                     ephemeral: true,
                 });
         }
@@ -122,7 +138,8 @@ module.exports = class help extends Command {
         if (interaction?.member.id !== interaction?.guild.ownerId) {
             if (member.roles.highest.position >= interaction?.member.roles.highest.position)
                 return interaction?.reply({
-                    content: "It is not possible for you to ban a user with the same or higher roles than you!",
+                    content:
+                        "It is not possible for you to ban a user with the same or higher roles than you!",
                     ephemeral: true,
                 });
         }
@@ -132,9 +149,14 @@ module.exports = class help extends Command {
                 ephemeral: true,
             });
         const reason =
-            interaction?.options.getString("reason") + " | Banned By: " + interaction?.user.username ||
+            interaction?.options.getString("reason") +
+                " | Banned By: " +
+                interaction?.user.username ||
             "No reason provided | Banned By: " + interaction?.user.username;
-        const embed = this.client.util.embed().setDescription(`**${member.user.username}** has been banned!`).setColor(this.client.config.Client.PrimaryColor);
+        const embed = this.client.util
+            .embed()
+            .setDescription(`**${member.user.username}** has been banned!`)
+            .setColor(this.client.config.Client.PrimaryColor);
         interaction?.reply({ embeds: [embed] });
         member
             .send({

@@ -9,14 +9,9 @@ module.exports = class help extends Command {
             usage: ["ban <user> [reason]"],
             category: "Moderation",
             userPerms: ["BanMembers"],
-            botPerms: [
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-                "BanMembers",
-            ],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages", "BanMembers"],
             cooldown: 20,
-            image:"https://i.imgur.com/rHHi6se.png",
+            image: "https://i.imgur.com/rHHi6se.png",
             options: [
                 {
                     type: 6,
@@ -36,19 +31,16 @@ module.exports = class help extends Command {
 
     async run({ message, args }) {
         let owner = this.client.util.checkOwner(message?.author.id);
-        if (!args)
-            return message?.reply({ content: "Please provide a user to ban!" });
+        if (!args) return message?.reply({ content: "Please provide a user to ban!" });
         const user = await this.client.util.userQuery(args[0]);
         if (!user)
             return message?.reply({
                 content: "Please mention a user or provide a valid user ID",
             });
         const member = await message?.guild.members.fetch(user);
-        if (!member)
-            return message?.reply({ content: "That user isn't in this guild!" });
+        if (!member) return message?.reply({ content: "That user isn't in this guild!" });
         let membercheckowner = this.client.util.checkOwner(member.id);
-        if (membercheckowner)
-            return message?.reply({ content: "You can't ban the bot owner!" });
+        if (membercheckowner) return message?.reply({ content: "You can't ban the bot owner!" });
         if (owner) {
             if (member.id === message?.author.id)
                 return message?.reply({
@@ -70,29 +62,25 @@ module.exports = class help extends Command {
                 content: "You can't ban the server owner!",
             });
         if (!owner) {
-            if(message?.author.id != message?.guild.ownerId) {
-            if (
-                message?.member.roles.highest.position <=
-                message?.guild.members.cache.get(this.client.user.id).roles
-                    .highest.position
-            )
-                return message?.reply({
-                    content:
-                        "You need to be higher than me in the role hierarchy to ban this user!",
-                });
-            if (
-                member.roles.highest.position >=
-                message?.member.roles.highest.position
-            )
-                return message?.reply({
-                    content:
-                        "You can't ban a user with same or higher roles as you!",
-                });
+            if (message?.author.id != message?.guild.ownerId) {
+                if (
+                    message?.member.roles.highest.position <=
+                    message?.guild.members.cache.get(this.client.user.id).roles.highest.position
+                )
+                    return message?.reply({
+                        content:
+                            "You need to be higher than me in the role hierarchy to ban this user!",
+                    });
+                if (member.roles.highest.position >= message?.member.roles.highest.position)
+                    return message?.reply({
+                        content: "You can't ban a user with same or higher roles as you!",
+                    });
             }
         }
-        if (!member.bannable)
-            return message?.reply({ content: "I can't ban that user!" });
-        const reason = args.slice(1).join(" ") + " | Banned By: " + message?.author.username || "No reason provided | Banned By: " + message?.author.username;
+        if (!member.bannable) return message?.reply({ content: "I can't ban that user!" });
+        const reason =
+            args.slice(1).join(" ") + " | Banned By: " + message?.author.username ||
+            "No reason provided | Banned By: " + message?.author.username;
         await member.ban({ days: 7, reason: reason });
         const embed = this.client.util
             .embed()
@@ -103,7 +91,7 @@ module.exports = class help extends Command {
             .send({
                 content: `You have been banned from - **${message?.guild.name}** for reason - **${reason}**`,
             })
-            .catch(() => { });
+            .catch(() => {});
     }
 
     async exec({ interaction }) {
@@ -115,7 +103,7 @@ module.exports = class help extends Command {
                 ephemeral: true,
             });
         let membercheckowner = this.client.util.checkOwner(member.user.id);
-        let serverowner = interaction?.guild.ownerId
+        let serverowner = interaction?.guild.ownerId;
         if (membercheckowner)
             return interaction?.reply({
                 content: "You can't ban the bot owner!",
@@ -131,33 +119,29 @@ module.exports = class help extends Command {
                 content: "You can't ban me!",
                 ephemeral: true,
             });
-        if(interaction?.user.id !== interaction?.guild.ownerId) {
-        if (
-            interaction?.member.roles.highest.position <=
-            interaction?.guild.members.cache.get(this.client.user.id).roles.highest
-                .position
-        )
-            return interaction?.reply({
-                content:
-                    "If you want to ban this user, you need to be higher in the role hierarchy than me!",
-                ephemeral: true,
-            });
+        if (interaction?.user.id !== interaction?.guild.ownerId) {
+            if (
+                interaction?.member.roles.highest.position <=
+                interaction?.guild.members.cache.get(this.client.user.id).roles.highest.position
+            )
+                return interaction?.reply({
+                    content:
+                        "If you want to ban this user, you need to be higher in the role hierarchy than me!",
+                    ephemeral: true,
+                });
         }
         if (member.id === interaction?.guild.ownerId)
             return interaction?.reply({
                 content: "There is no way to ban the server owner!",
                 ephemeral: true,
             });
-        if(interaction?.member.id !== interaction?.guild.ownerId) {
-        if (
-            member.roles.highest.position >=
-            interaction?.member.roles.highest.position
-        )
-            return interaction?.reply({
-                content:
-                    "It is not possible for you to ban a user with the same or higher roles than you!",
-                ephemeral: true,
-            });
+        if (interaction?.member.id !== interaction?.guild.ownerId) {
+            if (member.roles.highest.position >= interaction?.member.roles.highest.position)
+                return interaction?.reply({
+                    content:
+                        "It is not possible for you to ban a user with the same or higher roles than you!",
+                    ephemeral: true,
+                });
         }
         if (!member.bannable)
             return interaction?.reply({
@@ -165,7 +149,10 @@ module.exports = class help extends Command {
                 ephemeral: true,
             });
         const reason =
-            interaction?.options.getString("reason") + " | Banned By: " + interaction?.user.username || "No reason provided | Banned By: " + interaction?.user.username;
+            interaction?.options.getString("reason") +
+                " | Banned By: " +
+                interaction?.user.username ||
+            "No reason provided | Banned By: " + interaction?.user.username;
         await member.ban({ days: 7, reason: reason });
         const embed = this.client.util
             .embed()
@@ -176,6 +163,6 @@ module.exports = class help extends Command {
             .send({
                 content: `You have been banned from - **${interaction?.guild.name}** for reasson - **${reason}**`,
             })
-            .catch(() => { });
+            .catch(() => {});
     }
 };

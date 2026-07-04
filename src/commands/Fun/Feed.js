@@ -1,12 +1,5 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Feed extends Command {
     constructor(...args) {
@@ -36,12 +29,11 @@ module.exports = class Feed extends Command {
         if (!user) return message?.reply("Please provide a user to feed!");
         let member = await message?.guild.members.fetch(user);
         if (!member) return message?.reply("Please provide a valid user to feed!");
-        if (member.id === message?.author.id)
-            return message?.reply("You can't feed yourself!");
-        if (member.id === this.client.user.id)
-            return message?.reply("You can't feed me!");
-        const feed = await nekoClient.sfw.feed();
-        const embed = this.client.util.embed()
+        if (member.id === message?.author.id) return message?.reply("You can't feed yourself!");
+        if (member.id === this.client.user.id) return message?.reply("You can't feed me!");
+        const feed = await discordActions.feed();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${message?.author.username} is feeding ${member.user.username}!`)
             .setImage(feed.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -55,10 +47,10 @@ module.exports = class Feed extends Command {
         if (!member) return interaction?.reply("Please provide a valid user to feed!");
         if (member.id === interaction?.user.id)
             return interaction?.reply("You can't feed yourself!");
-        if (member.id === this.client.user.id)
-            return interaction?.reply("You can't feed me!");
-        const feed = await nekoClient.sfw.feed();
-        const embed = this.client.util.embed()
+        if (member.id === this.client.user.id) return interaction?.reply("You can't feed me!");
+        const feed = await discordActions.feed();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${interaction?.user.username} is feeding ${member.user.username}!`)
             .setImage(feed.url)
             .setColor(this.client.config.Client.PrimaryColor);

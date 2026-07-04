@@ -32,10 +32,10 @@ module.exports = class afkData {
         if (!data) {
             return true;
         }
-            await data.deleteOne( { id: id } );
-            await this.database.client.cacheAfkData();
-            await this.database.client.cache.delete(id);
-            return true;
+        await data.deleteOne({ id: id });
+        await this.database.client.cacheAfkData();
+        await this.database.client.cache.delete(id);
+        return true;
     }
 
     async find() {

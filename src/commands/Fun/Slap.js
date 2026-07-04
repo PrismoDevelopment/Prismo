@@ -1,6 +1,5 @@
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Slap extends Command {
     constructor(...args) {
@@ -31,13 +30,12 @@ module.exports = class Slap extends Command {
 
         const member = await message?.guild.members.fetch(user);
         if (!member) return message?.reply("Please provide a valid user to slap!");
-        if (member.id === message?.author.id)
-            return message?.reply("You can't slap yourself!");
-        if (member.id === this.client.user.id)
-            return message?.reply("You can't slap me!");
+        if (member.id === message?.author.id) return message?.reply("You can't slap yourself!");
+        if (member.id === this.client.user.id) return message?.reply("You can't slap me!");
 
-        const slap = await nekoClient.sfw.slap();
-        const embed = this.client.util.embed()
+        const slap = await discordActions.slap();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${message?.author.username} slapped ${member.user.username}!`)
             .setImage(slap.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -53,11 +51,11 @@ module.exports = class Slap extends Command {
         if (!member) return interaction?.reply("Please provide a valid user to slap!");
         if (member.id === interaction?.user.id)
             return interaction?.reply("You can't slap yourself!");
-        if (member.id === this.client.user.id)
-            return interaction?.reply("You can't slap me!");
+        if (member.id === this.client.user.id) return interaction?.reply("You can't slap me!");
 
-        const slap = await nekoClient.sfw.slap();
-        const embed = this.client.util.embed()
+        const slap = await discordActions.slap();
+        const embed = this.client.util
+            .embed()
             .setTitle(`${interaction?.user.username} slapped ${member.user.username}!`)
             .setImage(slap.url)
             .setColor(this.client.config.Client.PrimaryColor);

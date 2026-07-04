@@ -11,7 +11,7 @@ module.exports = class Translate extends Command {
             userPerms: ["ViewChannel", "SendMessages"],
             guildOnly: true,
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
-            image:"https://i.imgur.com/VI8FbeE.png",
+            image: "https://i.imgur.com/VI8FbeE.png",
             options: [
                 {
                     name: "text",
@@ -69,15 +69,14 @@ module.exports = class Translate extends Command {
                 message?.reply({ embeds: [embed] });
             }
         } catch (error) {
-            return
+            return;
         }
     }
 
     async exec({ interaction }) {
         try {
             const text = interaction?.options.getString("text").toLowerCase();
-            if (!text)
-                return interaction?.reply("Please provide text to translate.");
+            if (!text) return interaction?.reply("Please provide text to translate.");
             interaction?.channel.sendTyping();
             const language = interaction?.options.getString("language") || "en";
             const translate = require("@iamtraction/google-translate");
@@ -89,7 +88,7 @@ module.exports = class Translate extends Command {
                 .setDescription(`**${result.text}**`);
             interaction?.reply({ embeds: [embed] });
         } catch (error) {
-            return
+            return;
         }
     }
 };

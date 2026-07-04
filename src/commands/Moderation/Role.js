@@ -11,7 +11,7 @@ module.exports = class help extends Command {
             userPerms: ["ManageGuild", "ManageRoles"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://imgur.com/UZHqOkV",
+            image: "https://imgur.com/UZHqOkV",
             options: [
                 {
                     type: 1,
@@ -110,9 +110,7 @@ module.exports = class help extends Command {
                 message?.mentions.roles.first() ||
                 message?.guild.roles.cache.get(args[1]) ||
                 message?.guild.roles.cache.find(
-                    (r) =>
-                        r.name.toLowerCase() ==
-                        args.slice(1).join(" ").toLowerCase()
+                    (r) => r.name.toLowerCase() == args.slice(1).join(" ").toLowerCase()
                 );
             if (!role)
                 return message?.reply({
@@ -120,7 +118,7 @@ module.exports = class help extends Command {
                     ephemeral: true,
                 });
             this.client.commandFunctions.roleFunction.all(message, role);
-        } else if ((args[0].toLowerCase() == "bot") || (args[0].toLowerCase() == "bots")) {
+        } else if (args[0].toLowerCase() == "bot" || args[0].toLowerCase() == "bots") {
             if (!args[1])
                 return message?.reply({
                     content: `Please **Provide A Role**`,
@@ -130,9 +128,7 @@ module.exports = class help extends Command {
                 message?.mentions.roles.first() ||
                 message?.guild.roles.cache.get(args[1]) ||
                 message?.guild.roles.cache.find(
-                    (r) =>
-                        r.name.toLowerCase() ==
-                        args.slice(1).join(" ").toLowerCase()
+                    (r) => r.name.toLowerCase() == args.slice(1).join(" ").toLowerCase()
                 );
             if (!role)
                 return message?.reply({
@@ -140,7 +136,7 @@ module.exports = class help extends Command {
                     ephemeral: true,
                 });
             this.client.commandFunctions.roleFunction.bot(message, role);
-        } else if ((args[0].toLowerCase() == "human") || (args[0].toLowerCase() == "humans")) {
+        } else if (args[0].toLowerCase() == "human" || args[0].toLowerCase() == "humans") {
             if (!args[1])
                 return message?.reply({
                     content: `Please **Provide A Role**`,
@@ -150,9 +146,7 @@ module.exports = class help extends Command {
                 message?.mentions.roles.first() ||
                 message?.guild.roles.cache.get(args[1]) ||
                 message?.guild.roles.cache.find(
-                    (r) =>
-                        r.name.toLowerCase() ==
-                        args.slice(1).join(" ").toLowerCase()
+                    (r) => r.name.toLowerCase() == args.slice(1).join(" ").toLowerCase()
                 );
             if (!role)
                 return message?.reply({
@@ -179,11 +173,9 @@ module.exports = class help extends Command {
                 });
             const user = await message?.guild.members.fetch(member);
             const role =
-            message?.guild.roles.cache.find(
-                (r) =>
-                    r.name.toLowerCase() ==
-                    args.slice(1).join(" ").toLowerCase()
-            ) ||
+                message?.guild.roles.cache.find(
+                    (r) => r.name.toLowerCase() == args.slice(1).join(" ").toLowerCase()
+                ) ||
                 message?.guild.roles.cache.find((r) => r.id == args[1]) ||
                 message?.mentions.roles.first();
             if (!role)
@@ -199,47 +191,25 @@ module.exports = class help extends Command {
         const subcommand = interaction?.options.getSubcommand();
         if (subcommand == "all") {
             const role = interaction?.options.getRole("role");
-            this.client.commandFunctions.roleFunction.all(
-                interaction,
-                role,
-                true
-            );
+            this.client.commandFunctions.roleFunction.all(interaction, role, true);
         }
         if (subcommand == "bot") {
             const role = interaction?.options.getRole("role");
-            this.client.commandFunctions.roleFunction.bot(
-                interaction,
-                role,
-                true
-            );
+            this.client.commandFunctions.roleFunction.bot(interaction, role, true);
         }
         if (subcommand == "human") {
             const role = interaction?.options.getRole("role");
-            this.client.commandFunctions.roleFunction.human(
-                interaction,
-                role,
-                true
-            );
+            this.client.commandFunctions.roleFunction.human(interaction, role, true);
         }
         if (subcommand == "remove") {
             const user = interaction?.options.getMember("user");
             const role = interaction?.options.getRole("role");
-            this.client.commandFunctions.roleFunction.add(
-                interaction,
-                user,
-                role,
-                true
-            );
+            this.client.commandFunctions.roleFunction.add(interaction, user, role, true);
         }
         if (subcommand == "add") {
             const user = interaction?.options.getMember("user");
             const role = interaction?.options.getRole("role");
-            this.client.commandFunctions.roleFunction.add(
-                interaction,
-                user,
-                role,
-                true
-            );
+            this.client.commandFunctions.roleFunction.add(interaction, user, role, true);
         }
     }
 };

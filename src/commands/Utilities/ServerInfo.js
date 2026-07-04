@@ -37,7 +37,7 @@ module.exports = class help extends Command {
             userPerms: ["SendMessages"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
-            image:"https://i.imgur.com/BJV0OgG.png",
+            image: "https://i.imgur.com/BJV0OgG.png",
         });
     }
 
@@ -45,17 +45,13 @@ module.exports = class help extends Command {
         message?.guild.members.fetch();
         const embed = this.client.util.embed();
         embed.setColor(this.client.util.color(message));
-        embed.setThumbnail(
-            message?.guild.iconURL({ dynamic: true, size: 2048 })
-        );
+        embed.setThumbnail(message?.guild.iconURL({ dynamic: true, size: 2048 }));
         embed.setAuthor({
             name: message?.guild.name,
             iconURL: message?.guild.iconURL({ dynamic: true }),
         });
         embed.setTitle("Server Information");
-        embed.setDescription(
-            `${message?.guild.description || "No Description"}`
-        );
+        embed.setDescription(`${message?.guild.description || "No Description"}`);
         embed.addFields([
             {
                 name: "ID",
@@ -65,13 +61,11 @@ module.exports = class help extends Command {
                 name: "Created At",
                 value: `<t:${Math.floor(
                     message?.guild.createdTimestamp / 1000.0
-                )}:f> | <t:${Math.floor(
-                    message?.guild.createdTimestamp / 1000.0
-                )}:R>`,
+                )}:f> | <t:${Math.floor(message?.guild.createdTimestamp / 1000.0)}:R>`,
             },
             {
                 name: "Owner",
-                value: `<@${(await message?.guild.fetchOwner()).user.id}>`,
+                value: `<@${(await message?.guild?.fetchOwner())?.user?.id}>`,
             },
         ]);
         embed.setTimestamp();
@@ -124,8 +118,7 @@ module.exports = class help extends Command {
             ],
             fetchReply: true,
         });
-        const filter = (interaction) =>
-            interaction?.user.id === message?.author.id;
+        const filter = (interaction) => interaction?.user.id === message?.author.id;
         const collector = msg.createMessageComponentCollector({
             filter,
             time: 360000,
@@ -138,23 +131,15 @@ module.exports = class help extends Command {
                         name: message?.guild.name,
                         iconURL: message?.guild.iconURL({ dynamic: true }),
                     });
-                    embed.setThumbnail(
-                        message?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(message?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.setColor(this.client.util.color(message));
                     embed.addFields([
                         {
                             name: "Members",
-                            value: `Total Members: ${
-                                message?.guild.memberCount
-                            }\nHumans: ${
-                                message?.guild.members.cache.filter(
-                                    (m) => m.user.bot == false
-                                ).size
+                            value: `Total Members: ${message?.guild.memberCount}\nHumans: ${
+                                message?.guild.members.cache.filter((m) => m.user.bot == false).size
                             }\nBots: ${
-                                message?.guild.members.cache.filter(
-                                    (m) => m.user.bot == true
-                                ).size
+                                message?.guild.members.cache.filter((m) => m.user.bot == true).size
                             }`,
                         },
                     ]);
@@ -168,66 +153,47 @@ module.exports = class help extends Command {
                         iconURL: message?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(this.client.util.color(message));
-                    embed.setThumbnail(
-                        message?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(message?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: "Text Channels",
                             value: `Total Channels: ${
                                 message?.guild.channels.cache.size
                             }\nText Channels: ${
-                                message?.guild.channels.cache.filter(
-                                    (c) => c.type === 0
-                                ).size
+                                message?.guild.channels.cache.filter((c) => c.type === 0).size
                             }\nVoice Channels: ${
-                                message?.guild.channels.cache.filter(
-                                    (c) => c.type === 2
-                                ).size
+                                message?.guild.channels.cache.filter((c) => c.type === 2).size
                             }\nCategories: ${
-                                message?.guild.channels.cache.filter(
-                                    (c) => c.type === 4
-                                ).size
+                                message?.guild.channels.cache.filter((c) => c.type === 4).size
                             }`,
                         },
                         {
                             name: "AFK Channel",
-                            value: message?.guild.afkChannel
-                                ? message?.guild.afkChannel
-                                : "None",
+                            value: message?.guild.afkChannel ? message?.guild.afkChannel : "None",
                         },
                         {
                             name: "Hidden Channels",
                             value: `Total Channels: ${
                                 message?.guild.channels.cache.filter(
-                                    (c) =>
-                                        !c
-                                            .permissionsFor(message?.guild.id)
-                                            .has("ViewChannel")
+                                    (c) => !c.permissionsFor(message?.guild.id).has("ViewChannel")
                                 ).size
                             }\nText Channels: ${
                                 message?.guild.channels.cache.filter(
                                     (c) =>
                                         c.type === 0 &&
-                                        !c
-                                            .permissionsFor(message?.guild.id)
-                                            .has("ViewChannel")
+                                        !c.permissionsFor(message?.guild.id).has("ViewChannel")
                                 ).size
                             }\nVoice Channels: ${
                                 message?.guild.channels.cache.filter(
                                     (c) =>
                                         c.type === 2 &&
-                                        !c
-                                            .permissionsFor(message?.guild.id)
-                                            .has("ViewChannel")
+                                        !c.permissionsFor(message?.guild.id).has("ViewChannel")
                                 ).size
                             }\nCategories: ${
                                 message?.guild.channels.cache.filter(
                                     (c) =>
                                         c.type === 4 &&
-                                        !c
-                                            .permissionsFor(message?.guild.id)
-                                            .has("ViewChannel")
+                                        !c.permissionsFor(message?.guild.id).has("ViewChannel")
                                 ).size
                             }`,
                         },
@@ -243,15 +209,11 @@ module.exports = class help extends Command {
                         iconURL: message?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(0xeb459e);
-                    embed.setThumbnail(
-                        message?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(message?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: "Boosts",
-                            value:
-                                message?.guild.premiumSubscriptionCount +
-                                " Boosts",
+                            value: message?.guild.premiumSubscriptionCount + " Boosts",
                         },
                         {
                             name: "Level",
@@ -271,9 +233,7 @@ module.exports = class help extends Command {
                                 message?.guild.members.cache
                                     .filter((m) => m.premiumSince != null)
                                     .sort(
-                                        (a, b) =>
-                                            b.premiumSinceTimestamp -
-                                            a.premiumSinceTimestamp
+                                        (a, b) => b.premiumSinceTimestamp - a.premiumSinceTimestamp
                                     )
                                     .map((m) => `<@${m.user.id}>`)
                                     .slice(0, 5)
@@ -316,10 +276,7 @@ module.exports = class help extends Command {
                                 /ANIMATED_ICON/g,
                                 `${this.client.config.Client.emoji.tick} Animated Icon`
                             )
-                            .replace(
-                                /BANNER/g,
-                                `${this.client.config.Client.emoji.tick} Banner`
-                            )
+                            .replace(/BANNER/g, `${this.client.config.Client.emoji.tick} Banner`)
                             .replace(
                                 /COMMERCE/g,
                                 `${this.client.config.Client.emoji.tick} Commerce`
@@ -344,10 +301,7 @@ module.exports = class help extends Command {
                                 /MEMBER_VERIFICATION_GATE_ENABLED/g,
                                 `${this.client.config.Client.emoji.tick} Member Verifaction Gate`
                             )
-                            .replace(
-                                /NEWS/g,
-                                `${this.client.config.Client.emoji.tick} News`
-                            )
+                            .replace(/NEWS/g, `${this.client.config.Client.emoji.tick} News`)
                             .replace(
                                 /PARTNERED/g,
                                 `${this.client.config.Client.emoji.tick} Partnered`
@@ -404,10 +358,7 @@ module.exports = class help extends Command {
                                 /HAS_DIRECTORY_ENTRY /g,
                                 `${this.client.config.Client.emoji.tick} Has Directory Entry`
                             )
-                            .replace(
-                                /HUB/g,
-                                `${this.client.config.Client.emoji.tick} Hub`
-                            )
+                            .replace(/HUB/g, `${this.client.config.Client.emoji.tick} Hub`)
                             .replace(
                                 /MONETIZATION_ENABLED/g,
                                 `${this.client.config.Client.emoji.tick} Monetization`
@@ -446,9 +397,7 @@ module.exports = class help extends Command {
                         iconURL: message?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(this.client.util.color(message));
-                    embed.setThumbnail(
-                        message?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(message?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: "Features",
@@ -466,27 +415,20 @@ module.exports = class help extends Command {
                         iconURL: message?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(this.client.util.color(message));
-                    embed.setThumbnail(
-                        message?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(message?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: `Verifaction Level: ${
-                                verificationLevels[
-                                    message?.guild.verificationLevel
-                                ] || "None"
+                                verificationLevels[message?.guild.verificationLevel] || "None"
                             }`,
                             value:
-                                verificationLevelsStage[
-                                    message?.guild.verificationLevel
-                                ] || "None",
+                                verificationLevelsStage[message?.guild.verificationLevel] || "None",
                         },
                         {
                             name: "Explicit Content Filter",
                             value:
-                                explicitContentFilter[
-                                    message?.guild.explicitContentFilter
-                                ] || "None",
+                                explicitContentFilter[message?.guild.explicitContentFilter] ||
+                                "None",
                         },
                         {
                             name: "Default Notifications",
@@ -512,17 +454,13 @@ module.exports = class help extends Command {
         interaction?.guild.members.fetch();
         const embed = this.client.util.embed();
         embed.setColor(this.client.util.color(interaction));
-        embed.setThumbnail(
-            interaction?.guild.iconURL({ dynamic: true, size: 2048 })
-        );
+        embed.setThumbnail(interaction?.guild.iconURL({ dynamic: true, size: 2048 }));
         embed.setAuthor({
             name: interaction?.guild.name,
             iconURL: interaction?.guild.iconURL({ dynamic: true }),
         });
         embed.setTitle("Server Information");
-        embed.setDescription(
-            `${interaction?.guild.description || "No Description"}`
-        );
+        embed.setDescription(`${interaction?.guild.description || "No Description"}`);
         embed.addFields([
             {
                 name: "ID",
@@ -532,13 +470,11 @@ module.exports = class help extends Command {
                 name: "Created At",
                 value: `<t:${Math.floor(
                     interaction?.guild.createdTimestamp / 1000.0
-                )}:f> | <t:${Math.floor(
-                    interaction?.guild.createdTimestamp / 1000.0
-                )}:R>`,
+                )}:f> | <t:${Math.floor(interaction?.guild.createdTimestamp / 1000.0)}:R>`,
             },
             {
                 name: "Owner",
-                value: `<@${(await interaction?.guild.fetchOwner()).user.id}>`,
+                value: `<@${(await interaction?.guild?.fetchOwner())?.user?.id}>`,
             },
         ]);
         embed.setTimestamp();
@@ -604,23 +540,17 @@ module.exports = class help extends Command {
                         name: interaction?.guild.name,
                         iconURL: interaction?.guild.iconURL({ dynamic: true }),
                     });
-                    embed.setThumbnail(
-                        interaction?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(interaction?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.setColor(this.client.util.color(interaction));
                     embed.addFields([
                         {
                             name: "Members",
-                            value: `Total Members: ${
-                                interaction?.guild.memberCount
-                            }\nHumans: ${
-                                interaction?.guild.members.cache.filter(
-                                    (m) => m.user.bot == false
-                                ).size
+                            value: `Total Members: ${interaction?.guild.memberCount}\nHumans: ${
+                                interaction?.guild.members.cache.filter((m) => m.user.bot == false)
+                                    .size
                             }\nBots: ${
-                                interaction?.guild.members.cache.filter(
-                                    (m) => m.user.bot == true
-                                ).size
+                                interaction?.guild.members.cache.filter((m) => m.user.bot == true)
+                                    .size
                             }`,
                         },
                     ]);
@@ -634,26 +564,18 @@ module.exports = class help extends Command {
                         iconURL: interaction?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(this.client.util.color(interaction));
-                    embed.setThumbnail(
-                        interaction?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(interaction?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: "Text Channels",
                             value: `Total Channels: ${
                                 interaction?.guild.channels.cache.size
                             }\nText Channels: ${
-                                interaction?.guild.channels.cache.filter(
-                                    (c) => c.type === 0
-                                ).size
+                                interaction?.guild.channels.cache.filter((c) => c.type === 0).size
                             }\nVoice Channels: ${
-                                interaction?.guild.channels.cache.filter(
-                                    (c) => c.type === 2
-                                ).size
+                                interaction?.guild.channels.cache.filter((c) => c.type === 2).size
                             }\nCategories: ${
-                                interaction?.guild.channels.cache.filter(
-                                    (c) => c.type === 4
-                                ).size
+                                interaction?.guild.channels.cache.filter((c) => c.type === 4).size
                             }`,
                         },
                         {
@@ -667,41 +589,25 @@ module.exports = class help extends Command {
                             value: `Total Channels: ${
                                 interaction?.guild.channels.cache.filter(
                                     (c) =>
-                                        !c
-                                            .permissionsFor(
-                                                interaction?.guild.id
-                                            )
-                                            .has("ViewChannel")
+                                        !c.permissionsFor(interaction?.guild.id).has("ViewChannel")
                                 ).size
                             }\nText Channels: ${
                                 interaction?.guild.channels.cache.filter(
                                     (c) =>
                                         c.type === 0 &&
-                                        !c
-                                            .permissionsFor(
-                                                interaction?.guild.id
-                                            )
-                                            .has("ViewChannel")
+                                        !c.permissionsFor(interaction?.guild.id).has("ViewChannel")
                                 ).size
                             }\nVoice Channels: ${
                                 interaction?.guild.channels.cache.filter(
                                     (c) =>
                                         c.type === 2 &&
-                                        !c
-                                            .permissionsFor(
-                                                interaction?.guild.id
-                                            )
-                                            .has("ViewChannel")
+                                        !c.permissionsFor(interaction?.guild.id).has("ViewChannel")
                                 ).size
                             }\nCategories: ${
                                 interaction?.guild.channels.cache.filter(
                                     (c) =>
                                         c.type === 4 &&
-                                        !c
-                                            .permissionsFor(
-                                                interaction?.guild.id
-                                            )
-                                            .has("ViewChannel")
+                                        !c.permissionsFor(interaction?.guild.id).has("ViewChannel")
                                 ).size
                             }`,
                         },
@@ -717,15 +623,11 @@ module.exports = class help extends Command {
                         iconURL: interaction?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(0xeb459e);
-                    embed.setThumbnail(
-                        interaction?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(interaction?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: "Boosts",
-                            value:
-                                interaction?.guild.premiumSubscriptionCount +
-                                " Boosts",
+                            value: interaction?.guild.premiumSubscriptionCount + " Boosts",
                         },
                         {
                             name: "Level",
@@ -745,9 +647,7 @@ module.exports = class help extends Command {
                                 interaction?.guild.members.cache
                                     .filter((m) => m.premiumSince != null)
                                     .sort(
-                                        (a, b) =>
-                                            b.premiumSinceTimestamp -
-                                            a.premiumSinceTimestamp
+                                        (a, b) => b.premiumSinceTimestamp - a.premiumSinceTimestamp
                                     )
                                     .map((m) => `<@${m.user.id}>`)
                                     .slice(0, 5)
@@ -790,10 +690,7 @@ module.exports = class help extends Command {
                                 /ANIMATED_ICON/g,
                                 `${this.client.config.Client.emoji.tick} Animated Icon`
                             )
-                            .replace(
-                                /BANNER/g,
-                                `${this.client.config.Client.emoji.tick} Banner`
-                            )
+                            .replace(/BANNER/g, `${this.client.config.Client.emoji.tick} Banner`)
                             .replace(
                                 /COMMERCE/g,
                                 `${this.client.config.Client.emoji.tick} Commerce`
@@ -818,10 +715,7 @@ module.exports = class help extends Command {
                                 /MEMBER_VERIFICATION_GATE_ENABLED/g,
                                 `${this.client.config.Client.emoji.tick} Member Verifaction Gate`
                             )
-                            .replace(
-                                /NEWS/g,
-                                `${this.client.config.Client.emoji.tick} News`
-                            )
+                            .replace(/NEWS/g, `${this.client.config.Client.emoji.tick} News`)
                             .replace(
                                 /PARTNERED/g,
                                 `${this.client.config.Client.emoji.tick} Partnered`
@@ -878,10 +772,7 @@ module.exports = class help extends Command {
                                 /HAS_DIRECTORY_ENTRY /g,
                                 `${this.client.config.Client.emoji.tick} Has Directory Entry`
                             )
-                            .replace(
-                                /HUB/g,
-                                `${this.client.config.Client.emoji.tick} Hub`
-                            )
+                            .replace(/HUB/g, `${this.client.config.Client.emoji.tick} Hub`)
                             .replace(
                                 /MONETIZATION_ENABLED/g,
                                 `${this.client.config.Client.emoji.tick} Monetization`
@@ -921,9 +812,7 @@ module.exports = class help extends Command {
                         iconURL: interaction?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(this.client.util.color(interaction));
-                    embed.setThumbnail(
-                        interaction?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(interaction?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: "Features",
@@ -941,40 +830,32 @@ module.exports = class help extends Command {
                         iconURL: interaction?.guild.iconURL({ dynamic: true }),
                     });
                     embed.setColor(this.client.util.color(interaction));
-                    embed.setThumbnail(
-                        interaction?.guild.iconURL({ dynamic: true, size: 2048 })
-                    );
+                    embed.setThumbnail(interaction?.guild.iconURL({ dynamic: true, size: 2048 }));
                     embed.addFields([
                         {
                             name: `Verifaction Level: ${
-                                verificationLevels[
-                                    interaction?.guild.verificationLevel
-                                ] || "None"
+                                verificationLevels[interaction?.guild.verificationLevel] || "None"
                             }`,
                             value:
-                                verificationLevelsStage[
-                                    interaction?.guild.verificationLevel
-                                ] || "None",
+                                verificationLevelsStage[interaction?.guild.verificationLevel] ||
+                                "None",
                         },
                         {
                             name: "Explicit Content Filter",
                             value:
-                                explicitContentFilter[
-                                    interaction?.guild.explicitContentFilter
-                                ] || "None",
+                                explicitContentFilter[interaction?.guild.explicitContentFilter] ||
+                                "None",
                         },
                         {
                             name: "Default Notifications",
                             value:
                                 defaultMessageNotifications[
-                                    interaction?.guild
-                                        .defaultMessageNotifications
+                                    interaction?.guild.defaultMessageNotifications
                                 ] || "None",
                         },
                         {
                             name: "Moderators Require 2FA?",
-                            value:
-                                mfaLevels[interaction?.guild.mfaLevel] || "No",
+                            value: mfaLevels[interaction?.guild.mfaLevel] || "No",
                         },
                     ]);
                     embed.setTimestamp();

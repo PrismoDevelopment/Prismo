@@ -1,14 +1,8 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 
 module.exports = class roleCreate extends Event {
     get name() {
-        return 'roleCreate';
+        return "roleCreate";
     }
 
     get once() {
@@ -17,16 +11,18 @@ module.exports = class roleCreate extends Event {
 
     async run(role) {
         try {
-            let antiNukeData = await this.client.cache.get(role?.guild.id)
+            let antiNukeData = await this.client.cache.get(role?.guild.id);
             if (!antiNukeData) {
                 antiNukeData = await this.client.database.antiNukeData.get(role?.guild.id);
                 await this.client.cache.set(role?.guild.id, antiNukeData);
             }
             if (!antiNukeData.enabled) return;
-            const logs = await role?.guild.fetchAuditLogs({
-                type: 30,
-                limit: 1
-            }).catch(() => { });
+            const logs = await role?.guild
+                .fetchAuditLogs({
+                    type: 30,
+                    limit: 1,
+                })
+                .catch(() => {});
 
             const log = logs.entries.first();
             if (!log) return;
@@ -37,8 +33,15 @@ module.exports = class roleCreate extends Event {
             if (user.id == role?.guild.ownerId) return;
             if (role?.id != log.target.id) return;
             await Promise.all([
-            role?.delete().catch(() => { }),
-            this.client.eventRestrict(antiNukeData.punishment, user.id, role?.guild.id, `Anti Role Create | Prismo Antinuke`).catch(() => { })
+                role?.delete().catch(() => {}),
+                this.client
+                    .eventRestrict(
+                        antiNukeData.punishment,
+                        user.id,
+                        role?.guild.id,
+                        `Anti Role Create | Prismo Antinuke`
+                    )
+                    .catch(() => {}),
             ]);
             return;
         } catch (err) {

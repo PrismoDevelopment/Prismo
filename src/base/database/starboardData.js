@@ -25,8 +25,8 @@ module.exports = class starboardData {
         }
         if (data) {
             data = value;
-            await data.save().catch(() => { });
+            await data.save().catch(() => {});
             return data;
         }
     }
-}
+};

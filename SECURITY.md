@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We are currently providing security updates for the following versions: 
+We are currently providing security updates for the following versions:
 
 <table>
   <tr>
@@ -14,7 +14,6 @@ We are currently providing security updates for the following versions:
     <td align="center">✅</td>
   </tr>
 </table>
-
 
 Other versions of this project are considered out of scope for security issues.
 

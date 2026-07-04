@@ -8,12 +8,7 @@ module.exports = class help extends Command {
             description: "Create Embed can be used for announcment and welcome",
             usage: ["embed (Creates/Delete/Edit/Show embeds.)"],
             category: "Utilities",
-            userPerms: [
-                "SendMessages",
-                "EmbedLinks",
-                "ReadMessageHistory",
-                "ManageMessages",
-            ],
+            userPerms: ["SendMessages", "EmbedLinks", "ReadMessageHistory", "ManageMessages"],
             botPerms: ["EmbedLinks", "ViewChannel", "SendMessages"],
             cooldown: 5,
             image: "https://i.imgur.com/YRh8F15.png",
@@ -44,11 +39,7 @@ module.exports = class help extends Command {
 
     async run({ message, args }) {
         try {
-            this.client.commandFunctions.embedFunction.buildNormal(
-                message,
-                args[0],
-                false
-            );
+            this.client.commandFunctions.embedFunction.buildNormal(message, args[0], false);
         } catch (e) {
             message?.reply({
                 content: e.message,

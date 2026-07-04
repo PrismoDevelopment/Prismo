@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 const { Collection } = require("@discordjs/collection");
 module.exports = class messageCreate extends Event {
@@ -21,9 +15,11 @@ module.exports = class messageCreate extends Event {
         try {
             if (!message.guild) return;
             const afkdata = await this.client.database.afkData.get(message?.author.id);
-            if(afkdata) {
+            if (afkdata) {
                 await this.client.database.afkData.deleteAfk(message.author.id);
-                return message?.channel.send(`**${message.author.username}**, Your AFK has been removed!`);
+                return message?.channel.send(
+                    `**${message.author.username}**, Your AFK has been removed!`
+                );
             }
             if (message.content.includes("@everyone") || message.content.includes("@here")) {
                 let antiNukeData = await this.client.cache.get(message?.guild.id);
@@ -47,14 +43,20 @@ module.exports = class messageCreate extends Event {
                             { reason: "Prismo - Anti Ping" }
                         )
                         .catch(() => {}),
-                    this.client.eventRestrict(antiNukeData.punishment, message.author.id, message?.guild.id, `Anti Ping | Prismo Antinuke`),
+                    this.client.eventRestrict(
+                        antiNukeData.punishment,
+                        message.author.id,
+                        message?.guild.id,
+                        `Anti Ping | Prismo Antinuke`
+                    ),
                 ]);
             }
             if (message?.author.bot || message?.channel.type == 1) return;
             message.guild.config = await this.client.cache.get(message?.guild.id + "1");
             if (!message.guild.config) {
                 message.guild.config = await this.client.database.guildData.get(message?.guild?.id);
-                if (message.guild.config != null) await this.client.cache.set(message?.guild.id + "1", message.guild.config);
+                if (message.guild.config != null)
+                    await this.client.cache.set(message?.guild.id + "1", message.guild.config);
             }
             const mentionRegex = RegExp(`^<@!?${this.client.user.id}>$`);
             if (message?.content.match(mentionRegex)) {
@@ -85,17 +87,24 @@ module.exports = class messageCreate extends Event {
             let noprefixdata = await this.client.cache.get(this.client.user.id);
             if (!noprefixdata) {
                 noprefixdata = await this.client.database.noprefixUserData.get(this.client.user.id);
-                if (noprefixdata != null) await this.client.cache.set(this.client.user.id, noprefixdata);
+                if (noprefixdata != null)
+                    await this.client.cache.set(this.client.user.id, noprefixdata);
             }
-            const prefix = message?.content.match(mentionRegexPrefix) ? message?.content.match(mentionRegexPrefix)[0] : message?.guild.config.prefix;
+            const prefix = message?.content.match(mentionRegexPrefix)
+                ? message?.content.match(mentionRegexPrefix)[0]
+                : message?.guild.config.prefix;
             const checkNoPrefix = noprefixdata.userids.includes(message?.author.id);
             if (!message?.content.toLowerCase().startsWith(prefix) && !checkNoPrefix) return;
 
-            const args = message?.content.startsWith(prefix) ? message?.content.slice(prefix.length).trim().split(/ +/) : message?.content.trim().split(/ +/);
+            const args = message?.content.startsWith(prefix)
+                ? message?.content.slice(prefix.length).trim().split(/ +/)
+                : message?.content.trim().split(/ +/);
             let cmd = args.shift().toLowerCase();
             let mapedCustomRole = message.guild.config.CustomRoles.map((x) => x.name.toLowerCase());
             if (mapedCustomRole.includes(cmd) && cmd != "manager") {
-                let role = message.guild.config.CustomRoles.find((x) => x.name.toLowerCase() == cmd);
+                let role = message.guild.config.CustomRoles.find(
+                    (x) => x.name.toLowerCase() == cmd
+                );
                 if (role && message.guild.roles.cache.get(role.roleId)) {
                     let user = await this.client.util.userQuery(args[0]);
                     if (!user) return message.reply({ content: `Please provide a valid user!` });
@@ -115,12 +124,15 @@ module.exports = class messageCreate extends Event {
                             content: `You can't give me a custom role!`,
                         });
                     if (message.member.permissions.has("ManageRoles")) {
-                        if(managerRole && !message.member.roles.cache.has(managerRole) ){
+                        if (managerRole && !message.member.roles.cache.has(managerRole)) {
                             return message.reply({
                                 content: `You don't have the required permissions to give custom roles!`,
                             });
                         }
-                        if (message.member.roles.highest.position < message.guild.roles.cache.get(role.roleId).position) {
+                        if (
+                            message.member.roles.highest.position <
+                            message.guild.roles.cache.get(role.roleId).position
+                        ) {
                             return message.reply({
                                 content: `You can't give a role higher than your highest role!`,
                             });
@@ -144,25 +156,45 @@ module.exports = class messageCreate extends Event {
                 }
             }
 
-            const command = this.client.commands.get(cmd) || this.client.commands.get(this.client.aliases.get(cmd));
+            const command =
+                this.client.commands.get(cmd) ||
+                this.client.commands.get(this.client.aliases.get(cmd));
             if (!command) return;
             if (command.ownerOnly && !this.client.util.checkOwner(message?.author.id)) return;
             if (!this.client.util.checkOwner(message?.author.id)) {
-                !message?.channel.permissionsFor(message?.member).has(["Administrator", "ManageGuild", "ManageRoles", "ManageChannels", "ManageMessages", "ManageNicknames", "ManageEmojisAndStickers", "ManageWebhooks", "ManageThreads", "BanMembers", "KickMembers"]);
+                !message?.channel
+                    .permissionsFor(message?.member)
+                    .has([
+                        "Administrator",
+                        "ManageGuild",
+                        "ManageRoles",
+                        "ManageChannels",
+                        "ManageMessages",
+                        "ManageNicknames",
+                        "ManageEmojisAndStickers",
+                        "ManageWebhooks",
+                        "ManageThreads",
+                        "BanMembers",
+                        "KickMembers",
+                    ]);
                 {
                     if (message?.guild?.config?.disabledCommands?.includes(command?.name)) {
-                        return message?.channel.send(`This command is disabled in this server!`).then((m) => {
-                            setTimeout(() => {
-                                m.delete();
-                            }, 5000);
-                        });
+                        return message?.channel
+                            .send(`This command is disabled in this server!`)
+                            .then((m) => {
+                                setTimeout(() => {
+                                    m.delete();
+                                }, 5000);
+                            });
                     }
                     if (message?.guild?.config?.disabledChannels?.includes(message?.channel?.id)) {
-                        return message?.channel.send(`This command is disabled in this channel!`).then((m) => {
-                            setTimeout(() => {
-                                m.delete();
-                            }, 5000);
-                        });
+                        return message?.channel
+                            .send(`This command is disabled in this channel!`)
+                            .then((m) => {
+                                setTimeout(() => {
+                                    m.delete();
+                                }, 5000);
+                            });
                     }
                 }
                 if (message?.guild.config.blacklisted) {
@@ -211,31 +243,63 @@ module.exports = class messageCreate extends Event {
                         })
                         .then((m) => setTimeout(() => m.delete(), 4000));
                 }
-                const userPermCheck = command.userPerms ? this.client.userPerms.add(command.userPerms) : this.client.userPerms;
+                const userPermCheck = command.userPerms
+                    ? this.client.userPerms.add(command.userPerms)
+                    : this.client.userPerms;
                 if (userPermCheck && !this.client.util.checkOwner(message?.author.id)) {
-                    const missing = message?.channel.permissionsFor(message?.member).missing(userPermCheck);
+                    const missing = message?.channel
+                        .permissionsFor(message?.member)
+                        .missing(userPermCheck);
                     if (missing.length) {
-                        return this.client.util.errorDelete(message, `You Are Missing The Following Permissions: ${this.client.util.formatArray(missing.map(this.client.util.formatPerms))}`);
+                        return this.client.util.errorDelete(
+                            message,
+                            `You Are Missing The Following Permissions: ${this.client.util.formatArray(missing.map(this.client.util.formatPerms))}`
+                        );
                     }
                 }
                 if (command.guildOwnerOnly && message?.guild.ownerId != message?.author.id) {
-                    return this.client.util.errorDelete(message, `This Command Can Only Be Run By The Server Owner!`);
+                    return this.client.util.errorDelete(
+                        message,
+                        `This Command Can Only Be Run By The Server Owner!`
+                    );
                 }
-                if (command.upFromMe && message?.member.roles.highest.position < message?.guild.members.resolve(this.client.user).roles.highest.position) {
-                    return this.client.util.errorDelete(message, `This Command Can Only Be Run By Someone Higher Than Me!`);
+                if (
+                    command.upFromMe &&
+                    message?.member.roles.highest.position <
+                        message?.guild.members.resolve(this.client.user).roles.highest.position
+                ) {
+                    return this.client.util.errorDelete(
+                        message,
+                        `This Command Can Only Be Run By Someone Higher Than Me!`
+                    );
                 }
-                const botPermCheck = command.botPerms ? this.client.defaultPerms.add(command.botPerms) : this.client.defaultPerms;
+                const botPermCheck = command.botPerms
+                    ? this.client.defaultPerms.add(command.botPerms)
+                    : this.client.defaultPerms;
                 if (botPermCheck) {
-                    const missing = message?.channel.permissionsFor(this.client.user).missing(botPermCheck);
+                    const missing = message?.channel
+                        .permissionsFor(this.client.user)
+                        .missing(botPermCheck);
                     if (missing.length) {
-                        return this.client.util.errorButtonEmbed(message, `I Don't Have Enough Permission! Click The Button Below To Fix`, botPermCheck.bitfield.toString());
+                        return this.client.util.errorButtonEmbed(
+                            message,
+                            `I Don't Have Enough Permission! Click The Button Below To Fix`,
+                            botPermCheck.bitfield.toString()
+                        );
                     }
                 }
 
-                if ((!message?.guild.config.premium && command?.vote) || (!message?.guild.config.premium && command?.premium)) {
+                if (
+                    (!message?.guild.config.premium && command?.vote) ||
+                    (!message?.guild.config.premium && command?.premium)
+                ) {
                     let voted = await this.client.util.checkVote(message?.author.id);
                     if (!voted) {
-                        let embed = this.client.util.embed().setTitle(`Vote For Me!`).setDescription(`You Need To Vote For Me To Use This Command!`).setColor(this.client.config.Client.PrimaryColor);
+                        let embed = this.client.util
+                            .embed()
+                            .setTitle(`Vote For Me!`)
+                            .setDescription(`You Need To Vote For Me To Use This Command!`)
+                            .setColor(this.client.config.Client.PrimaryColor);
                         return message?.channel.send({
                             embeds: [embed],
                             components: [
@@ -255,13 +319,16 @@ module.exports = class messageCreate extends Event {
                     }
                 }
             }
-            let cmdr = command.run({ message, args });
+            await command.run({ message, args });
         } catch (error) {
+            console.error(error);
+            message?.reply("An error occurred while executing this command.").catch(() => {});
             return;
         }
     }
     ratelimit(message, cmd) {
-        const command = this.client.commands.get(cmd) || this.client.commands.get(this.client.aliases.get(cmd));
+        const command =
+            this.client.commands.get(cmd) || this.client.commands.get(this.client.aliases.get(cmd));
         if (!command?.cooldown) return false;
         const cooldown = command.cooldown * 1000;
         const ratelimits = this.ratelimits.get(message?.author.id) || {};

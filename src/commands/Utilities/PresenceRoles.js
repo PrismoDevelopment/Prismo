@@ -40,4 +40,4 @@ module.exports = class PreseneRoles extends Command {
         await interaction.reply({ content: "starting...", ephemeral: true });
         await this.client.commandFunctions.PresenceFunction.presence(interaction, args, true);
     }
-}
+};

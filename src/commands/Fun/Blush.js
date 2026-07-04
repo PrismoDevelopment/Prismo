@@ -1,13 +1,5 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Command = require("../../abstract/command");
-const ActionsClient = require('discord-actions');
-
-const nekoClient = new ActionsClient();
+const discordActions = require("../../base/discordActions");
 
 module.exports = class Blush extends Command {
     constructor(...args) {
@@ -39,15 +31,14 @@ module.exports = class Blush extends Command {
         const member = await message?.guild.members.fetch(user);
         if (!member) return message?.reply("Please provide a valid user to blush!");
 
-        if (member.id === message?.author.id)
-            return message?.reply("You can't blush yourself!");
+        if (member.id === message?.author.id) return message?.reply("You can't blush yourself!");
 
-        if (member.id === this.client.user.id)
-            return message?.reply("You can't blush me!");
+        if (member.id === this.client.user.id) return message?.reply("You can't blush me!");
 
-        const blush = await nekoClient.sfw.blush();
+        const blush = await discordActions.blush();
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle(`${message?.author.username} blushed at ${member.user.username}`)
             .setImage(blush.url)
             .setColor(this.client.config.Client.PrimaryColor);
@@ -62,12 +53,12 @@ module.exports = class Blush extends Command {
         if (user.id === interaction?.user.id)
             return interaction?.reply("You can't blush yourself!");
 
-        if (user.id === this.client.user.id)
-            return interaction?.reply("You can't blush me!");
+        if (user.id === this.client.user.id) return interaction?.reply("You can't blush me!");
 
-        const blush = await nekoClient.sfw.blush();
+        const blush = await discordActions.blush();
 
-        const embed = this.client.util.embed()
+        const embed = this.client.util
+            .embed()
             .setTitle(`${interaction?.user.username} blushed at ${user.username}`)
             .setImage(blush.url)
             .setColor(this.client.config.Client.PrimaryColor);

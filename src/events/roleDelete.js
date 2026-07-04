@@ -1,14 +1,8 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 
 module.exports = class roleDelete extends Event {
     get name() {
-        return 'roleDelete';
+        return "roleDelete";
     }
 
     get once() {
@@ -17,16 +11,18 @@ module.exports = class roleDelete extends Event {
 
     async run(role) {
         try {
-            let antiNukeData = await this.client.cache.get(role?.guild.id)
+            let antiNukeData = await this.client.cache.get(role?.guild.id);
             if (!antiNukeData) {
                 antiNukeData = await this.client.database.antiNukeData.get(role?.guild.id);
                 await this.client.cache.set(role?.guild.id, antiNukeData);
             }
             if (!antiNukeData.enabled) return;
-            const logs = await role?.guild.fetchAuditLogs({
-                type: 31,
-                limit: 1
-            }).catch(() => { });
+            const logs = await role?.guild
+                .fetchAuditLogs({
+                    type: 31,
+                    limit: 1,
+                })
+                .catch(() => {});
 
             const log = logs.entries.first();
             if (!log) return;
@@ -36,16 +32,25 @@ module.exports = class roleDelete extends Event {
             if (user.id == this.client.user.id) return;
             if (user.id == role?.guild.ownerId) return;
             await Promise.all([
-                role?.guild.roles.create({
-                    name: role?.name,
-                    color: role?.color,
-                    hoist: role?.hoist,
-                    mentionable: role?.mentionable,
-                    permissions: role?.permissions,
-                    position: role?.position,
-                    reason: `Anti Role Delete | Prismo Antinuke`
-                }).catch(() => { }),
-                this.client.eventRestrict(antiNukeData.punishment, user.id, role?.guild.id, `Anti Role Delete | Prismo Antinuke`).catch(() => { })
+                role?.guild.roles
+                    .create({
+                        name: role?.name,
+                        color: role?.color,
+                        hoist: role?.hoist,
+                        mentionable: role?.mentionable,
+                        permissions: role?.permissions,
+                        position: role?.position,
+                        reason: `Anti Role Delete | Prismo Antinuke`,
+                    })
+                    .catch(() => {}),
+                this.client
+                    .eventRestrict(
+                        antiNukeData.punishment,
+                        user.id,
+                        role?.guild.id,
+                        `Anti Role Delete | Prismo Antinuke`
+                    )
+                    .catch(() => {}),
             ]);
             return;
         } catch (err) {

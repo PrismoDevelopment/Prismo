@@ -13,7 +13,7 @@ module.exports = class about extends Command {
             userPerms: ["SendMessages"],
             botPerms: ["SendMessages", "EmbedLinks"],
             cooldown: 5,
-            image:"https://i.imgur.com/09yyTmo.png",
+            image: "https://i.imgur.com/09yyTmo.png",
             guildOnly: true,
             options: [
                 {
@@ -24,38 +24,28 @@ module.exports = class about extends Command {
             ],
         });
         this.flags = {
-            BotHTTPInteractions:
-                this.client.config.Client.Emojis.Flags.SupportCommands,
+            BotHTTPInteractions: this.client.config.Client.Emojis.Flags.SupportCommands,
             BugHunterLevel1: this.client.config.Client.Emojis.Flags.BugHunter1,
             BugHunterLevel2: this.client.config.Client.Emojis.Flags.BugHunter2,
-            CertifiedModerator:
-                this.client.config.Client.Emojis.Flags.CertifiedModerator,
-            HypeSquadOnlineHouse1:
-                this.client.config.Client.Emojis.Flags.HyperSquadBravery,
-            HypeSquadOnlineHouse2:
-                this.client.config.Client.Emojis.Flags.HyperSquadBrilliance,
-            HypeSquadOnlineHouse3:
-                this.client.config.Client.Emojis.Flags.HyperSquadBalance,
+            CertifiedModerator: this.client.config.Client.Emojis.Flags.CertifiedModerator,
+            HypeSquadOnlineHouse1: this.client.config.Client.Emojis.Flags.HyperSquadBravery,
+            HypeSquadOnlineHouse2: this.client.config.Client.Emojis.Flags.HyperSquadBrilliance,
+            HypeSquadOnlineHouse3: this.client.config.Client.Emojis.Flags.HyperSquadBalance,
             Hypesquad: this.client.config.Client.Emojis.Flags.HyperSquadEvent,
             Partner: this.client.config.Client.Emojis.Flags.PartnerServerOwner,
-            PremiumEarlySupporter:
-                this.client.config.Client.Emojis.Flags.EarlySupporter,
+            PremiumEarlySupporter: this.client.config.Client.Emojis.Flags.EarlySupporter,
             Staff: this.client.config.Client.Emojis.Flags.Exployee,
             VerifiedBot: this.client.config.Client.Emojis.Flags.VerifiedBot,
-            VerifiedDeveloper:
-                this.client.config.Client.Emojis.Flags
-                    .EarlyVerifiedBotDeveloper,
+            VerifiedDeveloper: this.client.config.Client.Emojis.Flags.EarlyVerifiedBotDeveloper,
         };
     }
 
     async run({ message, args, serverData, messageData }) {
         let permissionsArray = [];
         let acknowledgements = "Member";
-        let member = args[0]
-            ? await this.client.util.userQuery(args[0])
-            : message?.member;
+        let member = args[0] ? await this.client.util.userQuery(args[0]) : message?.member;
         if (typeof member === "string") {
-            let nopeMember = null;
+            let nopeMember;
             try {
                 nopeMember = await message?.guild.members.fetch(member);
             } catch (e) {
@@ -68,9 +58,7 @@ module.exports = class about extends Command {
             if (!nopeMember) return;
             member = nopeMember;
         }
-        const badges = member.user
-            ? member.user.flags.toArray()
-            : member.flags.toArray();
+        const badges = member.user ? member.user.flags.toArray() : member.flags.toArray();
         const embed = this.client.util
             .embed()
             .setFooter({
@@ -79,46 +67,30 @@ module.exports = class about extends Command {
             })
             .setTimestamp();
         if (member instanceof GuildMember) {
-            if (member.permissions.has("Administrator"))
-                permissionsArray.push("Administrator");
-            if (member.permissions.has("BanMembers"))
-                permissionsArray.push("Ban Members");
-            if (member.permissions.has("ChangeNickname"))
-                permissionsArray.push("Change Nickname");
+            if (member.permissions.has("Administrator")) permissionsArray.push("Administrator");
+            if (member.permissions.has("BanMembers")) permissionsArray.push("Ban Members");
+            if (member.permissions.has("ChangeNickname")) permissionsArray.push("Change Nickname");
             if (member.permissions.has("CreateInstantInvite"))
                 permissionsArray.push("Create Instant Invite");
-            if (member.permissions.has("DeafenMembers"))
-                permissionsArray.push("Deafen Members");
-            if (member.permissions.has("KickMembers"))
-                permissionsArray.push("Kick Members");
-            if (member.permissions.has("ManageChannels"))
-                permissionsArray.push("Manage Channels");
+            if (member.permissions.has("DeafenMembers")) permissionsArray.push("Deafen Members");
+            if (member.permissions.has("KickMembers")) permissionsArray.push("Kick Members");
+            if (member.permissions.has("ManageChannels")) permissionsArray.push("Manage Channels");
             if (member.permissions.has("ManageEmojisAndStickers"))
                 permissionsArray.push("Manage Emojis");
-            if (member.permissions.has("ManageGuild"))
-                permissionsArray.push("Manage Guild");
-            if (member.permissions.has("ManageMessages"))
-                permissionsArray.push("Manage Messages");
+            if (member.permissions.has("ManageGuild")) permissionsArray.push("Manage Guild");
+            if (member.permissions.has("ManageMessages")) permissionsArray.push("Manage Messages");
             if (member.permissions.has("ManageNicknames"))
                 permissionsArray.push("Manage Nicknames");
-            if (member.permissions.has("ManageRoles"))
-                permissionsArray.push("Manage Roles");
-            if (member.permissions.has("ManageWebhooks"))
-                permissionsArray.push("Manage Webhooks");
+            if (member.permissions.has("ManageRoles")) permissionsArray.push("Manage Roles");
+            if (member.permissions.has("ManageWebhooks")) permissionsArray.push("Manage Webhooks");
             if (member.permissions.has("MentionEveryone"))
                 permissionsArray.push("Mention Everyone");
-            if (member.permissions.has("MoveMembers"))
-                permissionsArray.push("Move Members");
-            if (member.permissions.has("MuteMembers"))
-                permissionsArray.push("Mute Members");
-            if (member.permissions.has("ViewAuditLog"))
-                permissionsArray.push("View Audit Logs");
-            if (member.permissions.has("ManageGuild"))
-                acknowledgements = "Moderator";
-            if (member.permissions.has("Administrator"))
-                acknowledgements = "Administrator";
-            if (member.id == message?.guild.ownerId)
-                acknowledgements = "Server Owner";
+            if (member.permissions.has("MoveMembers")) permissionsArray.push("Move Members");
+            if (member.permissions.has("MuteMembers")) permissionsArray.push("Mute Members");
+            if (member.permissions.has("ViewAuditLog")) permissionsArray.push("View Audit Logs");
+            if (member.permissions.has("ManageGuild")) acknowledgements = "Moderator";
+            if (member.permissions.has("Administrator")) acknowledgements = "Administrator";
+            if (member.id == message?.guild.ownerId) acknowledgements = "Server Owner";
             embed.setAuthor({
                 name: `${member.user.username}#${member.user.discriminator}`,
                 iconURL: member.user.displayAvatarURL({ dynamic: true }),
@@ -136,11 +108,7 @@ module.exports = class about extends Command {
                             ? "Yes " + this.client.config.Client.emoji.tick
                             : "No " + this.client.config.Client.emoji.cross
                     }
-**Badges:** ${
-                        badges.length != 0
-                            ? badges.map((c) => this.flags[c]).join(", ")
-                            : "None"
-                    }
+**Badges:** ${badges.length != 0 ? badges.map((c) => this.flags[c]).join(", ") : "None"}
 **Joined At:** <t:${Math.floor(member.joinedTimestamp / 1000.0)}:R>
 **Created At:** <t:${Math.floor(member.user.createdTimestamp / 1000.0)}:R>`,
                 },
@@ -149,9 +117,7 @@ module.exports = class about extends Command {
                     value: `**Highest Role:** ${member.roles.highest}
 **Boosting Since:** ${
                         member.premiumSince
-                            ? `<t:${Math.floor(
-                                  member.premiumSinceTimestamp / 1000.0
-                              )}:R>`
+                            ? `<t:${Math.floor(member.premiumSinceTimestamp / 1000.0)}:R>`
                             : "None"
                     }
 **Voice Channel:** ${member.voice.channel ? member.voice.channel : "None"}`,
@@ -174,9 +140,7 @@ module.exports = class about extends Command {
                           embed.setImage(
                               await member.user
                                   .fetch()
-                                  .then((u) =>
-                                      u.bannerURL({ dynamic: true, size: 2048 })
-                                  )
+                                  .then((u) => u.bannerURL({ dynamic: true, size: 2048 }))
                           ),
                       ],
                   })
@@ -185,9 +149,7 @@ module.exports = class about extends Command {
                           embed.setImage(
                               await member.user
                                   .fetch()
-                                  .then((u) =>
-                                      u.bannerURL({ dynamic: true, size: 2048 })
-                                  )
+                                  .then((u) => u.bannerURL({ dynamic: true, size: 2048 }))
                           ),
                       ],
                       components: [],
@@ -210,17 +172,11 @@ module.exports = class about extends Command {
                         ? "Yes " + this.client.config.Client.emoji.tick
                         : "No " + this.client.config.Client.emoji.cross
                 }
-**Badges:** ${
-                    badges.length != 0
-                        ? badges.map((c) => this.flags[c]).join(", ")
-                        : "None"
-                }
+**Badges:** ${badges.length != 0 ? badges.map((c) => this.flags[c]).join(", ") : "None"}
 **Created At:** <t:${Math.floor(member.createdTimestamp / 1000.0)}:R>`,
             },
         ]);
-        embed.setImage(
-            (await member.fetch()).bannerURL({ dynamic: true, size: 2048 })
-        );
+        embed.setImage((await member.fetch()).bannerURL({ dynamic: true, size: 2048 }));
         return messageData == null
             ? await message?.reply({
                   embeds: [embed],
@@ -248,9 +204,7 @@ module.exports = class about extends Command {
             }
         }
         if (!member) member = interaction?.member;
-        const badges = member.user
-            ? member.user.flags.toArray()
-            : member.flags.toArray();
+        const badges = member.user ? member.user.flags.toArray() : member.flags.toArray();
         const embed = this.client.util
             .embed()
             .setFooter({
@@ -260,48 +214,32 @@ module.exports = class about extends Command {
             .setTimestamp();
         interaction?.deferReply();
         if (member instanceof GuildMember) {
-            if (member.permissions.has("Administrator"))
-                permissionsArray.push("Administrator");
-            if (member.permissions.has("BanMembers"))
-                permissionsArray.push("Ban Members");
-            if (member.permissions.has("ChangeNickname"))
-                permissionsArray.push("Change Nickname");
+            if (member.permissions.has("Administrator")) permissionsArray.push("Administrator");
+            if (member.permissions.has("BanMembers")) permissionsArray.push("Ban Members");
+            if (member.permissions.has("ChangeNickname")) permissionsArray.push("Change Nickname");
             if (member.permissions.has("CreateInstantInvite"))
                 permissionsArray.push("Create Instant Invite");
-            if (member.permissions.has("DeafenMembers"))
-                permissionsArray.push("Deafen Members");
-            if (member.permissions.has("KickMembers"))
-                permissionsArray.push("Kick Members");
-            if (member.permissions.has("ManageChannels"))
-                permissionsArray.push("Manage Channels");
+            if (member.permissions.has("DeafenMembers")) permissionsArray.push("Deafen Members");
+            if (member.permissions.has("KickMembers")) permissionsArray.push("Kick Members");
+            if (member.permissions.has("ManageChannels")) permissionsArray.push("Manage Channels");
             if (member.permissions.has("ManageEmojisAndStickers"))
                 permissionsArray.push("Manage Emojis");
-            if (member.permissions.has("ManageGuild"))
-                permissionsArray.push("Manage Guild");
-            if (member.permissions.has("ManageMessages"))
-                permissionsArray.push("Manage Messages");
+            if (member.permissions.has("ManageGuild")) permissionsArray.push("Manage Guild");
+            if (member.permissions.has("ManageMessages")) permissionsArray.push("Manage Messages");
             if (member.permissions.has("ManageNicknames"))
                 permissionsArray.push("Manage Nicknames");
-            if (member.permissions.has("ManageRoles"))
-                permissionsArray.push("Manage Roles");
-            if (member.permissions.has("ManageWebhooks"))
-                permissionsArray.push("Manage Webhooks");
+            if (member.permissions.has("ManageRoles")) permissionsArray.push("Manage Roles");
+            if (member.permissions.has("ManageWebhooks")) permissionsArray.push("Manage Webhooks");
             if (member.permissions.has("MentionEveryone"))
                 permissionsArray.push("Mention Everyone");
-            if (member.permissions.has("MoveMembers"))
-                permissionsArray.push("Move Members");
-            if (member.permissions.has("MuteMembers"))
-                permissionsArray.push("Mute Members");
+            if (member.permissions.has("MoveMembers")) permissionsArray.push("Move Members");
+            if (member.permissions.has("MuteMembers")) permissionsArray.push("Mute Members");
             if (member.permissions.has("PrioritySpeaker"))
                 permissionsArray.push("Priority Speaker");
-            if (member.permissions.has("UseVAD"))
-                permissionsArray.push("Use VAD");
-            if (member.permissions.has("ManageGuild"))
-                acknowledgements = "Moderator";
-            if (member.permissions.has("Administrator"))
-                acknowledgements = "Administrator";
-            if (member.id == interaction?.guild.ownerId)
-                acknowledgements = "Server Owner";
+            if (member.permissions.has("UseVAD")) permissionsArray.push("Use VAD");
+            if (member.permissions.has("ManageGuild")) acknowledgements = "Moderator";
+            if (member.permissions.has("Administrator")) acknowledgements = "Administrator";
+            if (member.id == interaction?.guild.ownerId) acknowledgements = "Server Owner";
             embed.setAuthor({
                 name: `${member.user.username}#${member.user.discriminator}`,
                 iconURL: member.user.displayAvatarURL({ dynamic: true }),
@@ -325,11 +263,7 @@ module.exports = class about extends Command {
                             ? "Yes " + this.client.config.Client.emoji.tick
                             : "No " + this.client.config.Client.emoji.cross
                     }
-**Badges:** ${
-                        badges.length != 0
-                            ? badges.map((c) => this.flags[c]).join(", ")
-                            : "None"
-                    }
+**Badges:** ${badges.length != 0 ? badges.map((c) => this.flags[c]).join(", ") : "None"}
 **Joined At:** <t:${Math.floor(member.joinedTimestamp / 1000.0)}:R>
 **Created At:** <t:${Math.floor(member.user.createdTimestamp / 1000.0)}:R>`,
                 },
@@ -338,9 +272,7 @@ module.exports = class about extends Command {
                     value: `**Highest Role:** ${member.roles.highest}
 **Boosting Since:** ${
                         member.premiumSince
-                            ? `<t:${Math.floor(
-                                  member.premiumSinceTimestamp / 1000.0
-                              )}:R>`
+                            ? `<t:${Math.floor(member.premiumSinceTimestamp / 1000.0)}:R>`
                             : "None"
                     }
 **Voice Channel:** ${member.voice.channel ? member.voice.channel : "None"}`,
@@ -362,9 +294,7 @@ module.exports = class about extends Command {
                     embed.setImage(
                         await member.user
                             .fetch()
-                            .then((u) =>
-                                u.bannerURL({ dynamic: true, size: 2048 })
-                            )
+                            .then((u) => u.bannerURL({ dynamic: true, size: 2048 }))
                     ),
                 ],
             });
@@ -385,17 +315,11 @@ module.exports = class about extends Command {
                         ? "Yes " + this.client.config.Client.emoji.tick
                         : "No " + this.client.config.Client.emoji.cross
                 }
-**Badges:** ${
-                    badges.length != 0
-                        ? badges.map((c) => this.flags[c]).join(", ")
-                        : "None"
-                }
+**Badges:** ${badges.length != 0 ? badges.map((c) => this.flags[c]).join(", ") : "None"}
 **Created At:** <t:${Math.floor(member.createdTimestamp / 1000.0)}:R>`,
             },
         ]);
-        embed.setImage(
-            (await member.fetch()).bannerURL({ dynamic: true, size: 2048 })
-        );
+        embed.setImage((await member.fetch()).bannerURL({ dynamic: true, size: 2048 }));
         interaction?.editReply({
             embeds: [embed],
         });

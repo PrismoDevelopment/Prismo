@@ -9,33 +9,28 @@ module.exports = class unban extends Command {
             usage: ["Unban <user> [reason]"],
             category: "Moderation",
             userPerms: ["BanMembers"],
-            botPerms: [
-                "EmbedLinks",
-                "ViewChannel",
-                "SendMessages",
-                "BanMembers",
-            ],
+            botPerms: ["EmbedLinks", "ViewChannel", "SendMessages", "BanMembers"],
             cooldown: 20,
-            image:"https://i.imgur.com/gLwF8n1.png",
+            image: "https://i.imgur.com/gLwF8n1.png",
             options: [
                 {
                     type: 1,
                     name: "user",
                     description: "User to unban",
-                    options : [
+                    options: [
                         {
-                            type : 3,
-                            name : "user",
-                            description : "User to unban",
-                            required : true
+                            type: 3,
+                            name: "user",
+                            description: "User to unban",
+                            required: true,
                         },
-                    ]
+                    ],
                 },
                 {
                     type: 1,
                     name: "all",
                     description: "Unban all users",
-                }
+                },
             ],
         });
     }
@@ -46,18 +41,16 @@ module.exports = class unban extends Command {
                 return message?.reply({
                     content: "I would appreciate it if you provided a valid user!",
                 });
-                if(args[0] === "all") {
-                    let nunu = await message.channel.send("Unbanning all users...")
-                    message.guild.bans.fetch().then(bans => {
-                        bans.forEach(async ban => {
-                            await message.guild.members.unban(ban.user.id)
-                        })
-                    })
-                    return nunu.edit("Unbanned all users!")
-                }
-            const user = await this.client.users.fetch(
-                args[0].replace(/[\\<>@#&!]/g, "")
-            );
+            if (args[0] === "all") {
+                let nunu = await message.channel.send("Unbanning all users...");
+                message.guild.bans.fetch().then((bans) => {
+                    bans.forEach(async (ban) => {
+                        await message.guild.members.unban(ban.user.id);
+                    });
+                });
+                return nunu.edit("Unbanned all users!");
+            }
+            const user = await this.client.users.fetch(args[0].replace(/[\\<>@#&!]/g, ""));
             if (!user)
                 return message?.reply({
                     content: "I would appreciate it if you provided a valid user!",
@@ -75,7 +68,7 @@ module.exports = class unban extends Command {
                 .setColor(this.client.config.Client.PrimaryColor);
             message?.reply({ embeds: [embed] });
         } catch (err) {
-            return
+            return;
         }
     }
 
@@ -83,13 +76,13 @@ module.exports = class unban extends Command {
         try {
             let subcmd = interaction?.options.getSubcommand();
             if (subcmd === "all") {
-                let nunu = await interaction.reply("Unbanning all users...")
-                interaction.guild.bans.fetch().then(bans => {
-                    bans.forEach(async ban => {
-                        await interaction.guild.members.unban(ban.user.id)
-                    })
-                })
-                return nunu.editReply("Unbanned all users!")
+                let nunu = await interaction.reply("Unbanning all users...");
+                interaction.guild.bans.fetch().then((bans) => {
+                    bans.forEach(async (ban) => {
+                        await interaction.guild.members.unban(ban.user.id);
+                    });
+                });
+                return nunu.editReply("Unbanned all users!");
             }
             const user = interaction?.options.getUser("user");
             const bans = await interaction?.guild.bans.fetch();
@@ -98,8 +91,7 @@ module.exports = class unban extends Command {
                     content: "That user isn't banned!",
                     ephemeral: true,
                 });
-            const reason =
-                interaction?.options.getString("reason") || "No reason provided";
+            const reason = interaction?.options.getString("reason") || "No reason provided";
             await interaction?.guild.members.unban(user.id, reason);
             const embed = this.client.util
                 .embed()
@@ -107,7 +99,7 @@ module.exports = class unban extends Command {
                 .setColor(this.client.config.Client.PrimaryColor);
             interaction?.reply({ embeds: [embed] });
         } catch (err) {
-            return
+            return;
         }
     }
 };

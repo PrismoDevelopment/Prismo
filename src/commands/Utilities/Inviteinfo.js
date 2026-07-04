@@ -8,12 +8,10 @@ module.exports = class Inviteinfo extends Command {
             category: "Utilities",
             aliases: ["aboutinvite", "fetchinvite", "fetchserver"],
             cooldown: 5,
-            image:"https://i.imgur.com/0pKmJ1k.png",
+            image: "https://i.imgur.com/0pKmJ1k.png",
             usage: "inviteinfo <invite>",
             botPerms: ["SendMessages", "ReadMessageHistory"],
-            userPerms: [
-                "SendMessages",
-            ],
+            userPerms: ["SendMessages"],
             guildOnly: true,
             examples: ["inviteinfo https://discord.gg/invite"],
             options: [
@@ -31,13 +29,11 @@ module.exports = class Inviteinfo extends Command {
         const invite = args[0];
         // const inviteregex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/;
         // if (!inviteregex.test(invite)) return message?.channel.createMessage("Please provide a valid invite link");
-        if (!invite)
-            return message?.channel.send("Please provide a invite link");
+        if (!invite) return message?.channel.send("Please provide a invite link");
         const inviteData = await this.client.getInvite(invite);
         if (!inviteData) return message?.channel.send("Invalid invite");
         if (inviteData.guild.icon == null) {
-            inviteData.guild.icon =
-                "https://cdn.discordapp.com/embed/avatars/0.png";
+            inviteData.guild.icon = "https://cdn.discordapp.com/embed/avatars/0.png";
         } else if (inviteData.guild.icon.startsWith("a_")) {
             inviteData.guild.icon = `https://cdn.discordapp.com/icons/${inviteData.guild.id}/${inviteData.guild.icon}.gif`;
         } else {
@@ -101,11 +97,10 @@ ${
         const invite = interaction?.options.getString("invite");
         // const inviteregex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/;
         // if (!inviteregex.test(invite)) return interaction?.reply("Please provide a valid invite link");
-        if (!invite)
-            return interaction?.reply("Please provide a valid invite link");
+        if (!invite) return interaction?.reply("Please provide a valid invite link");
         const inviteData = await this.client.getInvite(invite);
         if (!inviteData) return interaction?.reply("Invalid invite");
-        if (inviteData.guild.icon == null) {    
+        if (inviteData.guild.icon == null) {
             inviteData.guild.icon = "https://cdn.discordapp.com/embed/avatars/0.png";
         } else if (inviteData.guild.icon.startsWith("a_")) {
             inviteData.guild.icon = `https://cdn.discordapp.com/icons/${inviteData.guild.id}/${inviteData.guild.icon}.gif`;

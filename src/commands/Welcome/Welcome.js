@@ -44,7 +44,12 @@ module.exports = class help extends Command {
         try {
             if (!args[0])
                 return message?.reply({
-                    embeds: [this.client.util.errorDelete(message, "Please Provide A Valid Option!\n\n**Options**:\n- `set`\n- `delete`\n- `test`")],
+                    embeds: [
+                        this.client.util.errorDelete(
+                            message,
+                            "Please Provide A Valid Option!\n\n**Options**:\n- `set`\n- `delete`\n- `test`"
+                        ),
+                    ],
                     ephemeral: true,
                 });
             if (args[0] === "set") {
@@ -52,13 +57,16 @@ module.exports = class help extends Command {
                     message?.mentions.channels.first() ||
                     message?.guild.channels.cache.get(args[1]) ||
                     message?.guild.channels.cache.find(
-                        (r) =>
-                            r.name.toLowerCase() ==
-                            args.slice(0).join(" ").toLowerCase()
-                    )
+                        (r) => r.name.toLowerCase() == args.slice(0).join(" ").toLowerCase()
+                    );
                 if (!channel)
                     return message?.reply({
-                        embeds: [this.client.util.errorDelete(message, "Please Provide A Valid Channel!")],
+                        embeds: [
+                            this.client.util.errorDelete(
+                                message,
+                                "Please Provide A Valid Channel!"
+                            ),
+                        ],
                         ephemeral: true,
                     });
                 const data = await this.client.database.welcomeUserData.get(
@@ -67,8 +75,7 @@ module.exports = class help extends Command {
                 let max = data.message?.length;
                 let okie = data.message?.slice(0, max);
                 const msg = await message?.reply({
-                    content:
-                        `Please Choose, Channel And Preset You Want To Set
+                    content: `Please Choose, Channel And Preset You Want To Set
 Need more presets? Try \`/embed create\`!`,
                     components: [
                         this.client.util.row().setComponents(
@@ -114,9 +121,7 @@ Need more presets? Try \`/embed create\`!`,
                 collector.on("collect", async (i) => {
                     if (i.componentType == 3) {
                         if (i.customId === "embedPreset") {
-                            const embedValue = data.message?.filter(
-                                (g) => g.id == i.values[0]
-                            )[0];
+                            const embedValue = data.message?.filter((g) => g.id == i.values[0])[0];
                             presetName = embedValue.name;
                             dataToSave.content = embedValue.content;
                             dataToSave.embeds = embedValue.embeds;
@@ -148,53 +153,55 @@ Need more presets? Try \`/embed create\`!`,
                 });
             }
             if (args[0] === "delete") {
-                await this.client.database.guildData.putWelcome(
-                    message?.guild.id,
-                    {
-                        channel: null,
-                        content: null,
-                        embeds: null,
-                    }
-                );
+                await this.client.database.guildData.putWelcome(message?.guild.id, {
+                    channel: null,
+                    content: null,
+                    embeds: null,
+                });
                 message?.reply({
-                    embeds: [this.client.util.doDeletesend(message, "Welcome Message Has Been Successfully Deleted!")],
+                    embeds: [
+                        this.client.util.doDeletesend(
+                            message,
+                            "Welcome Message Has Been Successfully Deleted!"
+                        ),
+                    ],
                     ephemeral: true,
                 });
             }
             if (args[0] === "test") {
-                const data = await this.client.database.guildData.getWelcome(
-                    message?.guild.id
-                );
+                const data = await this.client.database.guildData.getWelcome(message?.guild.id);
                 if (!data.channel)
                     return message?.reply({
-                        embeds: [this.client.util.errorDelete(message, "Welcome Message Hasn't Been Setupped Yet!")],
+                        embeds: [
+                            this.client.util.errorDelete(
+                                message,
+                                "Welcome Message Hasn't Been Setupped Yet!"
+                            ),
+                        ],
                         ephemeral: true,
                     });
                 message?.reply({
-                    embeds: [this.client.util.doDeletesend(message, "Welcome Message Has Been Sent!")],
+                    embeds: [
+                        this.client.util.doDeletesend(message, "Welcome Message Has Been Sent!"),
+                    ],
                     ephemeral: true,
                 });
                 this.client.emit("guildMemberAdd", message?.member);
             }
         } catch (e) {
-            return
+            return;
         }
     }
 
     async exec({ interaction }) {
         try {
             if (interaction?.options.getSubcommand() === "set") {
-                const channel =
-                    interaction?.options.getChannel("channel") ||
-                    interaction?.channel;
-                const data = await this.client.database.welcomeUserData.get(
-                    interaction?.user.id
-                );
+                const channel = interaction?.options.getChannel("channel") || interaction?.channel;
+                const data = await this.client.database.welcomeUserData.get(interaction?.user.id);
                 let max = data.message?.length;
                 let okie = data.message?.slice(0, max);
                 const msg = await interaction?.reply({
-                    content:
-                        `Please Choose, Channel And Preset You Want To Set
+                    content: `Please Choose, Channel And Preset You Want To Set
 Need more presets? Try \`/embed create\`!`,
                     fetchReply: true,
                     components: [
@@ -279,23 +286,18 @@ Need more presets? Try \`/embed create\`!`,
                 );
             }
             if (interaction?.options.getSubcommand() === "delete") {
-                await this.client.database.guildData.putWelcome(
-                    interaction?.guild.id,
-                    {
-                        channel: null,
-                        content: null,
-                        embeds: null,
-                    }
-                );
+                await this.client.database.guildData.putWelcome(interaction?.guild.id, {
+                    channel: null,
+                    content: null,
+                    embeds: null,
+                });
                 interaction?.reply({
                     content: `${this.client.config.Client.emoji.tick} Welcome Message Has Been Successfully Deleted!`,
                     ephemeral: true,
                 });
             }
             if (interaction?.options.getSubcommand() === "test") {
-                const data = await this.client.database.guildData.getWelcome(
-                    interaction?.guild.id
-                );
+                const data = await this.client.database.guildData.getWelcome(interaction?.guild.id);
                 if (!data.channel)
                     return interaction?.reply({
                         content: `${this.client.config.Client.emoji.cross} Welcome Message Has Not Been Setupped Yet!`,
@@ -308,7 +310,7 @@ Need more presets? Try \`/embed create\`!`,
                 this.client.emit("guildMemberAdd", interaction?.member);
             }
         } catch (e) {
-            return  
+            return;
         }
     }
 };

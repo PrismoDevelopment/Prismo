@@ -1,5 +1,5 @@
 const Command = require("../../abstract/command");
-const { MatchPairs } = require('discord-gamecord');
+const { MatchPairs } = require("discord-gamecord");
 
 module.exports = class Mp extends Command {
     constructor(...args) {
@@ -20,16 +20,16 @@ module.exports = class Mp extends Command {
         const Game = new MatchPairs({
             message: message,
             embed: {
-                title: 'Match Pairs',
+                title: "Match Pairs",
                 color: this.client.config.Client.PrimaryColor,
                 timestamp: true,
-                description: '**Click on the buttons to match emojis with their pairs.**'
+                description: "**Click on the buttons to match emojis with their pairs.**",
             },
             timeoutTime: 60000,
-            emojis: ['🍉', '🍇', '🍊', '🥭', '🍎', '🍏', '🥝', '🥥', '🍓', '🫐', '🍍', '🥕', '🥔'],
-            winMessage: '**You won the game! You turned a total of `{tilesTurned}` tiles.**',
-            loseMessage: '**You lost the game! You turned a total of `{tilesTurned}` tiles.**',
-            playerOnlyMessage: 'Only {player} can use these buttons.'
+            emojis: ["🍉", "🍇", "🍊", "🥭", "🍎", "🍏", "🥝", "🥥", "🍓", "🫐", "🍍", "🥕", "🥔"],
+            winMessage: "**You won the game! You turned a total of `{tilesTurned}` tiles.**",
+            loseMessage: "**You lost the game! You turned a total of `{tilesTurned}` tiles.**",
+            playerOnlyMessage: "Only {player} can use these buttons.",
         });
 
         Game.startGame();
@@ -39,16 +39,16 @@ module.exports = class Mp extends Command {
         const Game = new MatchPairs({
             message: interaction,
             embed: {
-                title: 'Match Pairs',
+                title: "Match Pairs",
                 color: this.client.config.Client.PrimaryColor,
                 timestamp: true,
-                description: '**Click on the buttons to match emojis with their pairs.**'
+                description: "**Click on the buttons to match emojis with their pairs.**",
             },
             timeoutTime: 60000,
-            emojis: ['🍉', '🍇', '🍊', '🥭', '🍎', '🍏', '🥝', '🥥', '🍓', '🫐', '🍍', '🥕', '🥔'],
-            winMessage: '**You won the game! You turned a total of `{tilesTurned}` tiles.**',
-            loseMessage: '**You lost the game! You turned a total of `{tilesTurned}` tiles.**',
-            playerOnlyMessage: 'Only {player} can use these buttons.',
+            emojis: ["🍉", "🍇", "🍊", "🥭", "🍎", "🍏", "🥝", "🥥", "🍓", "🫐", "🍍", "🥕", "🥔"],
+            winMessage: "**You won the game! You turned a total of `{tilesTurned}` tiles.**",
+            loseMessage: "**You lost the game! You turned a total of `{tilesTurned}` tiles.**",
+            playerOnlyMessage: "Only {player} can use these buttons.",
             isSlashGame: true,
         });
 

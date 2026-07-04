@@ -1,5 +1,5 @@
 const Command = require("../../abstract/command");
-const TicTacToe = require('discord-tictactoe');
+const TicTacToe = require("discord-tictactoe");
 
 module.exports = class TicTacToeCommand extends Command {
     constructor(...args) {
@@ -28,23 +28,25 @@ module.exports = class TicTacToeCommand extends Command {
         const user = await this.client.util.userQuery(args[0]);
         if (!user) return message?.reply("Please provide a valid user!");
         const member = await message?.guild.members.fetch(user);
-        if (member.id === message?.author.id) return message?.reply("You can't play with yourself!");
+        if (member.id === message?.author.id)
+            return message?.reply("You can't play with yourself!");
 
         const game = new TicTacToe({
-            language: 'en',
+            language: "en",
             command: message,
         });
         game.handleMessage(message);
     }
 
     async exec({ interaction }) {
-        const user = interaction?.options.getMember('user');
+        const user = interaction?.options.getMember("user");
         if (!user) return interaction?.reply("Please provide a valid user!");
         const member = await interaction?.guild.members.fetch(user.id);
-        if (member.id === interaction?.user.id) return interaction?.reply("You can't play with yourself!");
+        if (member.id === interaction?.user.id)
+            return interaction?.reply("You can't play with yourself!");
 
         const game = new TicTacToe({
-            language: 'en',
+            language: "en",
             command: interaction,
         });
         game.handleInteraction(interaction);

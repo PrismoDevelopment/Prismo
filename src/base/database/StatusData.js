@@ -21,13 +21,13 @@ module.exports = class StatusData {
         let data = await mongoData.findOne({ id: id });
         if (!data) {
             data = new mongoData({ id: id });
-            await this.database.client.cache.set(id+"status", data);
+            await this.database.client.cache.set(id + "status", data);
             await data.save();
         }
         if (data) {
             data = value;
-            await data.save().catch(() => { });
-            await this.database.client.cache.set(id+"status", data);
+            await data.save().catch(() => {});
+            await this.database.client.cache.set(id + "status", data);
             return data;
         }
     }
@@ -36,4 +36,4 @@ module.exports = class StatusData {
         let data = await mongoData.find();
         if (data) return data;
     }
-}
+};

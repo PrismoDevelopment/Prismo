@@ -15,11 +15,11 @@ module.exports = class antiNukeData {
             data = new mongoData({ id: id });
             await data.save();
             this.database.client.cache.set(id, data);
-            return data
+            return data;
         }
         if (data) {
             this.database.client.cache.set(id, data);
-            return data
+            return data;
         }
     }
 
@@ -29,18 +29,17 @@ module.exports = class antiNukeData {
             data = new mongoData({ id: id });
             await data.save();
             await this.database.client.cache.set(id, data);
-            return data
+            return data;
         }
         if (data) {
             data = value;
             await data.save();
             await this.database.client.cache.set(id, data);
-            return data
+            return data;
         }
     }
     async find() {
         let data = await mongoData.find();
         if (data) return data;
     }
-
-}
+};

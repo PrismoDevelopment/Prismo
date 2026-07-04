@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2025 Vaxera
- * Licensed under the Prismo License v2.0
- * Unauthorized use, distribution, or modification is strictly prohibited.
- * Legal actions, including DMCA takedowns and financial penalties, may apply.
- */
 const Event = require("../abstract/event");
 const { EmbedBuilder } = require("discord.js");
 module.exports = class guildMemberAdd extends Event {
@@ -17,9 +11,11 @@ module.exports = class guildMemberAdd extends Event {
         try {
             if (member?.user.bot) {
                 const guildId = member?.guild.id;
-                let antiNukeData = await this.client.cache.get(guildId) || await this.client.database.antiNukeData.get(guildId);
+                let antiNukeData =
+                    (await this.client.cache.get(guildId)) ||
+                    (await this.client.database.antiNukeData.get(guildId));
                 if (!antiNukeData || !antiNukeData.enabled) {
-                  return;
+                    return;
                 }
                 if (!antiNukeData.enabled) return;
                 const logs = await member?.guild
@@ -43,16 +39,26 @@ module.exports = class guildMemberAdd extends Event {
                 if (user.id == member?.guild.ownerId) return;
                 if (member?.id != log.target.id) return;
                 member?.kick("Anti Bot Add | Prismo Antinuke").catch(() => {});
-                if (exeMember?.roles.highest.position > member?.guild.members.resolve(this.client.user).roles.highest.position) {
+                if (
+                    exeMember?.roles.highest.position >
+                    member?.guild.members.resolve(this.client.user).roles.highest.position
+                ) {
                     return;
                 }
-                this.client.eventRestrict(antiNukeData.punishment, user.id, member?.guild.id, `Anti Bot Add | Prismo Antinuke`);
+                this.client.eventRestrict(
+                    antiNukeData.punishment,
+                    user.id,
+                    member?.guild.id,
+                    `Anti Bot Add | Prismo Antinuke`
+                );
                 let logChannel = member?.guild.channels.cache.get(antiNukeData.logchannelid);
                 if (!logChannel) return;
                 const embed = this.client.util
                     .embed()
                     .setTitle(`Anti Bot Add`)
-                    .setDescription(`**User:** ${user.username} (${user.id})\n**Member:** ${member?.user.username} (${member?.id})\n**Action:** Kicked`)
+                    .setDescription(
+                        `**User:** ${user.username} (${user.id})\n**Member:** ${member?.user.username} (${member?.id})\n**Action:** Kicked`
+                    )
                     .setColor(this.client.ErrorColor)
                     .setTimestamp();
                 logChannel?.send({ embeds: [embed] }).catch(() => {});
