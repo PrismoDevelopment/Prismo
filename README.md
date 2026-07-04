@@ -1,7 +1,7 @@
 <div align="center">
 
 <p align="center">
-  <img src="prismo.png" width="200" height="200">
+  <img src="resources/prismo.png" width="200" height="200">
 </p>
 
 # Prismo
@@ -51,9 +51,11 @@ We welcome and appreciate community contributions! Check out the [CONTRIBUTING.m
 
 ## ⚖️ License
 
-This project is licensed under the Apache License 2.0.  
-Unauthorized use, skidding, or redistribution is strictly prohibited.  
-Violators may face DMCA takedowns and legal consequences.
+This project is licensed under the Apache License 2.0.
+
+We're happy to share our work, and you are totally welcome to use it! However, we ask that you respect the effort we've put into Prismo. You **must** clearly acknowledge that this is Prismo's source code and provide proper, visible credit to the original creators. 
+
+Please don't claim our hard work as your own or strip away the credits. We actively monitor for unauthorized usage and "skidding". If we find that you are using this code without proper attribution or trying to pass it off as your own work, we will not hesitate to issue strict DMCA takedowns and pursue necessary legal actions. Keep it fair, keep it credited!
 
 ---
 
