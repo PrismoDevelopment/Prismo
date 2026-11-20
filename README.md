@@ -51,7 +51,7 @@ We welcome and appreciate community contributions! Check out the [CONTRIBUTING.m
 
 ## ⚖️ License
 
-This project is licensed under the Apache License 2.0.
+This project is licensed under the GNU General Public License v3.0
 
 We're happy to share our work, and you are totally welcome to use it! However, we ask that you respect the effort we've put into Prismo. You **must** clearly acknowledge that this is Prismo's source code and provide proper, visible credit to the original creators. 
 
